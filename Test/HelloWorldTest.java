@@ -5,10 +5,11 @@ import org.junit.Test;
  * Created by gaboth22 on 3/3/17.
  */
 
-public class FirstTest {
+public class HelloWorldTest {
 
     @Test
     public void HelloWorldTest() {
-        Assert.assertEquals("Hello World!", "Hello World!");
+        HelloWorld hello = new HelloWorld();
+        Assert.assertEquals("Hello, World!", hello.sayHello());
     }
 }
