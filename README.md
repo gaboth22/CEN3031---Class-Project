@@ -1,5 +1,5 @@
 # CEN3031---Class-Project
-This is the final class project for CEN3031 at the University of Florida
+This is the final class project for CEN3031 at the University of Florida.
 
 The idea is that this code implements a board game called TigerIsland&trade;. 
 
