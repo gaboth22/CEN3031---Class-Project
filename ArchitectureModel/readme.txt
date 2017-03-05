@@ -6,18 +6,18 @@ From what I saw, there will be 8 possible orientations, which I decided to name 
 
 N NE E SE S SW W NW - North, Northeast, East, Southeast, South, Southwest, West, and Northwest:
 
-		  N
+             N
 	  NW ^ NE
 	W < -|- > E
 	  SW v SE
-		  S
+	     S
 
 I believe those are all the positions that the volcano can point to, based on the hex configuration.
 The convention would be that we assume that wherever the volcano is poiting, that is the "up" position,
 regardless of the actual orientation of the piece. Then the lower left terrain will be leftTerrain, and the
 lower right terrain will be rightTerrain:
 
-					  Volcano
+			          Volcano
 					  
 
 		leftTerrain			rightTerrain
