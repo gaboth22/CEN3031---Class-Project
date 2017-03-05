@@ -10,4 +10,10 @@ public class HelloWorldTest {
         HelloWorld hello = new HelloWorld();
         Assert.assertEquals("Hello, world!", hello.sayHello());
     }
+
+    @Test
+    public void HelloWorldTwiceTest() {
+        HelloWorld hello = new HelloWorld();
+        Assert.assertEquals("Hello Hello, World!", hello.sayHelloTwice());
+    }
 }

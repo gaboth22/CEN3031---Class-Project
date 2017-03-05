@@ -8,4 +8,8 @@ public class HelloWorld {
     public String sayHello() {
         return "Hello, world!";
     }
+
+    public String sayHelloTwice() {
+        return "Hello Hello, World!";
+    }
 }
