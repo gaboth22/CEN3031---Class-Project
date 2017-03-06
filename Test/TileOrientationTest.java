@@ -4,17 +4,17 @@ import org.junit.Test;
 public class TileOrientationTest {
     public TileOrientation uut;
 
-    public void GiveTheTileOrientationHasBeenInitializedWithOrientation(Orientation orientation) {
+    public void givenTheTileOrientationHasBeenInitializedWithOrientation(Orientation orientation) {
         uut = new TileOrientation(orientation);
     }
 
-    public void TheOrientationShouldBe(Orientation expectedOrientation) {
+    public void theOrientationShouldBe(Orientation expectedOrientation) {
         Assert.assertEquals(expectedOrientation, uut.orientation);
     }
 
     @Test
-    public void TheTileOrientationDataShouldBeSetCorrectly() {
-        GiveTheTileOrientationHasBeenInitializedWithOrientation(Orientation.NE);
-        TheOrientationShouldBe(Orientation.NE);
+    public void theTileOrientationDataShouldBeSetCorrectly() {
+        givenTheTileOrientationHasBeenInitializedWithOrientation(Orientation.NE);
+        theOrientationShouldBe(Orientation.NE);
     }
 }

@@ -38,7 +38,7 @@ public class TileTest {
     }
 
     @Test
-    public void TheTileDataShouldBeSetCorrectly() {
+    public void theTileDataShouldBeSetCorrectly() {
         givenTheTileHasBeenInitialized();
         theLeftTerrainShouldBe(this.leftTerrain);
         theRightTerrainShouldBe(this.rightTerrain);
