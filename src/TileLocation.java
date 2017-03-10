@@ -1,5 +1,6 @@
 /*
- *  The location is the location of the tile containing a volcano,
+ *  The location is the location of the tile in regard to its volcano.
+ *  In other words, the location of the volcano
  *  the tile can be reconstructed from there using the leftTerrain
  *  rightTerrain convention.
  */
