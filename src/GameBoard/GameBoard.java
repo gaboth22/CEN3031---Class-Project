@@ -18,7 +18,7 @@ public interface GameBoard {
 
     List<Settlement> getAllSettlements(PlayerID ownerId);
 
-    void appendMeepleToSettlement(Settlement settlement, TerrainLocation location);
+    void appendMeeplesToSettlement(Settlement settlement, PlayerID playerId);
 
     void appendTotoroToSettlement(Settlement settlement, TerrainLocation location);
 

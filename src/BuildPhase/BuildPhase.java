@@ -1,11 +1,13 @@
 package BuildPhase;
 
-public interface BuildPhase {
-    boolean playerInBuildPhase();
+import GameBoard.GameBoard;
 
-    void foundSettlement();
+public abstract class BuildPhase {
+    private GameBoard gameBoard;
 
-    void expandSettlement();
+    abstract void build();
 
-    void placeTotoro();
+    void setGameBoard(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
+    }
 }

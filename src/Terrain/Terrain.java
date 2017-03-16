@@ -6,12 +6,15 @@ public abstract class Terrain {
     private TerrainLocation location;
     protected boolean hasPiece;
     private Piece piece;
+    protected boolean isVolcano;
 
     public Terrain() {
+        this.isVolcano = false;
         this.hasPiece = false;
     }
 
     public Terrain(TerrainLocation location) {
+        this.isVolcano = false;
         this.location = location;
     }
 
@@ -30,6 +33,10 @@ public abstract class Terrain {
     public void setPiece(Piece piece) throws InhabitableTerrainException {
         this.piece = piece;
         this.hasPiece = true;
+    }
+
+    public boolean isVolcano() {
+        return this.isVolcano;
     }
 
     public Piece getPiece() throws EmptyTerrainException {

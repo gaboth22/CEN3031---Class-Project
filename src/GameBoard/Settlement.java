@@ -1,15 +1,16 @@
 package GameBoard;
 
 import Terrain.Terrain;
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Settlement {
+public class Settlement implements Iterable<Terrain> {
     private List<Terrain> settlement;
     private boolean hasTotoro;
 
     public Settlement() {
-        this.settlement = new ArrayList<Terrain>();
+        this.settlement = new LinkedList<Terrain>();
     }
 
     public void append(Terrain terrain) {
@@ -30,5 +31,9 @@ public class Settlement {
 
     public void clearTotoroAdded() {
         this.hasTotoro = false;
+    }
+
+    public Iterator<Terrain> iterator() {
+        return new SettlementIterator(this.settlement);
     }
 }

@@ -6,7 +6,7 @@ public class Volcano extends Terrain {
 
     public Volcano() {
         super();
-        super.hasPiece = true;
+        super.isVolcano = true;
     }
 
     @Override
