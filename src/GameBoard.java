@@ -2,27 +2,27 @@ import java.util.List;
 
 public interface GameBoard {
 
-    public void insertTile(Tile tile, TileLocation location);
+    void insertTile(Tile tile, TileLocation location);
 
-    public Tile getTile(TileLocation location);
+    Tile getTile(TileLocation location);
 
-    public Settlement getSettlement(Player owner, TerrainLocation location);
+    Settlement getSettlement(Player owner, TerrainLocation location);
 
-    public List<Settlement> getAllSettlements(Player owner);
+    List<Settlement> getAllSettlements(Player owner);
 
-    public void appendMeepleToSettlement(Settlement settlement, TerrainLocation location);
+    void appendMeepleToSettlement(Settlement settlement, TerrainLocation location);
 
-    public void appendTotoroToSettlement(Settlement settlement, TerrainLocation location);
+    void appendTotoroToSettlement(Settlement settlement, TerrainLocation location);
 
-    public void foundSettlement(TerrainLocation location);
+    void foundSettlement(TerrainLocation location);
 
-    public Terrain getTerrain(TerrainLocation location);
+    Terrain getTerrain(TerrainLocation location);
 
-    public void removeSettlement(Settlement settlementToRemove);
+    void removeSettlement(Settlement settlementToRemove);
 
-    public TileLocation getTileLocation(Tile tile);
+    TileLocation getTileLocation(Tile tile);
 
-    public TerrainLocation getTerrainLocation(Terrain terrain);
+    TerrainLocation getTerrainLocation(Terrain terrain);
 
-    public void doBuildAction(BuildData data);
+    void doBuildAction(BuildData data);
 }
