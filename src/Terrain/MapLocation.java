@@ -11,18 +11,6 @@ public class MapLocation extends TerrainLocation {
         this.height = height;
     }
 
-    public int getColumn() {
-        return this.column;
-    }
-
-    public int getRow() {
-        return this.row;
-    }
-
-    public int getHeight() {
-        return this.height;
-    }
-
     public MapLocation up() {
         return new MapLocation(row + 1, column, height);
     }

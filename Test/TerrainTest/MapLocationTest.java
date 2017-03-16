@@ -9,13 +9,21 @@ public class MapLocationTest {
     MapLocation currentLocation;
     MapLocation expectedLocation;
 
-    void givenIAmAtLocation(int column, int row, int height){
-        currentLocation = new MapLocation(column, row, height);
+    void givenIAmAtLocation(int row, int column, int height){
+        currentLocation = new MapLocation(row, column, height);
     }
 
-    void thenIShouldArriveAt(int column, int row, int height){
-        expectedLocation = new MapLocation(column, row, height);
+    void thenIShouldArriveAt(int row, int column, int height){
+        expectedLocation = new MapLocation(row, column, height);
         Assert.assertEquals(currentLocation, expectedLocation);
+    }
+
+    void givenIHaveALocation(int row, int column, int height) {
+        currentLocation = new MapLocation(row, column, height);
+    }
+
+    void andIHaveAnotherLocation(int row, int column, int height) {
+        expectedLocation = new MapLocation(row, column, height);
     }
 
     void whenIMoveUp(){
@@ -52,67 +60,68 @@ public class MapLocationTest {
 
     @Test
     public void MapLocationsThatAreAtTheSameColumnAndRowShouldBeEqual(){
-        givenIAmAtLocation(4,5, 6);
-        thenIShouldArriveAt(4,5, 6);
-        Assert.assertTrue(currentLocation.equals(expectedLocation));
+        givenIHaveALocation(2,3,4);
+        andIHaveAnotherLocation(2,3,4);
+        Assert.assertEquals(currentLocation, expectedLocation);
 
-        thenIShouldArriveAt(4,6, 6);
-        Assert.assertFalse(currentLocation.equals(expectedLocation));
+        givenIHaveALocation(6, 4, 6);
+        andIHaveAnotherLocation(4,3,2);
+        Assert.assertNotEquals(currentLocation, expectedLocation);
     }
 
     @Test
     public void MovingUpwards() {
-        givenIAmAtLocation(4,5,0);
+        givenIAmAtLocation(5, 4, 0);
         whenIMoveUp();
-        thenIShouldArriveAt(4, 6, 0);
+        thenIShouldArriveAt(6, 4, 0);
     }
 
     @Test
     public void MovingUpRight() {
-        givenIAmAtLocation(2,2,2);
+        givenIAmAtLocation(2, 2, 2);
         whenIMoveUpRight();
-        thenIShouldArriveAt(2,3,2);
+        thenIShouldArriveAt(2, 3, 2);
     }
 
     @Test
     public void MovingDownRight() {
-        givenIAmAtLocation(5,3,2);
+        givenIAmAtLocation(3, 5, 2);
         whenIMoveDownRight();
-        thenIShouldArriveAt(6,2,2);
+        thenIShouldArriveAt(2, 6, 2);
     }
 
     @Test
     public void MovingDown() {
-        givenIAmAtLocation(3,2,1);
+        givenIAmAtLocation(2, 3, 1);
         whenIMoveDown();
-        thenIShouldArriveAt(3,1,1);
+        thenIShouldArriveAt(1, 3, 1);
     }
 
     @Test
     public void MovingDownLeft() {
-        givenIAmAtLocation(0,0,0);
+        givenIAmAtLocation(0, 0, 0);
         whenIMoveDownLeft();
-        thenIShouldArriveAt(-1,0,0);
+        thenIShouldArriveAt(0, -1, 0);
     }
 
     @Test
     public void MovingUpLeft() {
-        givenIAmAtLocation(0,0,0);
+        givenIAmAtLocation(0, 0, 0);
         whenIMoveUpLeft();
-        thenIShouldArriveAt(-1, 1, 0);
+        thenIShouldArriveAt(1, -1, 0);
     }
 
     @Test
     public void MovingAbove() {
-        givenIAmAtLocation(5,5,20);
+        givenIAmAtLocation(5, 5, 20);
         whenIMoveAbove();
-        thenIShouldArriveAt(5,5,21);
+        thenIShouldArriveAt(5, 5, 21);
     }
 
     @Test
     public void MovingBelow() {
-        givenIAmAtLocation(0,0,1);
+        givenIAmAtLocation(0, 0, 1);
         whenIMoveBelow();
-        thenIShouldArriveAt(0,0,0);
+        thenIShouldArriveAt(0, 0, 0);
     }
 }

@@ -2,7 +2,7 @@ package TerrainTest;
 
 import Terrain.TerrainLocation;
 
-public class TerrainLocationTestDouble implements TerrainLocation{
+public class TerrainLocationTestDouble extends TerrainLocation{
     private int row;
     private int col;
     private int height;
@@ -11,7 +11,7 @@ public class TerrainLocationTestDouble implements TerrainLocation{
         this.row = row;
     }
 
-    public void setColum(int col) {
+    public void setColumn(int col) {
         this.col = col;
     }
 
@@ -19,15 +19,4 @@ public class TerrainLocationTestDouble implements TerrainLocation{
         this.height = height;
     }
 
-    public int getColumn() {
-        return this.col;
-    }
-
-    public int getRow() {
-        return this.row;
-    }
-
-    public int getHeight() {
-        return this.height;
-    }
 }

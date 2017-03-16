@@ -3,6 +3,7 @@ package TileMapTest;
 import Terrain.TerrainLocation;
 import TileMap.*;
 import Tile.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class TileMapTest {
@@ -24,10 +25,11 @@ public class TileMapTest {
     }
 
     @Test
-    void testThatTheFirstTileIsPlacedAtTheOrigin(){
-        testMap.placeTile(tileToInsert);
+    public void testThatTheFirstTileIsPlacedAtTheOrigin(){
+        //testMap.placeTile(tileToInsert);
         givenThatYouHaveATileToInsert();
         whenYouPlaceTheTile();
         theTileShouldBePlaced();
+        Assert.assertTrue(true);
     }
 }
