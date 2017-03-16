@@ -1,18 +1,18 @@
 Important Concepts:
 
-* Terrain
+* Terrain.Terrain
     * Volcano
     * Terrain1
     * Terrain2
     * Terrain3
     * Terrain4
-* Tile
+* Tile.Tile
 * Game board
 * Placing a tile
 * Location of tiles
-* Playing Piece
-    * Meeple
-    * Totoro
+* Playing Piece.Piece
+    * Piece.Piece.Meeple
+    * Piece.Piece.Totoro
 * Placing a playing piece
 * Collections of pieces (settlements)
 * Location of pieces
@@ -23,9 +23,9 @@ Implementation Order
 Basically the order of enumeration.
 The first thing that needs to be implemented is the pieces, and a way of representing the “game board.”
 
-Terrain: Need to decided whether a terrain will be a class, or if it will simply be represented by a string.
+Terrain.Terrain: Need to decided whether a terrain will be a class, or if it will simply be represented by a string.
 
-Tile: A tile will contain information about itself, and game data, such as whether it is still a valid tile (it hasn’t been covered by another tile — if it has been covered, a pointer to the tile that covered it?), if there are any pieces (Meeple or Totoro) on any of its terrains… Maybe pointers to its adjacent tiles?
+Tile.Tile: A tile will contain information about itself, and game data, such as whether it is still a valid tile (it hasn’t been covered by another tile — if it has been covered, a pointer to the tile that covered it?), if there are any pieces (Piece.Piece.Meeple or Piece.Piece.Totoro) on any of its terrains… Maybe pointers to its adjacent tiles?
 
 Game board: Maybe not a game board itself (since there isn’t an actual game board in this game), but a way of representing the current pieces placed on the table.
 
@@ -36,7 +36,7 @@ Location of tiles: Where is a tile location with respect to a reference point…
 Playing piece: Maybe a class, maybe a simple count that lives on a tile/terrain class, but a simple way of representing that a piece has been placed down.
 
 Placing a playing piece: 
-Updating whatever data structure, count, or whatever it is that keeps track of the pieces placed on a tile/terrain, and a way to distinguish between it being a Maple or a Totoro.
+Updating whatever data structure, count, or whatever it is that keeps track of the pieces placed on a tile/terrain, and a way to distinguish between it being a Maple or a Piece.Piece.Totoro.
 
 Collection of pieces (settlements): Keeping track of the settlements — a quick way of addressing a settlement to update its status.
 
@@ -62,13 +62,13 @@ And I should record the location of that tile on the game board
 Given it is my turn 
 And I have a tile
 And I choose to place the tile on top of a level 1 tile
-Then I should make sure that there are no Totoro on any of the terrains I will cover
+Then I should make sure that there are no Piece.Piece.Totoro on any of the terrains I will cover
 And I should make sure I am not attempting to cover a level 1 settlement
 And I should make sure the volcano of the tile I am attempting to place is on top of a volcano
 
 Give it is my turn 
 And I have a tile And I choose to place the tile on top of a level 2+ tile
-Then I should make sure that there are no Totoro on any of the terrains I will cover
+Then I should make sure that there are no Piece.Piece.Totoro on any of the terrains I will cover
 And I should make sure I am not attempting to cover a level 1 settlement
 And I should make sure the volcano of the tile I am attempting to place is on top of a volcano
 And I should make sure there are no empty spaces below any of the terrains of my tile
@@ -77,29 +77,29 @@ Scenario: Playing a piece
 
 Given it is my turn
 And I have already placed my tile down
-And I have Meeple left
+And I have Piece.Piece.Meeple left
 And I have decided to found a settlement
 Then I should pick a terrain on level 1
 And I should make sure the terrain is empty
-And I should make sure the terrain is not a volcano And I should place a Meeple there by updating the game status
+And I should make sure the terrain is not a volcano And I should place a Piece.Piece.Meeple there by updating the game status
 
 Given it is my turn 
 And I have already placed my tile down
-And I have Meeple left
+And I have Piece.Piece.Meeple left
 And I have at least one settlement in place
 And there are empty, non-volcanic terrains adjacent to the settlement
-And I have decided to expand the settlement with a Meeple
+And I have decided to expand the settlement with a Piece.Piece.Meeple
 Then I should and empty, non-volcanic terrain adjacent to the settlement
-And I should place the Meeple there by updating the game status
+And I should place the Piece.Piece.Meeple there by updating the game status
 
 Given it is my turn 
 And I have already placed my tile down
-And I have Totoro left
+And I have Piece.Piece.Totoro left
 And I have at least one settlement in place of size five or more
 And there are empty, non-volcanic terrains adjacent to the settlement 
-And I have decided to place a Totoro down
+And I have decided to place a Piece.Piece.Totoro down
 Then I should pick an empty, non-volcanic terrain adjacent to the settlement
-And I should place the Totoro there by updating the game status
+And I should place the Piece.Piece.Totoro there by updating the game status
 
 
 
