@@ -3,7 +3,7 @@ package BuildPhase;
 import GameBoard.*;
 import Terrain.TerrainLocation;
 
-public class PlaceTotoro implements BuildPhase {
+public class PlaceTotoro extends BuildPhase {
     private GameBoard gameBoard;
     private TerrainLocation locationToExpandOn;
     private Settlement settlementToExpand;

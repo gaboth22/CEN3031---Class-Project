@@ -26,7 +26,7 @@ public interface GameBoard {
 
     Terrain getTerrain(TerrainLocation location);
 
-    void removeSettlement(Settlement settlementToRemove);
+    void removeSettlement(Settlement settlementToRemove, PlayerID playerId);
 
     TileLocation getTileLocation(Tile tile);
 

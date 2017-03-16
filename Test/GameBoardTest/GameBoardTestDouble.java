@@ -2,8 +2,12 @@ package GameBoardTest;
 
 import GameBoard.*;
 import Player.PlayerID;
-import Terrain.Terrain;
-import Terrain.TerrainLocation;
+import Terrain.*;
+import TerrainTest.TerrainLocationTestDouble;
+import Tile.*;
+import BuildPhase.BuildData;
+import TileTest.TileLocationTestDouble;
+import TileTest.TileOrientationTestDouble;
 
 import java.util.List;
 
@@ -28,12 +32,19 @@ public class GameBoardTestDouble implements GameBoard {
 
     public Settlement getSettlement(PlayerID ownerId, TerrainLocation anyLocationWithinSettlement) {
         List<Settlement> playerSettlements = getPlayerSettlement(ownerId);
+        return findSettlementWithinPlayerSettlements(playerSettlements, anyLocationWithinSettlement);
+    }
 
+    private Settlement findSettlementWithinPlayerSettlements(List<Settlement> playerSettlements,
+                                                             TerrainLocation anyLocationWithinSettlement) {
         for(Settlement settlement : playerSettlements) {
             if(terrainLocationWithinSettlement(settlement, anyLocationWithinSettlement))
                 return settlement;
         }
 
+        /*
+         * If settlement does not exist, return empty settlement
+         */
         return new Settlement();
     }
 
@@ -44,5 +55,48 @@ public class GameBoardTestDouble implements GameBoard {
         }
 
         return false;
+    }
+
+    public Terrain getTerrain(TerrainLocation location) {
+        return new Volcano();
+    }
+
+    public Tile getTile(TileLocation location) {
+        /*
+         * Hardcoded for now
+         */
+        return  new Tile(new Volcano(),
+                        new GrasslandsTerrain(),
+                        new RockyTerrain(),
+                        new TileLocationTestDouble(),
+                        new TileOrientationTestDouble());
+    }
+
+    public void appendMeeplesToSettlement(Settlement settlement, PlayerID playerId) {
+    }
+
+    public void appendTotoroToSettlement(Settlement settlement, TerrainLocation location) {
+    }
+
+    public void insertTile(Tile tile, TileLocation location) {
+    }
+
+    public void removeSettlement(Settlement settlementToRemove, PlayerID playerID) {
+        List<Settlement> playerSettlements = getPlayerSettlement(playerID);
+        playerSettlements.remove(settlementToRemove);
+    }
+
+    public void doBuildAction(BuildData data) {
+    }
+
+    public void foundSettlement(TerrainLocation location) {
+    }
+
+    public TerrainLocation getTerrainLocation(Terrain terrain) {
+        return new TerrainLocationTestDouble();
+    }
+
+    public TileLocation getTileLocation(Tile tile) {
+        return new TileLocationTestDouble();
     }
 }

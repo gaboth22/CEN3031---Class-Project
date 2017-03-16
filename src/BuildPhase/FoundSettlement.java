@@ -3,7 +3,7 @@ package BuildPhase;
 import GameBoard.GameBoard;
 import Terrain.TerrainLocation;
 
-public class FoundSettlement implements BuildPhase {
+public class FoundSettlement extends BuildPhase {
     private TerrainLocation terrainLocation;
     private GameBoard gameBoard;
 
