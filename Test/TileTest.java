@@ -37,6 +37,18 @@ public class TileTest {
         Assert.assertEquals(expectedOrientation, uut.orientation);
     }
 
+    public void givenTheTileLevelIs(int level) {
+        uut.level = level;
+    }
+
+    public void whenTheTileLevelIsIncreased() {
+        uut.increaseLevel();
+    }
+
+    public void theTileLevelShouldBe(int expectedLevel) {
+        Assert.assertEquals(expectedLevel, uut.level);
+    }
+
     @Test
     public void theTileDataShouldBeSetCorrectly() {
         givenTheTileHasBeenInitialized();
@@ -44,5 +56,19 @@ public class TileTest {
         theRightTerrainShouldBe(this.rightTerrain);
         theTileLocationShouldBe(this.location);
         theTileOrientationShouldBe(this.orientation);
+    }
+
+    @Test
+    public void theTileLevelShouldBeOneWhenOriginallyInitialized() {
+        givenTheTileHasBeenInitialized();
+        theTileLevelShouldBe(1);
+    }
+
+    @Test
+    public void theTileLevelShouldBeIncreasedCorrectly() {
+        givenTheTileHasBeenInitialized();
+        givenTheTileLevelIs(3);
+        whenTheTileLevelIsIncreased();
+        theTileLevelShouldBe(4);
     }
 }
