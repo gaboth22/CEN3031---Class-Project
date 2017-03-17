@@ -81,6 +81,10 @@ public class GameBoardTestDouble implements GameBoard {
     public void insertTile(Tile tile, TileLocation location) {
     }
 
+    public void nukeTiles(Tile tile, TileLocation location){
+
+    }
+
     public void removeSettlement(Settlement settlementToRemove, PlayerID playerID) {
         List<Settlement> playerSettlements = getPlayerSettlement(playerID);
         playerSettlements.remove(settlementToRemove);
