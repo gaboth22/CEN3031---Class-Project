@@ -17,4 +17,34 @@ public abstract class TerrainLocation {
         return this.height;
     }
 
+    public abstract TerrainLocation up();
+    public abstract TerrainLocation upRight();
+    public abstract TerrainLocation downRight();
+    public abstract TerrainLocation down();
+    public abstract TerrainLocation downLeft();
+    public abstract TerrainLocation upLeft();
+    public abstract TerrainLocation above();
+    public abstract TerrainLocation below();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TerrainLocation that = (TerrainLocation) o;
+
+        if (row != that.row) return false;
+        if (column != that.column) return false;
+        return height == that.height;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = row;
+        result = 31 * result + column;
+        result = 31 * result + height;
+        return result;
+    }
+
+
 }

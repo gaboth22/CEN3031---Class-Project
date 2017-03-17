@@ -43,23 +43,4 @@ public class MapLocation extends TerrainLocation {
         return new MapLocation(row, column, height - 1);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MapLocation that = (MapLocation) o;
-
-        if (column != that.column) return false;
-        if (row != that.row) return false;
-        return height == that.height;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = column;
-        result = 31 * result + row;
-        result = 31 * result + height;
-        return result;
-    }
 }
