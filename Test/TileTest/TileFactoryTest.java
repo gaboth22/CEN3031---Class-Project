@@ -3,9 +3,11 @@ package TileTest;
 import Terrain.GrasslandsTerrain;
 import Terrain.RockyTerrain;
 import Tile.*;
+import cucumber.api.java.en.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 
 public class TileFactoryTest {
     TileFactory uut;
@@ -19,8 +21,17 @@ public class TileFactoryTest {
         infoGenTestDouble.setTileOrientation(new TileOrientationTestDouble());
         uut = new TileFactory(infoGenTestDouble);
     }
+    @Given("a game is in session")
+    public void gameInSessionTest(){
+        Assert.assertTrue(true);
+    }
 
-    @Test
+    @When("a player draws a tile")
+    public void playerDrawsTileTest(){
+        Assert.assertTrue(true);
+    }
+
+    @Then("each hexagon should be of either one of four legal terrains or a volcano")
     public void theTileFactoryShouldCreateAValidTile() {
         Tile tile = uut.makeTile();
         Assert.assertTrue(tile.getLeftTerrain() != null);
