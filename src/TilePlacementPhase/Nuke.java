@@ -17,6 +17,4 @@ public class Nuke extends TilePlacementPhase {
     public void place(){
         this.gameBoard.nukeTiles(this.tile, this.location);
     }
-
 }
-git

@@ -17,5 +17,4 @@ public class SimplePlacement extends TilePlacementPhase {
     public void place(){
         this.gameBoard.insertTile(this.tile, this.location);
     }
-
 }

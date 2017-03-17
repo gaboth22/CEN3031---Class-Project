@@ -93,7 +93,7 @@ public class GameBoardTestDouble implements GameBoard {
     }
 
     public TerrainLocation getTerrainLocation(Terrain terrain) {
-        return new TerrainLocationTestDouble();
+        return new TerrainLocationTestDouble(0,0,0); //TODO: implement valid action here
     }
 
     public TileLocation getTileLocation(Tile tile) {
