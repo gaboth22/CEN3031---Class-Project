@@ -1,6 +1,7 @@
 package GameBoard;
 
-import Terrain.Terrain;
+import Piece.*;
+import Terrain.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,22 +12,31 @@ public class Settlement implements Iterable<Terrain> {
 
     public Settlement() {
         this.settlement = new LinkedList<Terrain>();
+        this.hasTotoro = false;
     }
 
     public void append(Terrain terrain) {
+        Piece piece = null;
+
+        try {
+            piece = terrain.getPiece();
+        }
+
+        catch (EmptyTerrainException e) {
+        }
+
+        if(piece instanceof Totoro)
+            this.hasTotoro = true;
+
         this.settlement.add(terrain);
     }
 
-    public void size() {
-        this.settlement.size();
+    public int size() {
+        return this.settlement.size();
     }
 
     public boolean hasTotoro() {
         return this.hasTotoro;
-    }
-
-    public void setTotoroAdded() {
-        this.hasTotoro = true;
     }
 
     public void clearTotoroAdded() {
