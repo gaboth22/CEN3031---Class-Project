@@ -8,13 +8,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import Terrain.*;
 
+import java.util.List;
+
 public class TileMapTest {
 
     TileMap testMap = new TileMap();
 
     Tile tileToInsert;
 
-    void givenThatYouHaveATileToInsertAtTheOrigin(){
+    private void givenThatYouHaveATileToInsertAtTheOrigin(){
         TerrainLocation volcanoLocation = new MapLocation(0,0,0);
         TerrainLocation leftTerrainLocation = volcanoLocation.up();
         TerrainLocation rightTerrainLocation = volcanoLocation.upLeft();
@@ -27,7 +29,7 @@ public class TileMapTest {
         tileToInsert = new Tile(volcano, leftTerrain, rightTerrain, dummyLocation, dummyOrientation);
     }
 
-    void whenYouPlaceTheTile() {
+    private void whenYouPlaceTheTile() {
         try{
             testMap.placeTile(tileToInsert);
         }
@@ -36,17 +38,20 @@ public class TileMapTest {
         }
     }
 
-    void thentheTileShouldBePlacedBePlacedAtTheOrigin() {
-        TerrainLocation origin = new MapLocation(0,0,0);
-        Tile tileAtGivenLocation = testMap.getTileAtLocation(origin);
-        Assert.assertEquals(tileAtGivenLocation, tileToInsert);
+    private void thenTheTilesLocationsShouldMapCorrectly() {
+        List<Terrain> terrains = tileToInsert.getListOfTerrains();
+        for(int i = 0; i < terrains.size(); i++) {
+            TerrainLocation currentLocation = terrains.get(i).getLocation();
+            Tile tileFromMapAtLocation = testMap.getTileAtLocation(currentLocation);
+            Assert.assertEquals(tileToInsert, tileFromMapAtLocation);
+        }
     }
 
     @Test
     public void testThatTheFirstTileIsPlacedAtTheOrigin() {
         givenThatYouHaveATileToInsertAtTheOrigin();
         whenYouPlaceTheTile();
-        thentheTileShouldBePlacedBePlacedAtTheOrigin();
+        thenTheTilesLocationsShouldMapCorrectly();
     }
 
     @Test
@@ -56,7 +61,7 @@ public class TileMapTest {
         thenYouShouldNotBeAbleToPlaceAnotherTileAtTheOrigin();
     }
 
-    void thenYouShouldNotBeAbleToPlaceAnotherTileAtTheOrigin(){
+    private void thenYouShouldNotBeAbleToPlaceAnotherTileAtTheOrigin(){
         try{
             testMap.placeTile(tileToInsert);
             Assert.fail();

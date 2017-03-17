@@ -124,4 +124,12 @@ public class MapLocationTest {
         whenIMoveBelow();
         thenIShouldArriveAt(0, 0, 0);
     }
+
+    @Test
+    public void EqualsIsSymmetricAndHashesAreEqual() {
+        MapLocation locationOne = new MapLocation(1,1,1);
+        MapLocation locationTwo = new MapLocation(1,1,1);
+        Assert.assertTrue(locationOne.equals(locationTwo) && locationTwo.equals(locationOne));
+        Assert.assertTrue(locationOne.hashCode() == locationTwo.hashCode());
+    }
 }
