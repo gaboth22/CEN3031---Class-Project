@@ -13,6 +13,8 @@ public interface GameBoard {
 
     void insertTile(Tile tile, TileLocation location);
 
+    void nukeTiles(Tile tile, TileLocation location);
+
     Tile getTile(TileLocation location);
 
     Settlement getSettlement(PlayerID ownerId, TerrainLocation location);
