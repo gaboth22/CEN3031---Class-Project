@@ -9,15 +9,16 @@ import java.util.List;
 
 public class TileMap {
     List<Tile> tilesOnBoard;
+    int numberOfTilesPlaced = 0;
     HashMap<TerrainLocation, Tile> board;
 
     public TileMap(){
         board = new HashMap<TerrainLocation, Tile>();
     }
 
-    public void placeTile(Tile tile) throws LocationOccupiedException {
-        throwExceptionIfLocationIsOccupied(tile);
-        placeTileOnBoard(tile);
+    public void placeTile(Tile tileToPlace) throws LocationOccupiedException {
+        throwExceptionIfLocationIsOccupied(tileToPlace);
+        placeTileOnBoard(tileToPlace);
     }
 
     private void throwExceptionIfLocationIsOccupied(Tile tile) throws LocationOccupiedException {
@@ -36,6 +37,7 @@ public class TileMap {
             Terrain currentTerrain = terrainsInTile.get(i);
             board.put(currentTerrain.getLocation(), tile);
         }
+        numberOfTilesPlaced++;
     }
 
     public Tile getTileAtLocation(TerrainLocation location){
