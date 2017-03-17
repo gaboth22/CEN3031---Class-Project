@@ -1,5 +1,6 @@
 package GameBoard;
 
+import Player.Player;
 import Player.PlayerID;
 import Terrain.Terrain;
 import Terrain.TerrainLocation;

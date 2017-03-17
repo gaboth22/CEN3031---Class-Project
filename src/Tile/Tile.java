@@ -2,6 +2,9 @@ package Tile;
 
 import Terrain.Terrain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tile {
     private Terrain volcano;
     private Terrain leftTerrain;
@@ -30,6 +33,20 @@ public class Tile {
 
     public int getLevel() {
         return this.level;
+    }
+
+    /*
+     * I believe that the Tile should return all Terrains through getListOfTerrains. This way, if the tile shape is ever changed
+     * only the implementation of getListOfTerrains and the constructor of Tile need to change. This 'abstracts' the implementation
+     * of Tile further
+     */
+    public List<Terrain> getListOfTerrains() {
+        List<Terrain> terrainsInTile = new ArrayList<Terrain>();
+        terrainsInTile.add(this.leftTerrain);
+        terrainsInTile.add(this.rightTerrain);
+        terrainsInTile.add(this.volcano);
+
+        return terrainsInTile;
     }
 
     public Terrain getLeftTerrain() {
