@@ -1,9 +1,15 @@
 package Terrain;
 
 public abstract class TerrainLocation {
-    int row;
-    int column;
-    int height;
+    private int row;
+    private int column;
+    private int height;
+
+    public TerrainLocation(int row, int column, int height) {
+        this.row = row;
+        this.column = column;
+        this.height = height;
+    }
 
     int getRow(){
         return this.row;

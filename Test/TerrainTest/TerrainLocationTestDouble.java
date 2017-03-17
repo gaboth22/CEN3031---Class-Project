@@ -8,9 +8,7 @@ public class TerrainLocationTestDouble extends TerrainLocation{
     private int height;
 
     public TerrainLocationTestDouble(int row, int column, int height) {
-        this.row = row;
-        this.column = column;
-        this.height = height;
+        super(row, column, height);
     }
 
     public void setRow(int row) {
