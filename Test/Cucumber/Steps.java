@@ -30,10 +30,12 @@ public class Steps{
         uut = new Tile(volcano, leftTerrain, rightTerrain, location, orientation);
     }
 
-    @Then("^there should be proper terrains$")
+    @Then("^there should be proper left terrain$")
     public void theLeftTerrainShouldBe() {
         Assert.assertEquals(leftTerrain, uut.getLeftTerrain());
     }
+
+    @Then("^there should be proper right terrain$")
     public void theRightTerrainShouldBe() {
         Assert.assertEquals(rightTerrain, uut.getRightTerrain());
     }
