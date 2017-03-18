@@ -24,10 +24,12 @@ public class Steps{
         location = new TileLocationTestDouble();
         orientation = new TileOrientationTestDouble();
     }
+
     @When("^a test is initialized")
     public void testTile() {
         uut = new Tile(volcano, leftTerrain, rightTerrain, location, orientation);
     }
+
     @Then("^there should be proper terrains$")
     public void theLeftTerrainShouldBe() {
         Assert.assertEquals(leftTerrain, uut.getLeftTerrain());
