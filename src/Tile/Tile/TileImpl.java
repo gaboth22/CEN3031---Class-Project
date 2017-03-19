@@ -3,7 +3,7 @@ package Tile.Tile;
 import Terrain.Terrain.Terrain;
 import Terrain.TerrainLocation.TerrainLocation;
 
-public class TimeImpl implements Tile {
+public class TileImpl implements Tile {
     @Override
     public Terrain[] getArrayOfTerrains() {
         return new Terrain[0];
