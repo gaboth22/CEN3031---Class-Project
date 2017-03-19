@@ -18,10 +18,7 @@ public class AxialMovementTest {
     }
 
     boolean terrainsAreEqual(TerrainLocation locationOne, TerrainLocation locationTwo) {
-        if (locationOne.getRow() != locationTwo.getRow()){
-            return false;
-        }
-        return locationOne.getCol() == locationTwo.getCol();
+        return locationOne.getRow() == locationTwo.getRow() && locationOne.getCol() == locationTwo.getCol();
     }
 
     @Test
