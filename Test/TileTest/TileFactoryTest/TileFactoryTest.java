@@ -65,6 +65,14 @@ public class TileFactoryTest {
     }
 
     @Test
+    public void firstTerrainShouldAlwaysBeTheVolcano() {
+        givenTheTileOrientationIs(TileOrientation.DOWN);
+        Tile tile = givenIMakeATile();
+        Terrain[] terrains = tile.getArrayOfTerrains();
+        Assert.assertTrue(Terrain.VOLCANO == terrains[0]);
+    }
+
+    @Test
     public void terrainsShouldShouldBeSetCorrectly() {
         givenTheTileOrientationIs(TileOrientation.UP);
         Tile tile = givenIMakeATile();

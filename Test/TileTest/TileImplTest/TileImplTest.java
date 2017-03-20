@@ -49,6 +49,12 @@ public class TileImplTest {
     }
 
     @Test
+    public void firstTerrainShouldAlwaysBeTheVolcano() {
+        Terrain[] terrains = tile.getArrayOfTerrains();
+        Assert.assertTrue(Terrain.VOLCANO == terrains[0]);
+    }
+
+    @Test
     public void itShouldBePossibleToGetTheTerrainsAsAnArray() {
         Terrain[] terrains = tile.getArrayOfTerrains();
         terrainsShouldNotBeNull(terrains);
