@@ -11,6 +11,7 @@ public class TerrainPosition {
     public TerrainPosition(TerrainLocation location, int height) {
         if(height < 0)
             throw new InvalidParameterException("TerrainPosition height can never be < 0, and it was set to: " + height);
+        
         this.location = location;
         this.height = height;
     }
