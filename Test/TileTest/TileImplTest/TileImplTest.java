@@ -1,6 +1,6 @@
 package TileTest.TileImplTest;
 
-import Terrain.TerrainLocation.TerrainLocation;
+import Location.Location;
 import Terrain.Terrain.Terrain;
 
 import java.security.InvalidParameterException;
@@ -15,16 +15,16 @@ import org.junit.Test;
 public class TileImplTest {
     Tile tile;
     List<Terrain> terrainList;
-    List<TerrainLocation> locationList;
+    List<Location> locationList;
 
     List<Terrain> givenIHaveAListOfTerrains(Terrain volcano, Terrain left, Terrain right) {
         return new ArrayList<>(Arrays.asList(volcano, left, right));
     }
 
 
-    List<TerrainLocation> givenIHaveAListOfTerrainLocations(TerrainLocation locOfVolcano,
-                                                            TerrainLocation locOfLeftTerrain,
-                                                            TerrainLocation locOfRightTerrain) {
+    List<Location> givenIHaveAListOfTerrainLocations(Location locOfVolcano,
+                                                     Location locOfLeftTerrain,
+                                                     Location locOfRightTerrain) {
         return new ArrayList<>(Arrays.asList(locOfVolcano, locOfLeftTerrain, locOfRightTerrain));
     }
 
@@ -39,9 +39,9 @@ public class TileImplTest {
     @Before
     public void initializeTile() {
         terrainList = givenIHaveAListOfTerrains(Terrain.VOLCANO, Terrain.GRASSLANDS, Terrain.ROCKY);
-        locationList = givenIHaveAListOfTerrainLocations(new TerrainLocation(0,0),
-                                                         new TerrainLocation(0, 1),
-                                                         new TerrainLocation(1, 0));
+        locationList = givenIHaveAListOfTerrainLocations(new Location(0,0),
+                                                         new Location(0, 1),
+                                                         new Location(1, 0));
         tile = new TileImpl(terrainList, locationList);
     }
 
@@ -51,7 +51,7 @@ public class TileImplTest {
         }
     }
 
-    public void locationsShouldNotBeNull(TerrainLocation[] locations) {
+    public void locationsShouldNotBeNull(Location[] locations) {
         for(int i = 0; i < locations.length; i++) {
             Assert.assertTrue(locations[i] != null);
         }
@@ -76,7 +76,7 @@ public class TileImplTest {
     }
 
     @Test public void itShouldBePossibleToGetTheLocationsAsAnArray() {
-        TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
+        Location[] locations = tile.getArrayOfTerrainLocations();
         locationsShouldNotBeNull(locations);
     }
 
@@ -91,7 +91,7 @@ public class TileImplTest {
 
     @Test
     public void locationArrayDataShouldBeTheSameThanThatOfTheLocationList() {
-        TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
+        Location[] locations = tile.getArrayOfTerrainLocations();
 
         for(int i = 0; i < locationList.size(); i++) {
             Assert.assertEquals(locationList.get(i), locations[i]);

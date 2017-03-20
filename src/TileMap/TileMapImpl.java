@@ -1,12 +1,12 @@
 package TileMap;
 
-import Terrain.TerrainPosition.TerrainPosition;
+import Position.Position;
 import Tile.Tile.Tile;
 
 import java.util.Map;
 
 public class TileMapImpl implements TileMap {
-    private Map<TerrainPosition, Tile> mapOfTiles;
+    private Map<Position, Tile> mapOfTiles;
 
     @Override
     public void insertTile(Tile tile) throws LocationOccupiedException {

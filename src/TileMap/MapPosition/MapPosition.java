@@ -1,16 +1,15 @@
 package TileMap.MapPosition;
 
-import Terrain.TerrainPosition.TerrainPosition;
-import TileMap.TileMap;
+import Position.Position;
 
 public class MapPosition {
     private int row;
     private int col;
     private int height;
 
-    public MapPosition(TerrainPosition position) {
-        row = position.getRow();
-        col = position.getCol();
+    public MapPosition(Position position) {
+        row = position.getX();
+        col = position.getY();
         height = position.getHeight();
     }
 
@@ -26,9 +25,9 @@ public class MapPosition {
         return height;
     }
 
-    public void resetPosition(TerrainPosition newPosition) {
-        row = newPosition.getRow();
-        col = newPosition.getCol();
+    public void resetPosition(Position newPosition) {
+        row = newPosition.getX();
+        col = newPosition.getY();
         height = newPosition.getHeight();
     }
 }

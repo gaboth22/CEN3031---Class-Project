@@ -1,10 +1,10 @@
 package Tile.Tile;
 
-import Terrain.TerrainLocation.TerrainLocation;
+import Location.Location;
 import Terrain.Terrain.Terrain;
 
 public interface Tile {
-    TerrainLocation[] getArrayOfTerrainLocations();
+    Location[] getArrayOfTerrainLocations();
 
     Terrain[] getArrayOfTerrains();
 }
