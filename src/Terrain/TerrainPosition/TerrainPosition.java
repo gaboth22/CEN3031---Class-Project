@@ -1,7 +1,6 @@
 package Terrain.TerrainPosition;
 
 import Terrain.TerrainLocation.TerrainLocation;
-
 import java.security.InvalidParameterException;
 
 public class TerrainPosition {
@@ -17,11 +16,11 @@ public class TerrainPosition {
     }
 
     public int getRow() {
-        return location.getRow();
+        return location.getX();
     }
 
     public int getCol() {
-        return location.getCol();
+        return location.getY();
     }
 
     public int getHeight() {

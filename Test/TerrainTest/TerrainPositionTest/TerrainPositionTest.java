@@ -48,7 +48,7 @@ public class TerrainPositionTest {
         givenIHaveATerrainLocationWithRowAndCol(3, 4);
         givenTheHeightIsSetTo(1);
         whenThePositionIsInitialized();
-        thePositionRowShouldBe(location.getRow());
+        thePositionRowShouldBe(location.getX());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class TerrainPositionTest {
         givenIHaveATerrainLocationWithRowAndCol(0, 1);
         givenTheHeightIsSetTo(1);
         whenThePositionIsInitialized();
-        thePositionColumnShouldBe(location.getCol());
+        thePositionColumnShouldBe(location.getY());
     }
 
     @Test

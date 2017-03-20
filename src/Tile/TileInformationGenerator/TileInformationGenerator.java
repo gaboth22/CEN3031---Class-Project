@@ -1,7 +1,6 @@
 package Tile.TileInformationGenerator;
 
 import Terrain.Terrain.Terrain;
-import Tile.TileOrientation.TileOrientation;
 
 /*
  * The convention is that getRow() and getCol() will
@@ -16,6 +15,5 @@ public interface TileInformationGenerator {
 
     int getRow();
     int getCol();
-    TileOrientation getOrientation();
     Terrain[] getTerrains();
 }
