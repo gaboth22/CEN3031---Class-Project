@@ -1,19 +1,19 @@
 package Terrain.TerrainLocation;
 
 public class TerrainLocation {
-    private int row;
-    private int col;
+    private int y;
+    private int x;
 
-    public TerrainLocation(int row, int col) {
-        this.row = row;
-        this.col = col;
+    public TerrainLocation(int x, int y) {
+        this.y = y;
+        this.x = x;
     }
 
-    public int getRow() {
-        return this.row;
+    public int getY() {
+        return this.y;
     }
 
-    public int getCol() {
-        return this.col;
+    public int getX() {
+        return this.x;
     }
 }

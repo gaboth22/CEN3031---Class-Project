@@ -10,5 +10,4 @@ public interface TerrainMovement {
     TerrainLocation down(TerrainLocation loc);
     TerrainLocation downLeft(TerrainLocation loc);
     TerrainLocation upLeft(TerrainLocation loc);
-
 }
