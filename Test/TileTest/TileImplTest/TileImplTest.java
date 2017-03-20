@@ -3,6 +3,7 @@ package TileTest.TileImplTest;
 import Terrain.TerrainLocation.TerrainLocation;
 import Terrain.Terrain.Terrain;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,14 @@ public class TileImplTest {
         return new ArrayList<>(Arrays.asList(locOfVolcano, locOfLeftTerrain, locOfRightTerrain));
     }
 
+    public void givenTheTerrainListDoesNotHaveTheVolcanoAsTheFirstTerrain() {
+        terrainList = givenIHaveAListOfTerrains(Terrain.GRASSLANDS, Terrain.VOLCANO, Terrain.ROCKY);
+    }
+
+    public void whenTheTileIsInitialized() {
+        tile = new TileImpl(terrainList, locationList);
+    }
+
     @Before
     public void initializeTile() {
         terrainList = givenIHaveAListOfTerrains(Terrain.VOLCANO, Terrain.GRASSLANDS, Terrain.ROCKY);
@@ -46,6 +55,12 @@ public class TileImplTest {
         for(int i = 0; i < locations.length; i++) {
             Assert.assertTrue(locations[i] != null);
         }
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public void firstTerrainMustBeTheVolcano() {
+        givenTheTerrainListDoesNotHaveTheVolcanoAsTheFirstTerrain();
+        whenTheTileIsInitialized();
     }
 
     @Test

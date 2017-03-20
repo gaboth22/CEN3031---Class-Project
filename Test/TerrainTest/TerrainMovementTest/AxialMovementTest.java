@@ -1,4 +1,4 @@
-package TerrainTest;
+package TerrainTest.TerrainMovementTest;
 
 import Terrain.TerrainLocation.TerrainLocation;
 import Terrain.TerrainMovement.AxialMovement;

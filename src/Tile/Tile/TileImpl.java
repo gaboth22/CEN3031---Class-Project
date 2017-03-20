@@ -2,6 +2,8 @@ package Tile.Tile;
 
 import Terrain.Terrain.Terrain;
 import Terrain.TerrainLocation.TerrainLocation;
+
+import java.security.InvalidParameterException;
 import java.util.List;
 
 public class TileImpl implements Tile {
@@ -9,6 +11,9 @@ public class TileImpl implements Tile {
     private List<TerrainLocation> volcanoLeftRightLocations;
 
     public TileImpl(List<Terrain> terrainList, List<TerrainLocation> terrainLocationList) {
+        if(terrainList.get(0) != Terrain.VOLCANO)
+            throw new InvalidParameterException("The first terrain should always" +
+                                                "be the volcano, but it is: " + terrainList.get(0));
         volcanoLeftRightTerrains = terrainList;
         volcanoLeftRightLocations = terrainLocationList;
     }
