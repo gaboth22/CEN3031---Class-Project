@@ -60,7 +60,7 @@ public class TileImplTest {
     }
 
     @Test
-    public void terrainArrayDataShouldBeTheSameThanThatOfTheTerrainList() {
+    public void terrainArrayDataShouldBeTheSameAsThatOfTheTerrainList() {
         Terrain[] terrains = tile.getArrayOfTerrains();
 
         for(int i = 0; i < terrainList.size(); i++) {

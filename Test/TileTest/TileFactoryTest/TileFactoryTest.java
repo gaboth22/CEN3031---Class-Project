@@ -58,8 +58,22 @@ public class TileFactoryTest {
         return factory.makeTile(tileInformationGenerator);
     }
 
+    public void terrainsShouldBe(Terrain expected1, Terrain expected2, Terrain expected3, Terrain[] actualTerrains) {
+        Assert.assertEquals(expected1, actualTerrains[0]);
+        Assert.assertEquals(expected2, actualTerrains[1]);
+        Assert.assertEquals(expected3, actualTerrains[2]);
+    }
+
     @Test
-    public void LeftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsDown() {
+    public void terrainsShouldShouldBeSetCorrectly() {
+        givenTheTileOrientationIs(TileOrientation.UP);
+        Tile tile = givenIMakeATile();
+        Terrain[] terrains = tile.getArrayOfTerrains();
+        terrainsShouldBe(Terrain.VOLCANO, Terrain.ROCKY, Terrain.JUNGLE, terrains);
+    }
+
+    @Test
+    public void leftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsDown() {
         givenTheTileOrientationIs(TileOrientation.DOWN);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
@@ -67,7 +81,7 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void RightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsDown() {
+    public void rightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsDown() {
         givenTheTileOrientationIs(TileOrientation.DOWN);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
@@ -75,7 +89,7 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void LeftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsRight() {
+    public void leftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsRight() {
         givenTheTileOrientationIs(TileOrientation.RIGHT);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
@@ -83,7 +97,7 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void RightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsRight() {
+    public void rightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsRight() {
         givenTheTileOrientationIs(TileOrientation.RIGHT);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
@@ -91,7 +105,7 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void LeftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsUp() {
+    public void leftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsUp() {
         givenTheTileOrientationIs(TileOrientation.UP);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
@@ -99,7 +113,7 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void RightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsUp() {
+    public void rightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsUp() {
         givenTheTileOrientationIs(TileOrientation.UP);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
@@ -107,7 +121,7 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void LeftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsLeft() {
+    public void leftTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsLeft() {
         givenTheTileOrientationIs(TileOrientation.LEFT);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
@@ -115,7 +129,7 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void RightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsLeft() {
+    public void rightTerrainLocationInGeneratedTileShouldBeCorrectWhenOrientationIsLeft() {
         givenTheTileOrientationIs(TileOrientation.LEFT);
         Tile tile = givenIMakeATile();
         TerrainLocation[] locations = tile.getArrayOfTerrainLocations();
