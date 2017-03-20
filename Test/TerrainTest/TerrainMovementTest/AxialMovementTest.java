@@ -18,7 +18,7 @@ public class AxialMovementTest {
     }
 
     boolean terrainsAreEqual(TerrainLocation locationOne, TerrainLocation locationTwo) {
-        return locationOne.getRow() == locationTwo.getRow() && locationOne.getCol() == locationTwo.getCol();
+        return locationOne.getY() == locationTwo.getY() && locationOne.getX() == locationTwo.getX();
     }
 
     @Test
@@ -33,19 +33,19 @@ public class AxialMovementTest {
     }
 
     void givenIHaveALocation(int row, int column) {
-        currentLocation = new TerrainLocation(row, column);
+        currentLocation = new TerrainLocation(column, row);
     }
 
     void andIHaveAnotherLocation(int row, int column) {
-        expectedLocation = new TerrainLocation(row, column);
+        expectedLocation = new TerrainLocation(column, row);
     }
 
     void givenIAmAtLocation(int row, int column){
-        currentLocation = new TerrainLocation(row, column);
+        currentLocation = new TerrainLocation(column, row);
     }
 
     void thenIShouldArriveAt(int row, int column){
-        expectedLocation = new TerrainLocation(row, column);
+        expectedLocation = new TerrainLocation(column, row);
         Assert.assertTrue(terrainsAreEqual(currentLocation, expectedLocation));
     }
 
