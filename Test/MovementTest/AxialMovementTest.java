@@ -1,23 +1,23 @@
-package TerrainTest.TerrainMovementTest;
+package MovementTest;
 
-import Terrain.TerrainLocation.TerrainLocation;
-import Terrain.TerrainMovement.AxialMovement;
-import Terrain.TerrainMovement.TerrainMovement;
+import Location.Location;
+import Movement.AxialMovement;
+import Movement.Movement;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AxialMovementTest {
-    TerrainLocation currentLocation;
-    TerrainLocation expectedLocation;
-    static TerrainMovement coordinateSystem;
+    Location currentLocation;
+    Location expectedLocation;
+    static Movement coordinateSystem;
 
     @BeforeClass
     public static void initializeCoordinateSystemAsAxial(){
         coordinateSystem = new AxialMovement();
     }
 
-    boolean terrainsAreEqual(TerrainLocation locationOne, TerrainLocation locationTwo) {
+    boolean terrainsAreEqual(Location locationOne, Location locationTwo) {
         return locationOne.getY() == locationTwo.getY() && locationOne.getX() == locationTwo.getX();
     }
 
@@ -32,20 +32,20 @@ public class AxialMovementTest {
         Assert.assertFalse(terrainsAreEqual(expectedLocation, currentLocation));
     }
 
-    void givenIHaveALocation(int row, int column) {
-        currentLocation = new TerrainLocation(column, row);
+    void givenIHaveALocation(int x, int y) {
+        currentLocation = new Location(x, y);
     }
 
-    void andIHaveAnotherLocation(int row, int column) {
-        expectedLocation = new TerrainLocation(column, row);
+    void andIHaveAnotherLocation(int x, int y) {
+        expectedLocation = new Location(x, y);
     }
 
-    void givenIAmAtLocation(int row, int column){
-        currentLocation = new TerrainLocation(column, row);
+    void givenIAmAtLocation(int x, int y){
+        currentLocation = new Location(x, y);
     }
 
-    void thenIShouldArriveAt(int row, int column){
-        expectedLocation = new TerrainLocation(column, row);
+    void thenIShouldArriveAt(int x, int y){
+        expectedLocation = new Location(x, y);
         Assert.assertTrue(terrainsAreEqual(currentLocation, expectedLocation));
     }
 
@@ -53,7 +53,7 @@ public class AxialMovementTest {
     public void MovingUpwards() {
         givenIAmAtLocation(5, 4);
         whenIMoveUp();
-        thenIShouldArriveAt(6, 4);
+        thenIShouldArriveAt(5, 5);
     }
 
     void whenIMoveUp(){
@@ -64,7 +64,7 @@ public class AxialMovementTest {
     public void MovingUpRight() {
         givenIAmAtLocation(2, 2);
         whenIMoveUpRight();
-        thenIShouldArriveAt(2, 3);
+        thenIShouldArriveAt(3, 2);
     }
 
     void whenIMoveUpRight() {
@@ -75,7 +75,7 @@ public class AxialMovementTest {
     public void MovingDownRight() {
         givenIAmAtLocation(3, 5);
         whenIMoveDownRight();
-        thenIShouldArriveAt(2, 6);
+        thenIShouldArriveAt(4, 4);
     }
 
     void whenIMoveDownRight() {
@@ -86,7 +86,7 @@ public class AxialMovementTest {
     public void MovingDown() {
         givenIAmAtLocation(2, 3);
         whenIMoveDown();
-        thenIShouldArriveAt(1, 3);
+        thenIShouldArriveAt(2, 2);
     }
 
     void whenIMoveDown() {
@@ -97,7 +97,7 @@ public class AxialMovementTest {
     public void MovingDownLeft() {
         givenIAmAtLocation(0, 0);
         whenIMoveDownLeft();
-        thenIShouldArriveAt(0, -1);
+        thenIShouldArriveAt(-1, 0);
     }
 
     void whenIMoveDownLeft() {
@@ -108,7 +108,7 @@ public class AxialMovementTest {
     public void MovingUpLeft() {
         givenIAmAtLocation(0, 0);
         whenIMoveUpLeft();
-        thenIShouldArriveAt(1, -1);
+        thenIShouldArriveAt(-1, 1);
     }
 
     void whenIMoveUpLeft() {

@@ -1,10 +1,10 @@
-package Terrain.TerrainLocation;
+package Location;
 
-public class TerrainLocation {
+public class Location {
     private int y;
     private int x;
 
-    public TerrainLocation(int x, int y) {
+    public Location(int x, int y) {
         this.y = y;
         this.x = x;
     }

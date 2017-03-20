@@ -1,11 +1,11 @@
 package TileMap;
 
-import Terrain.TerrainLocation.TerrainLocation;
+import Location.Location;
 import Terrain.Terrain.Terrain;
 
 public class Hexagon {
     private int parentTileID;
-    private TerrainLocation location;
+    private Location location;
     private int height;
     private Terrain terrain;
 
@@ -13,7 +13,7 @@ public class Hexagon {
         return parentTileID;
     }
 
-    public TerrainLocation getTerrainLocation() {
+    public Location getTerrainLocation() {
         return location;
     }
 

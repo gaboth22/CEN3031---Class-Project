@@ -1,19 +1,19 @@
-package TerrainTest.TerrainPositionTest;
+package PositionTest;
 
-import Terrain.TerrainLocation.TerrainLocation;
-import Terrain.TerrainPosition.TerrainPosition;
+import Location.Location;
+import Position.Position;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
 
-public class TerrainPositionTest {
-    TerrainPosition position;
-    TerrainLocation location;
+public class PositionTest {
+    Position position;
+    Location location;
     int height;
 
-    public void givenIHaveATerrainLocationWithRowAndCol(int row, int col) {
-        location = new TerrainLocation(row, col);
+    public void givenIHaveATerrainLocationWithRowAndCol(int x, int y) {
+        location = new Location(x, y);
     }
 
     public void givenTheHeightIsSetTo(int height) {
@@ -21,15 +21,15 @@ public class TerrainPositionTest {
     }
 
     public void whenThePositionIsInitialized() {
-        position = new TerrainPosition(location, height);
+        position = new Position(location, height);
     }
 
-    public void thePositionRowShouldBe(int expectedRow) {
-        Assert.assertEquals(expectedRow, position.getRow());
+    public void thePositionXShouldBe(int expectedX) {
+        Assert.assertEquals(expectedX, position.getX());
     }
 
-    public void thePositionColumnShouldBe(int expectedCol) {
-        Assert.assertEquals(expectedCol, position.getCol());
+    public void thePositionYShouldBe(int expectedY) {
+        Assert.assertEquals(expectedY, position.getY());
     }
 
     public void thePositionHeightShouldBe(int expectedHeight) {
@@ -44,19 +44,19 @@ public class TerrainPositionTest {
     }
 
     @Test
-    public void theRowShouldBeThatOfTheLocation() {
+    public void xShouldBeThatOfTheLocation() {
         givenIHaveATerrainLocationWithRowAndCol(3, 4);
         givenTheHeightIsSetTo(1);
         whenThePositionIsInitialized();
-        thePositionRowShouldBe(location.getX());
+        thePositionXShouldBe(location.getX());
     }
 
     @Test
-    public void theColumnShouldBeThatOfTheLocation() {
+    public void yShouldBeThatOfTheLocation() {
         givenIHaveATerrainLocationWithRowAndCol(0, 1);
         givenTheHeightIsSetTo(1);
         whenThePositionIsInitialized();
-        thePositionColumnShouldBe(location.getY());
+        thePositionYShouldBe(location.getY());
     }
 
     @Test
