@@ -4,5 +4,6 @@ public enum Terrain {
     JUNGLE,
     LAKE,
     GRASSLANDS,
-    ROCKY
+    ROCKY,
+    VOLCANO
 }
