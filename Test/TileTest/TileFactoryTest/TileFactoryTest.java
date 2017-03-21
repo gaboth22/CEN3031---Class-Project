@@ -45,18 +45,13 @@ public class TileFactoryTest {
     }
 
     @Test
-    public void theTerrainsShouldBeThoseFromTheFactory() throws ImpossibleTileException {
+    public void theTileTerrainsShouldBeThoseFromTheFactory() throws ImpossibleTileException {
         Tile tile = factory.makeTile(informationGenerator);
         Terrain[] terrains = tile.getArrayOfTerrains();
 
         for(int i = 0; i < terrains.length; i++) {
             Assert.assertEquals(informationGenerator.getTerrains()[i], terrains[i]);
         }
-    }
-
-    @Test
-    public void theTileTerrainsShouldBeThoseFromTheFactory() {
-
     }
 
     @Test(expected = InvalidParameterException.class)
