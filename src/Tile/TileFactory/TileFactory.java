@@ -74,7 +74,7 @@ public class TileFactory {
             for(int j = 0; j < locations.size(); j++) {
                 if(locations.get(i) != locations.get(j)) {
                     if(areEqual(locations.get(i), locations.get(j))) {
-                        throw new ImpossibleTileException("Tw0 locations cannot be the same on a Tile");
+                        throw new ImpossibleTileException("Two locations cannot be the same on a Tile");
                     }
                 }
             }
