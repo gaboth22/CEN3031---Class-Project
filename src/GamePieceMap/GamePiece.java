@@ -1,5 +1,7 @@
 package GamePieceMap;
 
+import Player.PlayerID;
+
 public class GamePiece {
     private PlayerID player;
     private TypeOfPiece pieceType;

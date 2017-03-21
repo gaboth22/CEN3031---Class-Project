@@ -2,7 +2,7 @@ package GamePieceMap;
 
 import java.util.HashMap;
 import Location.Location;
-
+import Player.PlayerID;
 
 public class GamePieceMap {
 
@@ -12,7 +12,7 @@ public class GamePieceMap {
         mapContainingPiecesAtLocations = new HashMap<Location, GamePiece>();
     }
 
-    private boolean isThereAPieceAt(Location location){
+    public boolean isThereAPieceAt(Location location){
         return mapContainingPiecesAtLocations.containsKey(location);
     }
 
@@ -28,12 +28,12 @@ public class GamePieceMap {
             mapContainingPiecesAtLocations.remove(location);
     }
 
-    public TypeOfPiece getPieceAtLocation(Location location){
+    public TypeOfPiece getPieceTypeAtLocation(Location location){
         GamePiece gamePiece = mapContainingPiecesAtLocations.get(location);
         return gamePiece.getPieceType();
     }
 
-    public PlayerID getPlayerAtLocation(Location location){
+    public PlayerID getPieceOwnerIdAtLocation(Location location){
         GamePiece gamePiece = mapContainingPiecesAtLocations.get(location);
         return gamePiece.getPlayer();
     }
