@@ -26,4 +26,22 @@ public class Position {
     public int getHeight() {
         return height;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Position position = (Position) o;
+
+        if (height != position.height) return false;
+        return location != null ? location.equals(position.location) : position.location == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = location != null ? location.hashCode() : 0;
+        result = 31 * result + height;
+        return result;
+    }
 }

@@ -9,6 +9,13 @@ public class Hexagon {
     private int height;
     private Terrain terrain;
 
+    public Hexagon(int tileID, Location loc, int height, Terrain terr) {
+        this.parentTileID = tileID;
+        this.location = loc;
+        this.height = height;
+        this.terrain = terr;
+    }
+
     public int getParentTileID() {
         return parentTileID;
     }

@@ -16,4 +16,22 @@ public class Location {
     public int getX() {
         return this.x;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Location location = (Location) o;
+
+        if (y != location.y) return false;
+        return x == location.x;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = y;
+        result = 31 * result + x;
+        return result;
+    }
 }
