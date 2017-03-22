@@ -13,6 +13,7 @@ import java.util.Map;
 public class HexagonMap implements TileMap {
 
     private int numberOfTilesInMap;
+    private int currentTileID;
 
     private Map<Position, Integer> mapOfTiles;
     private Map<Position, Terrain> mapOfTerrains;
@@ -20,73 +21,22 @@ public class HexagonMap implements TileMap {
 
     public HexagonMap() {
         numberOfTilesInMap = 0;
+        currentTileID = 0;
         mapOfHeights = new HashMap();
         mapOfTerrains = new HashMap();
         mapOfTiles = new HashMap();
     }
 
-    @Override
-    public void insertTile(Tile tile) throws LocationOccupiedException, InvalidTileLocationException {
-        throwErrorIfPlacementInvalid(tile);
-
-    }
-
-    private void throwErrorIfPlacementInvalid(Tile tile) throws LocationOccupiedException, InvalidTileLocationException {
-        if(numberOfTilesInMap == 0){
-            mustBeVolcanoAtOrigin(tile);
-        }
-        checkHexagonsWillBePlacedOnTheSameLevel(tile);
-    }
-
-    /*
-     * Guarantee that the first tile placed will be placed at the origin
-     */
-    private boolean mustBeVolcanoAtOrigin(Tile tile) throws InvalidTileLocationException {
-        Location[] locations = tile.getArrayOfTerrainLocations();
-        Terrain[] terrains = tile.getArrayOfTerrains();
-        boolean found = false;
-        for(int i = 0; i < locations.length; i++) {
-            if(locations[i].getX() == 0 && locations[i].getY() == 0 && terrains[i] == Terrain.VOLCANO) {
-                found = true;
-            }
-        }
-
-        if (found == false) {
-            throw new InvalidTileLocationException("The first tile must be placed with a volcano at the origin.");
-        }
-    }
-
-    /*
-     * Guarantee that a placed tile will have all of its locations on the same level
-     */
-    private boolean checkHexagonsWillBePlacedOnTheSameLevel(Tile tile) {
-        Location[] locations = tile.getArrayOfTerrainLocations();
-        List<Hexagon> hexagons = getListOfHexagons(locations);
-
-    }
-
-    private List<Hexagon> getListOfHexagons(Location[] locations) {
-        List<Hexagon> listOfHexagons = new ArrayList<Hexagon>();
-        for(int i = 0; i < locations.length; i++) {
-            Hexagon toAddToList = this.getHexagonAt(locations[i]);
-            listOfHexagons.add(toAddToList);
-        }
-        return listOfHexagons;
-    }
-
-    private boolean theLocationsAreAtTheSameHeight(List<Hexagon> hexagons) {
-        return true;
-    }
-
-    public List<Hexagon> getAllHexagons() {
-        List<Hexagon> allTopLevelHexagons = new ArrayList();
-
-        return allTopLevelHexagons;
-    }
-
     /*
      * Get the hexagon at the top of a location; returns null if there is no hexagon at that location
      */
+    public boolean hasHexagonAt(Location location) {
+        if(mapOfHeights.containsKey(location)) {
+            return true;
+        }
+        return false;
+    }
+
     public Hexagon getHexagonAt(Location location) {
         if(numberOfTilesInMap == 0){
             //TODO: Implement some sort of error here?
@@ -99,11 +49,105 @@ public class HexagonMap implements TileMap {
         return new Hexagon(tileID, location, height, terrain);
     }
 
-    public boolean hasHexagonAt(Location location) {
-        if(mapOfHeights.containsKey(location)) {
-            return true;
+    @Override
+    public void insertTile(Tile tileToPlace) throws LocationOccupiedException, InvalidTileLocationException {
+        throwErrorIfPlacementInvalid(tileToPlace);
+        placeTileIntoMaps(tileToPlace);
+    }
+
+    private void placeTileIntoMaps(Tile tile) {
+        Location[] locations = tile.getArrayOfTerrainLocations();
+        Terrain[] terrains = tile.getArrayOfTerrains();
+        for(int i = 0; i < locations.length; i++) {
+            placeHexagon(locations[i], terrains[i]);
         }
-        return false;
+        numberOfTilesInMap++;
+        currentTileID++;
+    }
+
+    private void placeHexagon(Location location, Terrain terrain) {
+        int height = mapOfHeights.get(location) != null ? mapOfHeights.get(location) + 1 : 1;
+        mapOfHeights.put(location, height);
+        Position position = new Position(location, height);
+        mapOfTiles.put(position, currentTileID);
+        mapOfTerrains.put(position, terrain);
+    }
+
+    private void throwErrorIfPlacementInvalid(Tile tile) throws LocationOccupiedException, InvalidTileLocationException {
+        if(numberOfTilesInMap == 0){
+            mustBeVolcanoAtOrigin(tile);
+        }
+        checkHexagonsWillBePlacedOnTheSameLevel(tile);
+    }
+
+    /*
+     * Guarantee that the first tile placed will be placed at the origin
+     */
+    private void mustBeVolcanoAtOrigin(Tile tile) throws InvalidTileLocationException {
+        Location[] locations = tile.getArrayOfTerrainLocations();
+        Terrain[] terrains = tile.getArrayOfTerrains();
+        boolean found = false;
+        for(int i = 0; i < locations.length; i++) {
+            if(locations[i].getX() == 0 && locations[i].getY() == 0 && terrains[i] == Terrain.VOLCANO) {
+                found = true;
+            }
+        }
+
+        if (found == false) {
+            throw new InvalidTileLocationException("The first tile placed in the map must have its volcano at the origin.");
+        }
+    }
+
+    /*
+     * Guarantee that a placed tile will have all of its locations on the same level
+     */
+    private void checkHexagonsWillBePlacedOnTheSameLevel(Tile tile) throws LocationOccupiedException{
+        Location[] locations = tile.getArrayOfTerrainLocations();
+        List<Hexagon> hexagons = getListOfHexagons(locations);
+        if(!theLocationsAreAtTheSameHeight(hexagons)){
+            throw new LocationOccupiedException("The tile must be placed such that all hexagons below it are of the same level");
+        }
+    }
+
+    private List<Hexagon> getListOfHexagons(Location[] locations) {
+        List<Hexagon> listOfHexagons = new ArrayList<Hexagon>();
+        for(int i = 0; i < locations.length; i++) {
+            Hexagon toAddToList = this.getHexagonAt(locations[i]);
+            listOfHexagons.add(toAddToList);
+        }
+        return listOfHexagons;
+    }
+
+    private boolean theLocationsAreAtTheSameHeight(List<Hexagon> hexagons) {
+        List<Integer> listOfHeights = getHeights(hexagons);
+        int height;
+        for(int i = 0; i < listOfHeights.size(); i++) {
+            height = listOfHeights.get(i);
+            if(listOfHeights.get(i) != height) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<Integer> getHeights(List<Hexagon> hexagons) {
+        List<Integer> listOfHeights = new ArrayList();
+        for(int i = 0; i < hexagons.size(); i++) {
+            if(hexagons.get(i) != null) {
+                listOfHeights.add(hexagons.get(i).getHeight());
+            }
+            else {
+                final int NULL_HEIGHT = -1;
+                listOfHeights.add(NULL_HEIGHT);
+            }
+        }
+        return listOfHeights;
+    }
+
+    public Map<Location, Hexagon> getAllHexagons() {
+        Map<Location, Hexagon> allTopLevelHexagons = new HashMap();
+
+        return allTopLevelHexagons;
     }
 
 }

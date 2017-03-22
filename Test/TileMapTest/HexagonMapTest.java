@@ -8,7 +8,6 @@ import TileMap.Hexagon;
 import TileMap.HexagonMap;
 import TileMap.InvalidTileLocationException;
 import TileMap.LocationOccupiedException;
-import com.sun.org.apache.bcel.internal.generic.MONITORENTER;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +15,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import Movement.Movement;
 import Movement.AxialMovement;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 
 public class HexagonMapTest {
 
@@ -49,9 +49,14 @@ public class HexagonMapTest {
     }
 
     @Test
-    public void getAllHexagonsShouldReturnAnEmptyListIfHashMapIsEmpty() {
-        List<Hexagon> values = hexMap.getAllHexagons();
+    public void getAllHexagonsShouldReturnAnEmptyMapsIfHashMapIsEmpty() {
+        Map<Location, Hexagon> values = hexMap.getAllHexagons();
         Assert.assertEquals(0, values.size());
+    }
+
+    @Test
+    public void getAllHexagonsShouldReturnAValidList() {
+        givenIHaveAListOf
     }
 
     @Test(expected = InvalidTileLocationException.class)
@@ -87,7 +92,37 @@ public class HexagonMapTest {
     }
 
     @Test
+    public void whenThereIsAPieceAtALocationThatPieceShouldReturn() throws InvalidTileLocationException, LocationOccupiedException{
+        givenIHaveATileToPlaceWithVolcanoAt(0,0);
+        whenYouInsertATile();
+        thenIShouldGetAValidHexagonAtTheTilesThreeLocations();
+    }
+
+    void thenIShouldGetAValidHexagonAtTheTilesThreeLocations() {
+        Location[] locations = toPlace.getArrayOfTerrainLocations();
+        Terrain[] terrains = toPlace.getArrayOfTerrains();
+        for(int i = 0; i < locations.length; i++) {
+            Hexagon current = hexMap.getHexagonAt(locations[i]);
+            Assert.assertEquals(terrains[i], current.getTerrain());
+            Assert.assertEquals(1, current.getHeight());
+            Assert.assertEquals(locations[i],current.getTerrainLocation());
+            Assert.assertEquals(0, current.getParentTileID());
+        }
+    }
+
+    @Test
     public void returnFalseWhenNoPieceAtALocation() {
         Assert.assertFalse(hexMap.hasHexagonAt(new Location(5,3)));
+    }
+
+    @Test
+    public void returnTrueWhenAPieceAtALocation() throws InvalidTileLocationException, LocationOccupiedException{
+        givenIHaveATileToPlaceWithVolcanoAt(0,0);
+        whenYouInsertATile();
+        thenThereShouldBeAPieceAtTheOrigin();
+    }
+
+    void thenThereShouldBeAPieceAtTheOrigin() {
+        Assert.assertTrue(hexMap.hasHexagonAt(new Location(0,0)));
     }
 }
