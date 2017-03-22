@@ -9,11 +9,13 @@ import java.util.List;
 public class TileImpl implements Tile {
     private List<Terrain> volcanoLeftRightTerrains;
     private List<Location> volcanoLeftRightLocations;
+    private String errorMessage = "The first terrain should always be the volcano, but it is: ";
 
     public TileImpl(List<Terrain> terrainList, List<Location> locationList) {
-        if(terrainList.get(0) != Terrain.VOLCANO)
-            throw new InvalidParameterException("The first terrain should always" +
-                                                "be the volcano, but it is: " + terrainList.get(0));
+        if(terrainList.get(0) != Terrain.VOLCANO) {
+            throw new InvalidParameterException(errorMessage + terrainList.get(0));
+        }
+
         volcanoLeftRightTerrains = terrainList;
         volcanoLeftRightLocations = locationList;
     }
@@ -22,7 +24,7 @@ public class TileImpl implements Tile {
     public Terrain[] getArrayOfTerrains() {
         Terrain[] terrainArray = new Terrain[volcanoLeftRightTerrains.size()];
         terrainArray = volcanoLeftRightTerrains.toArray(terrainArray);
-        return  terrainArray;
+        return terrainArray;
     }
 
     @Override

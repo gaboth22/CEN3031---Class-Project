@@ -1,5 +1,6 @@
 package Tile.TileInformationGenerator;
 
+import Location.Location;
 import Terrain.Terrain.Terrain;
 
 /*
@@ -13,7 +14,6 @@ import Terrain.Terrain.Terrain;
  */
 public interface TileInformationGenerator {
 
-    int getRow();
-    int getCol();
+    Location[] getLocations();
     Terrain[] getTerrains();
 }
