@@ -55,11 +55,16 @@ public class HexagonMapTest {
         Assert.assertEquals(0, values.size());
     }
 
+    /*
+     * A manual test that checks the locations that would be in the Map returned by getAllHexagons().
+     * The methods in this test should not be changed without changing the other two methods.
+     * The coordinate system can, however, change. These tests would not be affected.
+     */
     @Test
     public void getAllHexagonsShouldReturnAValidMap() throws InvalidTileLocationException, LocationOccupiedException {
         givenIHaveAListOfValidTilesToAdd();
-        whenIInsertATile();
-
+        whenIInsertTheTile();
+        thenTheHexagonsICanSeeShouldBeValid();
     }
 
     void givenIHaveAListOfValidTilesToAdd() {
@@ -86,13 +91,13 @@ public class HexagonMapTest {
         tilesToPlace.add(new TileImpl(terrains, locations));
     }
 
-    void whenIInsertATile() throws InvalidTileLocationException, LocationOccupiedException {
+    void whenIInsertTheTile() throws InvalidTileLocationException, LocationOccupiedException {
         for(int i = 0; i < tilesToPlace.size(); i++) {
             hexMap.insertTile(tilesToPlace.get(i));
         }
     }
 
-    void thenTheHexagonsICanSeeShouldBeValid(List<Tile> tiles) {
+    void thenTheHexagonsICanSeeShouldBeValid() {
         Map<Location, Hexagon> hexagonMap = hexMap.getAllHexagons();
 
         Location locToCheck = new Location(0,0);
@@ -107,7 +112,7 @@ public class HexagonMapTest {
         toCheck = hexagonMap.get(locToCheck);
         assertThatHexagonHas(1, Terrain.JUNGLE, 1);
 
-        locToCheck = coordinateSystem.downLeft(locToCheck);
+        locToCheck = coordinateSystem.downRight(locToCheck);
         toCheck = hexagonMap.get(locToCheck);
         assertThatHexagonHas(1, Terrain.LAKE, 1);
 
