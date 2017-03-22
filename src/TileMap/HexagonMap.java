@@ -38,7 +38,7 @@ public class HexagonMap implements TileMap {
     }
 
     public Hexagon getHexagonAt(Location location) {
-        if(numberOfTilesInMap == 0){
+        if(numberOfTilesInMap == 0 || !mapOfHeights.containsKey(location)){
             //TODO: Implement some sort of error here?
             return null;
         }
@@ -146,7 +146,10 @@ public class HexagonMap implements TileMap {
 
     public Map<Location, Hexagon> getAllHexagons() {
         Map<Location, Hexagon> allTopLevelHexagons = new HashMap();
-
+        List<Location> l = new ArrayList(mapOfHeights.keySet());
+        for(int i = 0; i < l.size(); i++) {
+            allTopLevelHexagons.put(l.get(i), this.getHexagonAt(l.get(i)));
+        }
         return allTopLevelHexagons;
     }
 

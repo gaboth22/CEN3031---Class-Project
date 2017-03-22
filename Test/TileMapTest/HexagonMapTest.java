@@ -12,10 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import Movement.Movement;
 import Movement.AxialMovement;
@@ -26,6 +23,10 @@ public class HexagonMapTest {
     Movement coordinateSystem;
 
     Tile toPlace;
+    List<Tile> tilesToPlace;
+
+    Hexagon toCheck;
+
 
     List<Terrain> givenIHaveAListOfTerrains(Terrain volcano, Terrain left, Terrain right) {
         return new ArrayList<>(Arrays.asList(volcano, left, right));
@@ -55,8 +56,74 @@ public class HexagonMapTest {
     }
 
     @Test
-    public void getAllHexagonsShouldReturnAValidList() {
-        givenIHaveAListOf
+    public void getAllHexagonsShouldReturnAValidMap() throws InvalidTileLocationException, LocationOccupiedException {
+        givenIHaveAListOfValidTilesToAdd();
+        whenIInsertATile();
+
+    }
+
+    void givenIHaveAListOfValidTilesToAdd() {
+        tilesToPlace = new ArrayList();
+        Location volcano = new Location(0, 0);
+        Location left = coordinateSystem.downRight(volcano);
+        Location right = coordinateSystem.upRight(volcano);
+        List<Location> locations = givenIHaveAListOfTerrainLocations(volcano, left, right);
+        List<Terrain> terrains = givenIHaveAListOfTerrains(Terrain.VOLCANO, Terrain.GRASSLANDS, Terrain.JUNGLE);
+        tilesToPlace.add(new TileImpl(terrains, locations));
+
+        volcano = coordinateSystem.up(volcano);
+        left = coordinateSystem.upRight(volcano);
+        right = coordinateSystem.up(volcano);
+        locations = givenIHaveAListOfTerrainLocations(volcano, left, right);
+        terrains = givenIHaveAListOfTerrains(Terrain.VOLCANO, Terrain.LAKE, Terrain.JUNGLE);
+        tilesToPlace.add(new TileImpl(terrains, locations));
+
+        volcano = coordinateSystem.down(volcano);
+        left = coordinateSystem.upRight(volcano);
+        right = coordinateSystem.up(volcano);
+        locations = givenIHaveAListOfTerrainLocations(volcano, left, right);
+        terrains = givenIHaveAListOfTerrains(Terrain.VOLCANO, Terrain.JUNGLE, Terrain.ROCKY);
+        tilesToPlace.add(new TileImpl(terrains, locations));
+    }
+
+    void whenIInsertATile() throws InvalidTileLocationException, LocationOccupiedException {
+        for(int i = 0; i < tilesToPlace.size(); i++) {
+            hexMap.insertTile(tilesToPlace.get(i));
+        }
+    }
+
+    void thenTheHexagonsICanSeeShouldBeValid(List<Tile> tiles) {
+        Map<Location, Hexagon> hexagonMap = hexMap.getAllHexagons();
+
+        Location locToCheck = new Location(0,0);
+        toCheck = hexagonMap.get(locToCheck);
+        assertThatHexagonHas(2, Terrain.VOLCANO, 2);
+
+        locToCheck = coordinateSystem.up(locToCheck);
+        toCheck = hexagonMap.get(locToCheck);
+        assertThatHexagonHas(2, Terrain.ROCKY, 2);
+
+        locToCheck = coordinateSystem.up(locToCheck);
+        toCheck = hexagonMap.get(locToCheck);
+        assertThatHexagonHas(1, Terrain.JUNGLE, 1);
+
+        locToCheck = coordinateSystem.downLeft(locToCheck);
+        toCheck = hexagonMap.get(locToCheck);
+        assertThatHexagonHas(1, Terrain.LAKE, 1);
+
+        locToCheck = coordinateSystem.down(locToCheck);
+        toCheck = hexagonMap.get(locToCheck);
+        assertThatHexagonHas(2, Terrain.JUNGLE, 2);
+
+        locToCheck = coordinateSystem.down(locToCheck);
+        toCheck = hexagonMap.get(locToCheck);
+        assertThatHexagonHas(1, Terrain.GRASSLANDS, 0);
+    }
+
+    void assertThatHexagonHas(int height, Terrain terrain, int parentTileID) {
+        Assert.assertEquals(height, toCheck.getHeight());
+        Assert.assertEquals(terrain, toCheck.getTerrain());
+        Assert.assertEquals(parentTileID, toCheck.getParentTileID());
     }
 
     @Test(expected = InvalidTileLocationException.class)
