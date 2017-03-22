@@ -35,3 +35,4 @@ public class Location {
         return result;
     }
 }
+
