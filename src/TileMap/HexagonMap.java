@@ -120,9 +120,8 @@ public class HexagonMap implements TileMap {
 
     private boolean theLocationsAreAtTheSameHeight(List<Hexagon> hexagons) {
         List<Integer> listOfHeights = getHeights(hexagons);
-        int height;
+        int height = listOfHeights.get(0);
         for(int i = 0; i < listOfHeights.size(); i++) {
-            height = listOfHeights.get(i);
             if(listOfHeights.get(i) != height) {
                 return false;
             }
