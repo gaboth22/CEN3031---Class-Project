@@ -2,7 +2,6 @@ package GameBoard;
 
 import GamePieceMap.GamePieceMap;
 import Play.Rule.TilePlacementRules.*;
-import Play.Rule.TilePlacementRules.InvalidTilePlacementRuleException.InvalidTilePlacementRuleException;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import TileMap.TileMap;
 import Play.Rule.*;

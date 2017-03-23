@@ -1,9 +1,7 @@
 package Play.Rule;
 
 import GamePieceMap.GamePieceMap;
-import Play.Rule.TilePlacementRules.InvalidTilePlacementRuleException.*;
 import TileMap.TileMap;
-import Play.Rule.RuleType;
 
 public abstract class Rule {
     private RuleType ruleType;

@@ -1,4 +1,4 @@
-package Play.Rule.TilePlacementRules.InvalidTilePlacementRuleException;
+package Play.Rule.TilePlacementRules.PlacementRuleException;
 
 public class InvalidTilePlacementRuleException extends Exception {
     public InvalidTilePlacementRuleException() {
