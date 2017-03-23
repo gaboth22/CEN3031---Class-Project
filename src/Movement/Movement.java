@@ -10,4 +10,5 @@ public interface Movement {
     Location down(Location loc);
     Location downLeft(Location loc);
     Location upLeft(Location loc);
+
 }

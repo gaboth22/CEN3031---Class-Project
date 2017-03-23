@@ -114,4 +114,23 @@ public class AxialMovementTest {
     void whenIMoveUpLeft() {
         currentLocation = coordinateSystem.upLeft(currentLocation);
     }
+
+    @Test
+    public void testEquals_Symmetric() {
+        Location locationOne = new Location(0,0);
+        Location locationTwo = new Location(0,0);
+        Assert.assertTrue(locationOne.equals(locationTwo) == locationTwo.equals(locationTwo));
+        Assert.assertTrue(locationOne.hashCode() == locationTwo.hashCode());
+    }
+
+    @Test
+    public void movingInAnyDirectionShouldNotChangeTheOriginalLocationReference() {
+        Location original = new Location(0,0);
+        Assert.assertNotEquals(original, coordinateSystem.up(original));
+        Assert.assertNotEquals(original, coordinateSystem.upLeft(original));
+        Assert.assertNotEquals(original, coordinateSystem.downLeft(original));
+        Assert.assertNotEquals(original, coordinateSystem.down(original));
+        Assert.assertNotEquals(original, coordinateSystem.downRight(original));
+        Assert.assertNotEquals(original, coordinateSystem.upRight(original));
+    }
 }
