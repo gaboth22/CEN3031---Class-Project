@@ -12,13 +12,13 @@ public class CannotWipeOutSettlementRuleTest {
 
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @Test
+    public void applyRule() throws Exception {
 
     }
 
-    @Test
-    public void applyRule() throws Exception {
+    @After
+    public void tearDown() throws Exception {
 
     }
 

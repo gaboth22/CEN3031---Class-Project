@@ -109,7 +109,7 @@ public class HexagonMap implements TileMap {
         }
     }
 
-    private List<Hexagon> getListOfHexagons(Location[] locations) {
+    public List<Hexagon> getListOfHexagons(Location[] locations) {
         List<Hexagon> listOfHexagons = new ArrayList<Hexagon>();
         for(int i = 0; i < locations.length; i++) {
             Hexagon toAddToList = this.getHexagonAt(locations[i]);
@@ -118,7 +118,7 @@ public class HexagonMap implements TileMap {
         return listOfHexagons;
     }
 
-    private boolean theLocationsAreAtTheSameHeight(List<Hexagon> hexagons) {
+    public boolean theLocationsAreAtTheSameHeight(List<Hexagon> hexagons) {
         List<Integer> listOfHeights = getHeights(hexagons);
         int height = listOfHeights.get(0);
         for(int i = 0; i < listOfHeights.size(); i++) {
