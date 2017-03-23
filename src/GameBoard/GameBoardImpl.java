@@ -4,18 +4,10 @@ import GamePieceMap.GamePieceMap;
 import Play.Rule.TilePlacementRules.*;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import TileMap.TileMap;
-import Play.Rule.*;
-import java.util.Map;
 
 public class GameBoardImpl implements GameBoard {
     private GamePieceMap gamePieceMap;
     private TileMap tileMap;
-    private Map<RuleType, Rule> rules;
-
-    @Override
-    public void insertRule(Rule rule) {
-        rules.put(rule.getType(), rule);
-    }
 
     @Override
     public void doTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception {
