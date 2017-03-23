@@ -1,9 +1,11 @@
 package GameBoard;
 
 import GamePieceMap.GamePieceMap;
+import Play.Rule.TilePlacementRules.*;
+import Play.Rule.TilePlacementRules.InvalidTilePlacementRuleException.InvalidTilePlacementRuleException;
+import Play.TilePlacementPhase.TilePlacementPhase;
 import TileMap.TileMap;
-import Play.Rule.RuleType;
-import Play.Rule.Rule;
+import Play.Rule.*;
 import java.util.Map;
 
 public class GameBoardImpl implements GameBoard {
@@ -14,5 +16,30 @@ public class GameBoardImpl implements GameBoard {
     @Override
     public void insertRule(Rule rule) {
         rules.put(rule.getType(), rule);
+    }
+
+    @Override
+    public void doTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception {
+
+
+        try{
+            checkSimpleTilePlacementRules(tilePlacementPhase);
+            tileMap.insertTile(tilePlacementPhase.getTileToPlace());
+            return;
+        }
+        catch(Exception e) {
+        }
+
+        try {
+
+        }
+        catch(Exception e) {
+        }
+    }
+
+    private void checkSimpleTilePlacementRules(TilePlacementPhase tilePlacementPhase) throws Exception {
+        TileMustTouchOneEdgeRule.applyRule(tileMap, gamePieceMap, tilePlacementPhase.getTileToPlace());
+
+
     }
 }
