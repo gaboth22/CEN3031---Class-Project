@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class GamePieceMapTest {
 
     private GamePieceMap gameMap = new GamePieceMap();
-    private GamePiece gamePiece = new GamePiece(PlayerID.PLAYER_TWO, TypeOfPiece.MEEPLE);
+    private GamePiece gamePiece = new GamePiece(PlayerID.PLAYER_TWO, TypeOfPiece.VILLAGER);
     private Location location = new Location(10,10);
 
     @Test
@@ -44,6 +44,6 @@ public class GamePieceMapTest {
     @Test
     public void ensureTheProperPieceTypeIsFoundAtLocation() throws LocationNotEmptyException{
         gameMap.insertAPieceAt(location, gamePiece);
-        assertEquals(TypeOfPiece.MEEPLE, gameMap.getPieceTypeAtLocation(location));
+        assertEquals(TypeOfPiece.VILLAGER, gameMap.getPieceTypeAtLocation(location));
     }
 }

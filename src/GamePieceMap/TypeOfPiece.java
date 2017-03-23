@@ -1,5 +1,5 @@
 package GamePieceMap;
 
 public enum TypeOfPiece {
-    MEEPLE, TOTORO
+    VILLAGER, TOTORO, TIGER
 }
