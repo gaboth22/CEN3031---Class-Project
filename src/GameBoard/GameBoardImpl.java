@@ -29,7 +29,7 @@ public class GameBoardImpl implements GameBoard {
     }
 
     private void checkSimpleTilePlacementRules(TilePlacementPhase tilePlacementPhase) throws Exception {
-        TileMustTouchOneEdgeRule.applyRule(tileMap, gamePieceMap, tilePlacementPhase.getTileToPlace());
+        TileMustTouchOneEdgeRule.applyRule(tileMap, tilePlacementPhase.getTileToPlace());
 
 
     }
