@@ -33,5 +33,4 @@ public class AxialMovement implements Movement {
     public Location upLeft(Location loc) {
         return new Location(loc.getX() - 1, loc.getY() + 1);
     }
-
 }

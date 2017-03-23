@@ -7,7 +7,7 @@ import Location.Location;
 
 public class HexesBelowTileShouldBelongToTwoOrMoreTiles {
 
-    static private final int NULL_TILE_ID = -1;
+    static private final int NO_HEXAGON_RETURNED_ID = -1;
 
     public static void applyRule(TileMap tileMap, Tile tileToPlace)
             throws InvalidTilePlacementRuleException {
@@ -26,7 +26,7 @@ public class HexesBelowTileShouldBelongToTwoOrMoreTiles {
                 tileID[i] = tileMap.getHexagonAt(locations[i]).getParentTileID();
             }
             else{
-                tileID[i] = NULL_TILE_ID;
+                tileID[i] = NO_HEXAGON_RETURNED_ID;
             }
         }
 
@@ -40,7 +40,7 @@ public class HexesBelowTileShouldBelongToTwoOrMoreTiles {
             }
         }
 
-        if(tileIDs.length > 0 && tileIDs[0] != NULL_TILE_ID) {
+        if(tileIDs.length > 0 && tileIDs[0] != NO_HEXAGON_RETURNED_ID) {
             throw new InvalidTilePlacementRuleException(
                     "A Tile placed on another Tile must be placed over hexes that are part of two or three different tiles");
         }

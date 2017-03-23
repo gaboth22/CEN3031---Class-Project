@@ -7,14 +7,12 @@ import Tile.TileFactory.TileFactory;
 import TileTest.TileInformationGeneratorTestDouble.OrientationTestDouble;
 import TileTest.TileInformationGeneratorTestDouble.TileInformationGeneratorWithOrientationTestDouble;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import TileMap.TileMap;
 import TileMap.HexagonMap;
 import Movement.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class HexesBelowTileShouldBelongToTwoOrMoreTilesTest {
 
