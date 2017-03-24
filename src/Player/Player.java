@@ -20,30 +20,27 @@ public class Player {
         return this.id;
     }
 
-    public int getMeeple() {
-        if(this.meeples > 0) {
-            this.meeples--;
-            return 1;
-        }
-
-        return -1;
+    public void decrimentMeeples() {
+        this.meeples--;
     }
 
-    public int getTotoro() {
-        if(this.totoros > 0) {
+    public void decrimentTotoros() {
             this.totoros--;
-            return 1;
-        }
-
-        return -1;
     }
 
-    public int getTiger() {
-        if (this.tigers > 0) {
+    public void decrimentTigers() {
             this.tigers--;
-            return 1;
-        }
+    }
 
-        return -1;
+    public int getMeeples(){
+        return meeples;
+    }
+
+    public int getTotoros(){
+        return totoros;
+    }
+
+    public int getTigers(){
+        return tigers;
     }
 }
