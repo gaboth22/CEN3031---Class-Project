@@ -1,11 +1,13 @@
 package GameBoard;
 
 import GamePieceMap.GamePieceMap;
+import Location.Location;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
 import Play.Rule.TilePlacementRules.*;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementPhaseException;
 import TileMap.*;
+import java.util.Map;
 
 public class GameBoardImpl implements GameBoard {
     private GamePieceMap gamePieceMap;
@@ -16,7 +18,7 @@ public class GameBoardImpl implements GameBoard {
     public GameBoardImpl() {
         this.gamePieceMap = new GamePieceMap();
         this.tileMap = new HexagonMap();
-        this.turnNumber = 0;
+        this.turnNumber = FIRST_TURN;
     }
 
     @Override
@@ -92,4 +94,25 @@ public class GameBoardImpl implements GameBoard {
     private void incrementTurnNumber() {
         this.turnNumber++;
     }
+
+    @Override
+    public int getCurrentTurn() {
+        return turnNumber;
+    }
+
+    @Override
+    public Map<Location, Hexagon> getGameBoardHexagons() {
+        return tileMap.getAllHexagons();
+    }
+
+    @Override
+    public boolean hasTileAt(Location[] locationsInTile) {
+        for(int i = 0; i < locationsInTile.length; i++) {
+            if(!tileMap.hasHexagonAt(locationsInTile[i]))
+                return false;
+        }
+
+        return true;
+    }
+
 }
