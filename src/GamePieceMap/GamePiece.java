@@ -18,4 +18,9 @@ public class GamePiece {
     public TypeOfPiece getPieceType(){
         return pieceType;
     }
+
+    @Override
+    public String toString() {
+        return "" + player + "'s " + pieceType;
+    }
 }
