@@ -1,8 +1,19 @@
+package PieceBuilder;
+
+import org.junit.After;
+import org.junit.Before;
+
 import static org.junit.Assert.*;
 
-/**
- * Created by peter on 3/23/17.
- */
 public class PieceBuilderTest {
+    @Before
+    public void setUp() throws Exception {
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+    }
 
 }
