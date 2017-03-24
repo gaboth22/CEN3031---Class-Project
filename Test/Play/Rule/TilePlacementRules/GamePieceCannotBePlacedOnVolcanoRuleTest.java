@@ -6,7 +6,7 @@ import Location.Location;
 import Movement.Movement;
 import Movement.AxialMovement;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
-import Play.Rule.GamePieceCannotBePlacedOnVolcanoRule;
+import Play.Rule.PiecePlacementRules.GamePieceCannotBePlacedOnVolcanoRule;
 import Player.PlayerID;
 import TileMap.HexagonMap;
 import Terrain.Terrain.Terrain;
@@ -91,7 +91,7 @@ public class GamePieceCannotBePlacedOnVolcanoRuleTest {
         this.gamePieceToPlace = new GamePiece(PlayerID.PLAYER_TWO, TypeOfPiece.TIGER);
     }
 
-    @Test
+    @Test(expected = InvalidPiecePlacementRuleException.class)
     public void aVillagerShouldNotBePlacedOntoAVolcano() throws Exception {
         givenIHaveALocationToSettleAVillager(movement.down(origin));
         whenICheckIfICanPlaceTheGamePiece();
