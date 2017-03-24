@@ -3,7 +3,6 @@ package Play.Rule.PiecePlacementRules;
 import GamePieceMap.*;
 import Location.Location;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
-import Play.Rule.TilePlacementRules.HexBelowMustNotHavePieceRule;
 import Player.PlayerID;
 import TestExceptions.MethodCalledException;
 import org.junit.Before;
