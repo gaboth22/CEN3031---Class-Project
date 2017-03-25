@@ -24,7 +24,10 @@ public class Settlement {
         tigerPlayground = false;
     }
 
-    public void addPieceToSettlement(Location location, GamePiece gamePiece) throws SettlementException {
+    /*
+     * Used by Settlement Creator
+     */
+    public void markPieceInSettlement(Location location, GamePiece gamePiece) throws SettlementException {
         if(numberOfHexesInSettlement == 0) {
             this.playerID = gamePiece.getPlayer();
         }

@@ -31,7 +31,7 @@ public class SettlementCreator {
 
             GamePiece toAdd = new GamePiece(playerID, pieceType);
             try{
-                newSettlement.addPieceToSettlement(locations.get(i), toAdd);
+                newSettlement.markPieceInSettlement(locations.get(i), toAdd);
             }
             catch(SettlementException ex) {
                 System.out.println(ex.getMessage());

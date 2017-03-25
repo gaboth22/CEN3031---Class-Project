@@ -34,13 +34,13 @@ public class SettlementTest {
     void addThreeVillagersToSettlement() throws SettlementException {
         GamePiece villager = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER);
         locationToAdd = new Location(0,0);
-        settlement.addPieceToSettlement(locationToAdd, villager);
+        settlement.markPieceInSettlement(locationToAdd, villager);
 
         locationToAdd = new Location(0,1);
-        settlement.addPieceToSettlement(locationToAdd, villager);
+        settlement.markPieceInSettlement(locationToAdd, villager);
 
         locationToAdd = new Location(0,2);
-        settlement.addPieceToSettlement(locationToAdd, villager);
+        settlement.markPieceInSettlement(locationToAdd, villager);
     }
 
     @After
@@ -151,9 +151,9 @@ public class SettlementTest {
         Settlement settlementOne = new Settlement();
         Settlement settlementTwo = new Settlement();
         locationToAdd = new Location(0,0);
-        settlementOne.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        settlementOne.markPieceInSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
         locationToAdd = new Location(0,0);
-        settlementTwo.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        settlementTwo.markPieceInSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
         Assert.assertEquals(settlementOne, settlementTwo);
     }
 
@@ -162,12 +162,12 @@ public class SettlementTest {
         Settlement settlementOne = new Settlement();
         Settlement settlementTwo = new Settlement();
         locationToAdd = new Location(0,0);
-        settlementOne.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        settlementOne.markPieceInSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
         locationToAdd = new Location(0,0);
-        settlementTwo.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        settlementTwo.markPieceInSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
 
         locationToAdd = new Location(0,1);
-        settlementTwo.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
+        settlementTwo.markPieceInSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
         Assert.assertNotEquals(settlementOne, settlementTwo);
     }
 
@@ -199,6 +199,6 @@ public class SettlementTest {
     }
 
     private void whenIAddThePieceToTheSettlement() throws SettlementException {
-        settlement.addPieceToSettlement(locationToAdd, gamePiece);
+        settlement.markPieceInSettlement(locationToAdd, gamePiece);
     }
 }

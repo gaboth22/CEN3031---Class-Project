@@ -13,6 +13,19 @@ public class SettlementCreatorTest {
 
     Location locationToCheck;
 
+    @Before
+    public void setUpPieceMap() throws Exception {
+        pieceMap = new GamePieceMap();
+
+        Location[] listOfPlayerOneLocations = listOfPlayerOneLocations();
+        GamePiece[] listOfPlayerOneGamePieces = listOfPlayerOneGamePieces();
+        insertPlayerPieces(listOfPlayerOneLocations, listOfPlayerOneGamePieces);
+
+        Location[] listOfPlayerTwoLocations = listOfPlayerTwoLocations();
+        GamePiece[] listOfPlayerTwoGamePieces = listOfPlayerTwoGamePieces();
+        insertPlayerPieces(listOfPlayerTwoLocations, listOfPlayerTwoGamePieces);
+    }
+
     @Test
     public void shouldReturnSettlementOfSizeZeroAtEmptyLocation() {
         locationToCheck = new Location(1,0);
@@ -103,7 +116,7 @@ public class SettlementCreatorTest {
 
         Settlement settlement = new Settlement();
         for(int i = 0; i < pieces.length; i++) {
-            settlement.addPieceToSettlement(locations[i], pieces[i]);
+            settlement.markPieceInSettlement(locations[i], pieces[i]);
         }
         return settlement;
     }
@@ -131,19 +144,6 @@ public class SettlementCreatorTest {
             new Location(3, -3),
             new Location(2, -2)
         };
-    }
-
-    @Before
-    public void setUpPieceMap() throws Exception {
-        pieceMap = new GamePieceMap();
-
-        Location[] listOfPlayerOneLocations = listOfPlayerOneLocations();
-        GamePiece[] listOfPlayerOneGamePieces = listOfPlayerOneGamePieces();
-        insertPlayerPieces(listOfPlayerOneLocations, listOfPlayerOneGamePieces);
-
-        Location[] listOfPlayerTwoLocations = listOfPlayerTwoLocations();
-        GamePiece[] listOfPlayerTwoGamePieces = listOfPlayerTwoGamePieces();
-        insertPlayerPieces(listOfPlayerTwoLocations, listOfPlayerTwoGamePieces);
     }
 
     @After
