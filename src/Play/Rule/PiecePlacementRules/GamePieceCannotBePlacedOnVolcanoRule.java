@@ -1,4 +1,4 @@
-package Play.Rule;
+package Play.Rule.PiecePlacementRules;
 
 import GamePieceMap.GamePiece;
 import Location.Location;
