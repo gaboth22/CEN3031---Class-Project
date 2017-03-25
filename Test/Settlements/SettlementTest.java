@@ -157,6 +157,27 @@ public class SettlementTest {
         Assert.assertEquals(settlementOne, settlementTwo);
     }
 
+    @Test
+    public void settlementsWithoutSameInsertionShouldNotEqual() throws Exception {
+        Settlement settlementOne = new Settlement();
+        Settlement settlementTwo = new Settlement();
+        locationToAdd = new Location(0,0);
+        settlementOne.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        locationToAdd = new Location(0,0);
+        settlementTwo.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+
+        locationToAdd = new Location(0,1);
+        settlementTwo.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
+        Assert.assertNotEquals(settlementOne, settlementTwo);
+    }
+
+    @Test
+    public void emptySettlementsShouldBeEqual() throws Exception {
+        Settlement settlement = new Settlement();
+        Settlement settlementTwo = new Settlement();
+        Assert.assertEquals(settlement, settlementTwo);
+    }
+
     private void givenIWantToPlaceAVillagerAt(Location location, PlayerID playerID) {
         locationToAdd = location;
         gamePiece = new GamePiece(playerID, TypeOfPiece.VILLAGER);
