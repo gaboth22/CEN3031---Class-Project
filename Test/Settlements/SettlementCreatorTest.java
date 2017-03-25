@@ -5,8 +5,6 @@ import Location.Location;
 import Player.PlayerID;
 import Settlements.Creation.Settlement;
 import Settlements.Creation.SettlementCreator;
-import Settlements.SettlementException.SettlementException;
-import cucumber.api.java.cs.A;
 import org.junit.*;
 
 public class SettlementCreatorTest {
@@ -16,28 +14,28 @@ public class SettlementCreatorTest {
     Location locationToCheck;
 
     @Test
-    public void shouldReturnSettlementOfSizeZeroAtEmptyLocation() throws SettlementException {
+    public void shouldReturnSettlementOfSizeZeroAtEmptyLocation() {
         locationToCheck = new Location(1,0);
         Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
         Assert.assertEquals(0, settlement.getNumberOfHexesInSettlement());
     }
 
     @Test
-    public void shouldReturnSettlementOfSizeThreeAtOriginSettlement() throws SettlementException {
+    public void shouldReturnSettlementOfSizeThreeAtOriginSettlement() {
         locationToCheck = new Location(0,0);
         Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
         Assert.assertEquals(3, settlement.getNumberOfHexesInSettlement());
     }
 
     @Test
-    public void shouldReturnSettlementOfSizeSix() throws SettlementException {
+    public void shouldReturnSettlementOfSizeSix() {
         locationToCheck = new Location(6,2);
         Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
         Assert.assertEquals(6, settlement.getNumberOfHexesInSettlement());
     }
 
     @Test
-    public void shouldGiveValidTotoroAndTigerLocation() throws SettlementException {
+    public void shouldGiveValidTotoroAndTigerLocation() {
         locationToCheck = new Location(3,-3);
         Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
 
@@ -48,7 +46,7 @@ public class SettlementCreatorTest {
     }
 
     @Test
-    public void differentLocationsWithTheSameSettlementShouldGiveTheSameSettlement() throws SettlementException {
+    public void differentLocationsWithTheSameSettlementShouldGiveTheSameSettlement() {
         locationToCheck = new Location(3,-3);
         Settlement settlementOne = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
 
@@ -59,7 +57,7 @@ public class SettlementCreatorTest {
     }
 
     @Test
-    public void differentSettlementsInConflictedAreasShouldGiveTheSameSettlement() throws SettlementException {
+    public void differentSettlementsInConflictedAreasShouldGiveTheSameSettlement() {
         locationToCheck = new Location(4,3);
         Settlement settlementOne = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
 
@@ -70,7 +68,7 @@ public class SettlementCreatorTest {
     }
 
     @Test
-    public void emptyLocationsAreEqual() throws SettlementException {
+    public void emptyLocationsAreEqual() {
         locationToCheck = new Location(0,4);
         Settlement settlementOne = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
 
@@ -81,7 +79,7 @@ public class SettlementCreatorTest {
     }
 
     @Test
-    public void emptyLocationIsNotEqualToSettlement() throws SettlementException {
+    public void emptyLocationIsNotEqualToSettlement() {
         locationToCheck = new Location(0,0);
         Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
 

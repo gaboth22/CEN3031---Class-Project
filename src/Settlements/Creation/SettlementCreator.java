@@ -10,19 +10,19 @@ import java.util.*;
 
 public class SettlementCreator {
 
-    public static Settlement getSettlementAt(GamePieceMap pieceMap, Location location) throws SettlementException {
+    public static Settlement getSettlementAt(GamePieceMap pieceMap, Location location) {
         if(pieceMap.isThereAPieceAt(location)) {
             return createSettlement(pieceMap, location);
         }
         return new Settlement();
     }
 
-    private static Settlement createSettlement(GamePieceMap pieceMap, Location location) throws SettlementException {
+    private static Settlement createSettlement(GamePieceMap pieceMap, Location location) {
         List<Location> locationsInSettlement = getLocationsInSettlement(pieceMap, location);
         return createSettlementWithLocations(pieceMap, locationsInSettlement);
     }
 
-    private static Settlement createSettlementWithLocations(GamePieceMap pieceMap, List<Location> locations) throws SettlementException {
+    private static Settlement createSettlementWithLocations(GamePieceMap pieceMap, List<Location> locations) {
         Settlement newSettlement = new Settlement();
         for(int i = 0; i < locations.size(); i++) {
             Location location = locations.get(i);
@@ -30,7 +30,12 @@ public class SettlementCreator {
             TypeOfPiece pieceType = pieceMap.getPieceTypeAtLocation(location);
 
             GamePiece toAdd = new GamePiece(playerID, pieceType);
-            newSettlement.addPieceToSettlement(locations.get(i), toAdd);
+            try{
+                newSettlement.addPieceToSettlement(locations.get(i), toAdd);
+            }
+            catch(SettlementException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
         return newSettlement;
     }
