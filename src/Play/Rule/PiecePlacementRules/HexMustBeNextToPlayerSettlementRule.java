@@ -8,8 +8,6 @@ import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
 import Player.PlayerID;
 
 public class HexMustBeNextToPlayerSettlementRule {
-    private static Movement movement = new AxialMovement();
-
     public static void applyRule(GamePieceMap pieceMap, Location locationToPlacePieceOn, PlayerID pid)
             throws InvalidPiecePlacementRuleException {
 
