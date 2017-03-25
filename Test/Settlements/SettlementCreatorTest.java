@@ -6,6 +6,7 @@ import Player.PlayerID;
 import Settlements.Creation.Settlement;
 import Settlements.Creation.SettlementCreator;
 import Settlements.SettlementException.SettlementException;
+import cucumber.api.java.cs.A;
 import org.junit.*;
 
 public class SettlementCreatorTest {
@@ -40,7 +41,6 @@ public class SettlementCreatorTest {
         locationToCheck = new Location(3,-3);
         Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
 
-
         Assert.assertEquals(TypeOfPiece.TOTORO, settlement.getTypeOfPieceAt(locationToCheck));
 
         locationToCheck = new Location(2,-2);
@@ -56,6 +56,83 @@ public class SettlementCreatorTest {
         Settlement settlementTwo = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
 
         Assert.assertEquals(settlementOne, settlementTwo);
+    }
+
+    @Test
+    public void differentSettlementsInConflictedAreasShouldGiveTheSameSettlement() throws SettlementException {
+        locationToCheck = new Location(4,3);
+        Settlement settlementOne = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        locationToCheck = new Location(3,4);
+        Settlement settlementTwo = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        Assert.assertEquals(settlementOne, settlementTwo);
+    }
+
+    @Test
+    public void emptyLocationsAreEqual() throws SettlementException {
+        locationToCheck = new Location(0,4);
+        Settlement settlementOne = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        locationToCheck = new Location(0,5);
+        Settlement settlementTwo = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        Assert.assertEquals(settlementOne, settlementTwo);
+    }
+
+    @Test
+    public void emptyLocationIsNotEqualToSettlement() throws SettlementException {
+        locationToCheck = new Location(0,0);
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        locationToCheck = new Location(-1,-1);
+        Settlement settlement1 = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        Assert.assertNotEquals(settlement, settlement1);
+    }
+
+    @Test
+    public void settlementReturnedShouldBeEqualToConstructedSettlement() throws Exception {
+        Settlement settlement = buildVillageFour();
+        locationToCheck = new Location(2,-2);
+
+        Assert.assertEquals(settlement, SettlementCreator.getSettlementAt(pieceMap, locationToCheck));
+    }
+
+    private Settlement buildVillageFour() throws Exception {
+        GamePiece[] pieces = gamePieceVillageFour();
+        Location[] locations = locationVillageFour();
+
+        Settlement settlement = new Settlement();
+        for(int i = 0; i < pieces.length; i++) {
+            settlement.addPieceToSettlement(locations[i], pieces[i]);
+        }
+        return settlement;
+    }
+
+    private GamePiece[] gamePieceVillageFour() {
+        PlayerID playerID = PlayerID.PLAYER_TWO;
+        return new GamePiece[] {
+                new GamePiece(playerID, TypeOfPiece.VILLAGER),
+                new GamePiece(playerID, TypeOfPiece.VILLAGER),
+                new GamePiece(playerID, TypeOfPiece.VILLAGER),
+                new GamePiece(playerID, TypeOfPiece.VILLAGER),
+                new GamePiece(playerID, TypeOfPiece.VILLAGER),
+                new GamePiece(playerID, TypeOfPiece.TOTORO),
+                new GamePiece(playerID, TypeOfPiece.TIGER)
+        };
+    }
+
+    private Location[] locationVillageFour() {
+        return new Location[]{
+            new Location(2, 1),
+            new Location(2, 0),
+            new Location(3, -1),
+            new Location(2, -1),
+            new Location(3, -2),
+            new Location(3, -3),
+            new Location(2, -2)
+        };
     }
 
     @Before
