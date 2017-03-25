@@ -43,6 +43,7 @@ public class SettlementCreator {
         Set<Location> visitedLocations = new HashSet<Location>();
 
         locationsToCheck.add(location);
+        visitedLocations.add(location);
         while(locationsToCheck.size() > 0) {
             Location locationToCheck = locationsToCheck.remove();
 

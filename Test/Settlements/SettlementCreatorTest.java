@@ -3,19 +3,66 @@ package Settlements;
 import GamePieceMap.*;
 import Location.Location;
 import Player.PlayerID;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import Settlements.Creation.Settlement;
+import Settlements.Creation.SettlementCreator;
+import Settlements.SettlementException.SettlementException;
+import org.junit.*;
 
 public class SettlementCreatorTest {
 
     GamePieceMap pieceMap;
 
+    Location locationToCheck;
+
+    @Test
+    public void shouldReturnSettlementOfSizeZeroAtEmptyLocation() throws SettlementException {
+        locationToCheck = new Location(1,0);
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+        Assert.assertEquals(0, settlement.getNumberOfHexesInSettlement());
+    }
+
+    @Test
+    public void shouldReturnSettlementOfSizeThreeAtOriginSettlement() throws SettlementException {
+        locationToCheck = new Location(0,0);
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+        Assert.assertEquals(3, settlement.getNumberOfHexesInSettlement());
+    }
+
+    @Test
+    public void shouldReturnSettlementOfSizeSix() throws SettlementException {
+        locationToCheck = new Location(6,2);
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+        Assert.assertEquals(6, settlement.getNumberOfHexesInSettlement());
+    }
+
+    @Test
+    public void shouldGiveValidTotoroAndTigerLocation() throws SettlementException {
+        locationToCheck = new Location(3,-3);
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+
+        Assert.assertEquals(TypeOfPiece.TOTORO, settlement.getTypeOfPieceAt(locationToCheck));
+
+        locationToCheck = new Location(2,-2);
+        Assert.assertEquals(TypeOfPiece.TIGER, settlement.getTypeOfPieceAt(locationToCheck));
+    }
+
     @Before
     public void setUpPieceMap() throws Exception {
+        pieceMap = new GamePieceMap();
+
         Location[] listOfPlayerOneLocations = listOfPlayerOneLocations();
         GamePiece[] listOfPlayerOneGamePieces = listOfPlayerOneGamePieces();
-        
+        insertPlayerPieces(listOfPlayerOneLocations, listOfPlayerOneGamePieces);
+
+        Location[] listOfPlayerTwoLocations = listOfPlayerTwoLocations();
+        GamePiece[] listOfPlayerTwoGamePieces = listOfPlayerTwoGamePieces();
+        insertPlayerPieces(listOfPlayerTwoLocations, listOfPlayerTwoGamePieces);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        pieceMap = null;
     }
 
     private void insertPlayerPieces(Location[] locations, GamePiece[] pieces) throws Exception {
