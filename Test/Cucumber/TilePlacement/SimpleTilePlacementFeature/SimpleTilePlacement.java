@@ -1,4 +1,4 @@
-package Cucumber;
+package Cucumber.TilePlacement.SimpleTilePlacementFeature;
 
 import GameBoard.*;
 import Location.Location;
@@ -10,7 +10,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import cucumber.api.java.en.Then;
 import Tile.Tile.Tile;
-import org.junit.Assert;
 
 public class SimpleTilePlacement {
     private GameBoard gameBoard;
