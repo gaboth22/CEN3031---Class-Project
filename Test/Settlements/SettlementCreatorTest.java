@@ -47,6 +47,17 @@ public class SettlementCreatorTest {
         Assert.assertEquals(TypeOfPiece.TIGER, settlement.getTypeOfPieceAt(locationToCheck));
     }
 
+    @Test
+    public void differentLocationsWithTheSameSettlementShouldGiveTheSameSettlement() throws SettlementException {
+        locationToCheck = new Location(3,-3);
+        Settlement settlementOne = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        locationToCheck = new Location(2,-2);
+        Settlement settlementTwo = SettlementCreator.getSettlementAt(pieceMap, locationToCheck);
+
+        Assert.assertEquals(settlementOne, settlementTwo);
+    }
+
     @Before
     public void setUpPieceMap() throws Exception {
         pieceMap = new GamePieceMap();

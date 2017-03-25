@@ -51,7 +51,7 @@ public class SettlementTest {
 
     @Test
     public void anEmptySettlementHasNoTotoroOrTigerSanctuary() throws Exception {
-        Assert.assertFalse(settlement.hasTigerSanctuary());
+        Assert.assertFalse(settlement.hasTigerPlayground());
         Assert.assertFalse(settlement.hasTotoroSanctuary());
     }
 
@@ -116,7 +116,7 @@ public class SettlementTest {
     }
 
     private void thenTheTigerShouldBeAt(Location location) {
-        Assert.assertTrue(settlement.hasTigerSanctuary());
+        Assert.assertTrue(settlement.hasTigerPlayground());
         Assert.assertEquals(TypeOfPiece.TIGER, settlement.getTypeOfPieceAt(location));
     }
 
@@ -144,6 +144,17 @@ public class SettlementTest {
     @Test
     public void anEmptySettlementShouldHaveNoOwner() {
         thenThePlayerIdShouldBe(null);
+    }
+
+    @Test
+    public void settlementsWithSameInsertionShouldBeEqual() throws Exception {
+        Settlement settlementOne = new Settlement();
+        Settlement settlementTwo = new Settlement();
+        locationToAdd = new Location(0,0);
+        settlementOne.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        locationToAdd = new Location(0,0);
+        settlementTwo.addPieceToSettlement(locationToAdd, new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        Assert.assertEquals(settlementOne, settlementTwo);
     }
 
     private void givenIWantToPlaceAVillagerAt(Location location, PlayerID playerID) {

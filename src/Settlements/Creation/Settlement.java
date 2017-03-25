@@ -4,28 +4,24 @@ import GamePieceMap.GamePiece;
 import GamePieceMap.TypeOfPiece;
 import Location.Location;
 import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
-import Player.Player;
 import Player.PlayerID;
 import Settlements.SettlementException.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Settlement {
 
     Map<Location, GamePiece> settlementLocations;
     int numberOfHexesInSettlement;
     boolean totoroSanctuary;
-    boolean tigerSanctuary;
+    boolean tigerPlayground;
     PlayerID playerID;
 
     public Settlement() {
         settlementLocations = new HashMap<Location, GamePiece>();
         numberOfHexesInSettlement = 0;
         totoroSanctuary = false;
-        tigerSanctuary = false;
+        tigerPlayground = false;
     }
 
     public void addPieceToSettlement(Location location, GamePiece gamePiece) throws SettlementException {
@@ -45,7 +41,7 @@ public class Settlement {
             totoroSanctuary = true;
         }
         if(gamePiece.getPieceType() == TypeOfPiece.TIGER) {
-            tigerSanctuary = true;
+            tigerPlayground = true;
         }
     }
 
@@ -98,8 +94,8 @@ public class Settlement {
         return totoroSanctuary;
     }
 
-    public boolean hasTigerSanctuary() {
-        return tigerSanctuary;
+    public boolean hasTigerPlayground() {
+        return tigerPlayground;
     }
 
     public PlayerID getSettlementOwner() {
@@ -110,4 +106,28 @@ public class Settlement {
         return settlementLocations.get(location).getPieceType();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Settlement that = (Settlement) o;
+
+        if (numberOfHexesInSettlement != that.numberOfHexesInSettlement) return false;
+        if (totoroSanctuary != that.totoroSanctuary) return false;
+        if (tigerPlayground != that.tigerPlayground) return false;
+        if (settlementLocations != null ? !settlementLocations.equals(that.settlementLocations) : that.settlementLocations != null)
+            return false;
+        return playerID == that.playerID;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = settlementLocations != null ? settlementLocations.hashCode() : 0;
+        result = 31 * result + numberOfHexesInSettlement;
+        result = 31 * result + (totoroSanctuary ? 1 : 0);
+        result = 31 * result + (tigerPlayground ? 1 : 0);
+        result = 31 * result + (playerID != null ? playerID.hashCode() : 0);
+        return result;
+    }
 }
