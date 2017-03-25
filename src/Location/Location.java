@@ -34,5 +34,10 @@ public class Location {
         result = 31 * result + x;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }
 
