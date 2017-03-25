@@ -55,7 +55,7 @@ public class GameBoardImpl implements GameBoard {
             FirstTileMustBePlacedWithVolcanoAtCenterOfBoard.applyRule(tileMap, placementPhase.getTileToPlace());
         }
         catch( InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getClass());
             return false;
         }
 
@@ -68,7 +68,7 @@ public class GameBoardImpl implements GameBoard {
             TileMustTouchOneEdgeRule.applyRule(tileMap, placementPhase.getTileToPlace());
         }
         catch(InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getClass());
             return false;
         }
 
@@ -84,7 +84,7 @@ public class GameBoardImpl implements GameBoard {
             // TODO: CannotWipeOutSettlementRule.applyRule()
         }
         catch(InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getClass());
             return false;
         }
 

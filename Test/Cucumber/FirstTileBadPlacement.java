@@ -21,7 +21,7 @@ public class FirstTileBadPlacement {
     private Movement movement;
     private boolean insertionFailed;
 
-    @Given("^it is the first turn$")
+    @Given("^it's the first turn$")
     public void InitializeGameboardAgain() {
         insertionFailed = false;
         builder = new TileBuilder();
@@ -31,7 +31,7 @@ public class FirstTileBadPlacement {
         Assert.assertEquals(1, gameBoard.getCurrentTurn());
     }
 
-    @When("^the active player places a tile not at the origin$")
+    @When("^the active player tries to place a tile incorrectly$")
     public void placeFirstTileAgain() throws Exception {
         Location notOrigin = new Location(1,2);
         firstTile = builder.getTileWithLocations(notOrigin,
