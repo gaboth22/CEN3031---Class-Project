@@ -7,7 +7,7 @@ public class TilePlacementPhase {
     final private PlayerID playerID;
     final private Tile tileToPlace;
 
-    TilePlacementPhase(PlayerID playerID, Tile tileToPlace) {
+    public TilePlacementPhase(PlayerID playerID, Tile tileToPlace) {
         this.playerID = playerID;
         this.tileToPlace = tileToPlace;
     }
