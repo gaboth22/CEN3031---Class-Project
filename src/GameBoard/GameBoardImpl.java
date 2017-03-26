@@ -6,6 +6,8 @@ import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildPhaseException;
 import Play.Rule.PiecePlacementRules.*;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
+import GamePieceMap.GamePieceMap;
+import Location.Location;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
 import Play.Rule.TilePlacementRules.*;
 import Play.TilePlacementPhase.TilePlacementPhase;
@@ -36,7 +38,7 @@ public class GameBoardImpl implements GameBoard {
 
         else if(attemptSimpleTilePlacement(tilePlacementPhase)) {
             tileMap.insertTile(tilePlacementPhase.getTileToPlace());
-            incrementTurnNumber();
+            incrementTurnNumber()
             return;
         }
 
@@ -59,7 +61,7 @@ public class GameBoardImpl implements GameBoard {
             FirstTileMustBePlacedWithVolcanoAtCenterOfBoard.applyRule(tileMap, placementPhase.getTileToPlace());
         }
         catch( InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getClass());
             return false;
         }
 
@@ -72,13 +74,13 @@ public class GameBoardImpl implements GameBoard {
             TileMustTouchOneEdgeRule.applyRule(tileMap, placementPhase.getTileToPlace());
         }
         catch(InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getClass());
             return false;
         }
 
         return true;
     }
-
+          
     private boolean attemptNuke(TilePlacementPhase placementPhase) {
         try {
             VolcanoMustBeOnTopOfVolcanoRule.applyRule(tileMap, placementPhase.getTileToPlace());
@@ -88,7 +90,7 @@ public class GameBoardImpl implements GameBoard {
             // TODO: CannotWipeOutSettlementRule.applyRule()
         }
         catch(InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getClass());
             return false;
         }
 
@@ -115,7 +117,7 @@ public class GameBoardImpl implements GameBoard {
             if(!tileMap.hasHexagonAt(locationsInTile[i]))
                 return false;
         }
-
+      
         return true;
     }
 
@@ -216,7 +218,8 @@ public class GameBoardImpl implements GameBoard {
             System.out.println(e.getClass());
             return false;
         }
-
+      
         return true;
     }
+
 }
