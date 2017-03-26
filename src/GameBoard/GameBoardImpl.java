@@ -38,7 +38,7 @@ public class GameBoardImpl implements GameBoard {
 
         else if(attemptSimpleTilePlacement(tilePlacementPhase)) {
             tileMap.insertTile(tilePlacementPhase.getTileToPlace());
-            incrementTurnNumber()
+            incrementTurnNumber();
             return;
         }
 
