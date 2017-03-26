@@ -80,7 +80,7 @@ public class GameBoardImpl implements GameBoard {
 
         return true;
     }
-          
+
     private boolean attemptNuke(TilePlacementPhase placementPhase) {
         try {
             VolcanoMustBeOnTopOfVolcanoRule.applyRule(tileMap, placementPhase.getTileToPlace());
@@ -221,5 +221,4 @@ public class GameBoardImpl implements GameBoard {
       
         return true;
     }
-
 }

@@ -14,7 +14,6 @@ import org.junit.Test;
 public class HexesBelowTileShouldBeSameLevelRuleTest {
     private TileBuilder builder;
     private HexagonMap hexMap;
-    private Location[] locations;
     private AxialMovement movement;
     private Tile toPlacePass;
     private Tile toPlaceFail;

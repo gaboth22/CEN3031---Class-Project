@@ -5,7 +5,6 @@ import Tile.Tile.Tile;
 import TileMap.TileMap;
 import Location.*;
 import TileMap.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HexesBelowTileShouldBeSameLevelRule {
