@@ -6,6 +6,8 @@ import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildPhaseException;
 import Play.Rule.PiecePlacementRules.*;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
+import GamePieceMap.GamePieceMap;
+import Location.Location;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
 import Play.Rule.TilePlacementRules.*;
 import Play.TilePlacementPhase.TilePlacementPhase;
@@ -66,19 +68,34 @@ public class GameBoardImpl implements GameBoard {
         return true;
     }
 
-    private boolean attemptSimpleTilePlacement(TilePlacementPhase placementPhase) {
+    private boolean attemptFirstTilePlacement(TilePlacementPhase placementPhase) {
         try {
+            if(turnNumber != FIRST_TURN)
+                throw new InvalidTilePlacementRuleException();
             HexesBelowShouldBeAtLevelZeroRule.applyRule(tileMap, placementPhase.getTileToPlace());
-            TileMustTouchOneEdgeRule.applyRule(tileMap, placementPhase.getTileToPlace());
+            FirstTileMustBePlacedWithVolcanoAtCenterOfBoard.applyRule(tileMap, placementPhase.getTileToPlace());
         }
-        catch(InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+        catch( InvalidTilePlacementRuleException e) {
+            System.out.println(e.getClass());
             return false;
         }
 
         return true;
     }
 
+    private boolean attemptSimpleTilePlacement(TilePlacementPhase placementPhase) {
+        try {
+            HexesBelowShouldBeAtLevelZeroRule.applyRule(tileMap, placementPhase.getTileToPlace());
+            TileMustTouchOneEdgeRule.applyRule(tileMap, placementPhase.getTileToPlace());
+        }
+        catch(InvalidTilePlacementRuleException e) {
+            System.out.println(e.getClass());
+            return false;
+        }
+
+        return true;
+    }
+          
     private boolean attemptNuke(TilePlacementPhase placementPhase) {
         try {
             VolcanoMustBeOnTopOfVolcanoRule.applyRule(tileMap, placementPhase.getTileToPlace());
@@ -88,7 +105,7 @@ public class GameBoardImpl implements GameBoard {
             // TODO: CannotWipeOutSettlementRule.applyRule()
         }
         catch(InvalidTilePlacementRuleException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getClass());
             return false;
         }
 
@@ -109,13 +126,126 @@ public class GameBoardImpl implements GameBoard {
         return tileMap.getAllHexagons();
     }
 
+//     @Override
+//     public boolean hasTileAt(Location[] locationsInTile) {
+//         for(int i = 0; i < locationsInTile.length; i++) {
+//             if(!tileMap.hasHexagonAt(locationsInTile[i]))
+//                 return false;
+//         }
+
+//         return true;
+//     }
+
+//     @Override
+//     public void doBuildPhase(BuildPhase buildPhase) throws Exception {
+
+//         if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.VILLAGER) {
+
+//             if(attemptSettlementExpansion(buildPhase)) {
+//                 gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
+//                                             buildPhase.getGamePiece());
+//             }
+
+//             else if(attemptSettlementFoundation(buildPhase)) {
+//                 gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
+//                                             buildPhase.getGamePiece());
+//             }
+
+//             else {
+//                 throw new BuildPhaseException();
+//             }
+//         }
+
+//         else if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TIGER ||
+//                 buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TOTORO) {
+//             if(attemptSpecialConstruction(buildPhase)) {
+//                 gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
+//                                             buildPhase.getGamePiece());
+//             }
+//             else {
+//                 throw new BuildPhaseException();
+//             }
+//         }
+//     }
+
+//     private boolean attemptSettlementExpansion(BuildPhase buildPhase) {
+//         try {
+//             GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+//                                                             buildPhase.getGamePiece(),
+//                                                             buildPhase.getLocationToPlacePieceOn());
+//             HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
+//             HexMustBeNextToPlayerSettlementRule.applyRule(gamePieceMap,
+//                                                             buildPhase.getLocationToPlacePieceOn(),
+//                                                             buildPhase.getPlayerID());
+//         }
+//         catch(InvalidPiecePlacementRuleException e) {
+//             System.out.println(e.getClass());
+//             return false;
+//         }
+
+//         return true;
+//     }
+
+//     private boolean attemptSettlementFoundation(BuildPhase buildPhase) {
+//         try {
+//             GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+//                                                             buildPhase.getGamePiece(),
+//                                                             buildPhase.getLocationToPlacePieceOn());
+//             HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
+
+//         }
+//         catch(InvalidPiecePlacementRuleException e) {
+//             System.out.println(e.getClass());
+//             return false;
+//         }
+
+//         return true;
+//     }
+
+//     private boolean attemptSpecialConstruction(BuildPhase buildPhase) {
+//         try {
+//             GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+//                                                             buildPhase.getGamePiece(),
+//                                                             buildPhase.getLocationToPlacePieceOn());
+
+//             HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
+
+//             HexMustBeNextToPlayerSettlementRule.applyRule(gamePieceMap,
+//                                                             buildPhase.getLocationToPlacePieceOn(),
+//                                                             buildPhase.getPlayerID());
+
+//             if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TIGER) {
+//                 HexHeightMustBeThreeOrHigherRule.applyRule(tileMap, buildPhase.getLocationToPlacePieceOn());
+//             }
+
+//             else if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TOTORO) {
+//                 SettlementSizeMustBeFiveOrGreaterRule.applyRule(gamePieceMap,
+//                                                                 buildPhase.getLocationToPlacePieceOn(),
+//                                                                 buildPhase.getPlayerID());
+//             }
+
+//             SettlementMustNotAlreadyHaveSpecialPieceRule.applyRule(gamePieceMap,
+//                                                                 buildPhase.getLocationToPlacePieceOn(),
+//                                                                 buildPhase.getPlayerID(),
+//                                                                 buildPhase.getTypeOfPieceToPlace());
+//         }
+//         catch (InvalidPiecePlacementRuleException e) {
+//             System.out.println(e.getClass());
+//             return false;
+//         }
+
+    @Override
+    public Map<Location, Hexagon> getGameBoardHexagons() {
+        return tileMap.getAllHexagons();
+    }
+
     @Override
     public boolean hasTileAt(Location[] locationsInTile) {
         for(int i = 0; i < locationsInTile.length; i++) {
             if(!tileMap.hasHexagonAt(locationsInTile[i]))
                 return false;
         }
-
+      
         return true;
     }
 
@@ -216,7 +346,8 @@ public class GameBoardImpl implements GameBoard {
             System.out.println(e.getClass());
             return false;
         }
-
+      
         return true;
     }
+
 }
