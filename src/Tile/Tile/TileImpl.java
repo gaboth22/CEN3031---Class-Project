@@ -4,6 +4,7 @@ import Terrain.Terrain.Terrain;
 import Location.Location;
 
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.List;
 
 public class TileImpl implements Tile {
@@ -43,11 +44,13 @@ public class TileImpl implements Tile {
         Location[] locations = tile.getArrayOfTerrainLocations();
         Terrain[] terrains = tile.getArrayOfTerrains();
 
-        for(int i = 0; i < locations.length; i++) {
-            if(!locations[i].equals(volcanoLeftRightLocations.get(i)) ||
-                    terrains[i] != volcanoLeftRightTerrains.get(i))
-                return false;
+        if(!Arrays.equals(locations, volcanoLeftRightLocations.toArray())){
+            return false;
         }
+        if(!Arrays.equals(terrains, volcanoLeftRightTerrains.toArray())) {
+            return false;
+        }
+
         return true;
     }
 
