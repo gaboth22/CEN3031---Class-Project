@@ -1,23 +1,31 @@
 package GUI;
 
 import GamePieceMap.GamePiece;
+import GamePieceMap.TypeOfPiece;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.TilePlacementPhase.TilePlacementPhase;
+import Player.PlayerID;
 import Terrain.Terrain.Terrain;
 import Tile.Tile.Tile;
 import processing.core.PApplet;
 import processing.core.PImage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
+import processing.core.PFont;
 
 public class HexLayoutGui extends PApplet {
 
     private ArrayList<Coordinate> coordinates;
     private PImage background;
-    private ArrayList<Tile> tilesOnDisplay;
-    private ArrayList<GamePiece> piecesOnDisplay;
+    private PFont font;
+    private List<Tile> tilesOnDisplay;
+    private List<GamePiece> piecesOnDisplay;
+    private List<Hexagon> hexesOnDisplay;
     private Scanner input;
+    private HexMap hexMap;
+    private boolean showTiles;
 
     public static void main(String[] args) {
         PApplet.main("GUI.HexLayoutGui");
@@ -32,16 +40,33 @@ public class HexLayoutGui extends PApplet {
     }
 
     public void setup() {
-        tilesOnDisplay = new ArrayList<>();
-        piecesOnDisplay = new ArrayList<>();
+        showTiles = false;
+        hexesOnDisplay = new ArrayList<>();
+        tilesOnDisplay = new ArrayList<Tile>();
+        piecesOnDisplay = new ArrayList<GamePiece>();
         input = new Scanner(System.in);
+        hexMap = new HexMap();
         imageMode(CENTER);
         setFrameRate();
         background = loadImage("./src/GUI/data/hexes.jpeg");
+        font = loadFont("./src/GUI/data/AndaleMono-48.vlw");
+        textFont(font,10);
         coordinates = new ArrayList<>();
         coordinates = Deserializer.getListOfCoordinates();
+        doBackGroundImage();
+        writeCoordinatesOnMap();
+    }
 
-        getUserPlay();
+    private void writeCoordinatesOnMap() {
+        for(Coordinate coordinate : coordinates) {
+            Location location = hexMap.getLocationFromCoordinate(coordinate);
+            if(location != null) {
+                String loc = "(" + location.getX() + "," + location.getY() + ")";
+                fill(color(0,0,0));
+                textSize(10);
+                text(loc, coordinate.x - 18, coordinate.y - 10);
+            }
+        }
     }
 
     private void setFrameRate() {
@@ -49,8 +74,7 @@ public class HexLayoutGui extends PApplet {
     }
 
     public void draw() {
-        doBackGroundImage();
-        highLightMouseLocation();
+        getUserPlay();
         displayUpdatedBoard();
     }
 
@@ -58,16 +82,45 @@ public class HexLayoutGui extends PApplet {
         image(background, width/2, height/2, width, height);
     }
 
+    public void mouseClicked() {
+        showTiles = !showTiles;
+    }
+
     private void getUserPlay() {
+
         System.out.println("Enter play: ");
         String play = input.nextLine();
         GameDataParser parser = new GameDataParser(play);
         BuildPhase buildPhase;
         TilePlacementPhase tilePlacementPhase;
 
-        if(parser.getPlayType() == "piece") {
+        if(parser.getPlayType().equals("piece")) {
             try {
                 buildPhase = parser.getBuildPhase();
+                PlayerID pid = buildPhase.getPlayerID();
+                TypeOfPiece piece = buildPhase.getTypeOfPieceToPlace();
+                Location loc = buildPhase.getLocationToPlacePieceOn();
+                String pieceString = "";
+                String pidString = "";
+                if(pid == PlayerID.PLAYER_TWO)
+                    pidString = "P2";
+                else
+                    pidString = "P1";
+
+                if(piece == TypeOfPiece.TIGER)
+                    pieceString = pidString + "-" + "TI";
+                else if(piece == TypeOfPiece.TOTORO)
+                    pieceString = pidString + "-" + "TO";
+                else
+                    pieceString = pidString + "-" + "VI";
+
+                Coordinate coord = hexMap.getCoordinateFromLocation(loc);
+                for(Hexagon hex : hexesOnDisplay) {
+                    if(hex.getCenterX() == coord.x && hex.getCenterY() == coord.y) {
+                        hex.setPiece(pieceString);
+                        break;
+                    }
+                }
             }
             catch (Exception e) {}
         }
@@ -75,32 +128,80 @@ public class HexLayoutGui extends PApplet {
             try {
                 tilePlacementPhase = parser.getTilePlacementPhase();
                 Tile toPlace = tilePlacementPhase.getTileToPlace();
-                tilesOnDisplay.add(toPlace);
-                System.out.println(toPlace.getArrayOfTerrainLocations());
-                System.out.println(toPlace.getArrayOfTerrains());
+                Location[] l = toPlace.getArrayOfTerrainLocations();
+                Terrain[] t = toPlace.getArrayOfTerrains();
+
+                float r = random(0, 255);
+                float g = random(0, 255);
+                float b = random(0, 255);
+
+                for(Hexagon hex : hexesOnDisplay) {
+
+                    for(int i = 0; i < l.length; i++) {
+                        Coordinate c = hexMap.getCoordinateFromLocation(l[i]);
+                        if(hex.getCenterX() == c.x && hex.getCenterY() == c.y) {
+                            hex.setTerrain(terrainToString(t[i]));
+                            int prevLevel = Integer.parseInt(hex.getLevel());
+                            hex.setLevel(Integer.toString(prevLevel + 1));
+                            hex.setColor(color(r,g,b,100));
+                            hex.setPiece("");
+                        }
+                    }
+                }
+
+                for(int i  = 0; i < t.length; i++) {
+                    Hexagon hex = getHex(l[i],color(r,g,b,100),t[i]);
+                    if(!hexesOnDisplay.contains(hex))
+                        hexesOnDisplay.add(hex);
+                }
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
         }
 
     }
 
+    private String terrainToString(Terrain t) {
+        if(t == Terrain.GRASSLANDS)
+            return "G";
+        else if(t == Terrain.JUNGLE)
+            return "J";
+        else if(t == Terrain.LAKE)
+            return "L";
+        else if(t == Terrain.ROCKY)
+            return "R";
+        else
+            return"V";
+    }
+
+    private Hexagon getHex(Location loc, int color, Terrain t) {
+        Coordinate c = hexMap.getCoordinateFromLocation(loc);
+        Hexagon hex = new Hexagon(c.x, c.y, 30);
+        hex.setParent(this);
+        hex.setColor(color);
+
+        if(t == Terrain.GRASSLANDS)
+            hex.setTerrain("G");
+        else if(t == Terrain.JUNGLE)
+            hex.setTerrain("J");
+        else if(t == Terrain.LAKE)
+            hex.setTerrain("L");
+        else if(t == Terrain.ROCKY)
+            hex.setTerrain("R");
+        else
+            hex.setTerrain("V");
+
+        hex.setLevel("1");
+
+        return hex;
+    }
+
     private void displayUpdatedBoard() {
-        for(Tile tile : tilesOnDisplay) {
-            Location[] locs = tile.getArrayOfTerrainLocations();
-            Terrain[] ters = tile.getArrayOfTerrains();
-            for(int i = 0; i < locs.length; i++) {
-                if(ters[i] == Terrain.VOLCANO) {
-                    renderHexWithVolcanoAt(locs[i].getX(), locs[i].getY());
-                }
-
-                else if(ters[i] == Terrain.GRASSLANDS) {
-                    renderHexWithGrasslandsAt(locs[i].getX(), locs[i].getY());
-                }
-
-                else if(ters[i] == Terrain.LAKE) {
-                    renderHexWithLakeAt(locs[i].getX(), locs[i].getY());
-                }
-            }
+        doBackGroundImage();
+        writeCoordinatesOnMap();
+        for(Hexagon hex : hexesOnDisplay) {
+            hex.render();
         }
     }
 
@@ -110,28 +211,31 @@ public class HexLayoutGui extends PApplet {
 
     private void renderBlackHexAt(Coordinate coordinate) {
         Hexagon hex = new Hexagon(coordinate.x, coordinate.y, 30);
-        hex.setColor(Color.BLACK);
+        hex.setColor(color(0,0,0, 100));
         hex.setParent(this);
         hex.render();
     }
 
-    private void renderHexWithVolcanoAt(int x, int y) {
-        Hexagon hex = new Hexagon(x, y, 30);
-        hex.setColor(Color.RED);
+    private void renderHexWithVolcanoAt(Location loc, int color) {
+        Coordinate toRender = hexMap.getCoordinateFromLocation(loc);
+        Hexagon hex = new Hexagon(toRender.x, toRender.y, 30);
+        hex.setColor(color(255, 0, 0, 100));
         hex.setParent(this);
         hex.render();
     }
 
-    private void renderHexWithGrasslandsAt(int x, int y) {
-        Hexagon hex = new Hexagon(x, y, 30);
-        hex.setColor(Color.GREEN);
+    private void renderHexWithGrasslandsAt(Location loc, int color) {
+        Coordinate toRender = hexMap.getCoordinateFromLocation(loc);
+        Hexagon hex = new Hexagon(toRender.x, toRender.y, 30);
+        hex.setColor(color(0, 255, 0, 100));
         hex.setParent(this);
         hex.render();
     }
 
-    private void renderHexWithLakeAt(int x, int y) {
-        Hexagon hex = new Hexagon(x, y, 30);
-        hex.setColor(Color.RED);
+    private void renderHexWithLakeAt(Location loc, int color) {
+        Coordinate toRender = hexMap.getCoordinateFromLocation(loc);
+        Hexagon hex = new Hexagon(toRender.x, toRender.y, 30);
+        hex.setColor(color(0, 0, 255, 100));
         hex.setParent(this);
         hex.render();
     }

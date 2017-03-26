@@ -39,28 +39,31 @@ public class GameDataParser {
 
     public BuildPhase getBuildPhase() throws Exception {
         GamePiece piece = null;
-        if(playType.equals("piece")) {
-            if (args[2].equals("villager"))
-                piece = new GamePiece(pid, TypeOfPiece.VILLAGER);
-            else if (args[2].equals("totoro"))
-                piece = new GamePiece(pid, TypeOfPiece.TOTORO);
-            else
-                piece = new GamePiece(pid, TypeOfPiece.TIGER);
-        }
 
-        BuildPhase buildPhase = new BuildPhase(piece,
-                new Location(Integer.parseInt(args[3]),
-                             Integer.parseInt(args[4])));
-         return buildPhase;
+        if (args[2].equals("vi"))
+            piece = new GamePiece(pid, TypeOfPiece.VILLAGER);
+        else if (args[2].equals("to"))
+            piece = new GamePiece(pid, TypeOfPiece.TOTORO);
+        else
+            piece = new GamePiece(pid, TypeOfPiece.TIGER);
+
+        Location toPlaceOn = new Location(Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+
+        System.out.println(piece);
+        System.out.println(toPlaceOn);
+
+        BuildPhase buildPhase = new BuildPhase(piece, toPlaceOn);
+
+        return buildPhase;
     }
 
     public TilePlacementPhase getTilePlacementPhase() throws Exception {
         Terrain volc = getTerrainFromString(args[2]);
         Terrain left = getTerrainFromString(args[3]);
         Terrain right = getTerrainFromString(args[4]);
-        Location vLoc = new Location(Integer.parseInt(args[5]), Integer.parseInt(args[8]));
-        Location lLoc = new Location(Integer.parseInt(args[6]), Integer.parseInt(args[9]));
-        Location rLoc = new Location(Integer.parseInt(args[7]), Integer.parseInt(args[10]));
+        Location vLoc = new Location(Integer.parseInt(args[5]), Integer.parseInt(args[6]));
+        Location lLoc = new Location(Integer.parseInt(args[7]), Integer.parseInt(args[8]));
+        Location rLoc = new Location(Integer.parseInt(args[9]), Integer.parseInt(args[10]));
         System.out.println("" + volc + ", " + left + ", " + right);
         System.out.println(vLoc + ", " + lLoc + ", " + rLoc);
         Terrain[] terrains = {volc, left, right};

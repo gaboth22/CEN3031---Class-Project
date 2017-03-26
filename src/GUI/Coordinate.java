@@ -17,4 +17,22 @@ public class Coordinate implements Pair {
     public String toString() {
         return "(" + x + ", " + y + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coordinate coord = (Coordinate) o;
+
+        if (y != coord.y) return false;
+        return x == coord.x;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = y;
+        result = 31 * result + x;
+        return result;
+    }
 }

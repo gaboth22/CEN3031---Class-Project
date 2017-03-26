@@ -8,11 +8,33 @@ public class Hexagon {
     private int size;
     private int color;
     private PApplet parent;
+    private String terrain;
+    private String level;
+    private String piece;
 
     public Hexagon(int centerX, int centerY, int size) {
         this.centerX = centerX;
         this.centerY = centerY;
         this.size = size;
+        terrain = "";
+        level = "";
+        piece = "";
+    }
+
+    public void setTerrain(String terrain) {
+        this.terrain = terrain;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public void setPiece(String piece) {
+        this.piece = piece;
     }
 
     public void setParent(PApplet applet) {
@@ -32,10 +54,12 @@ public class Hexagon {
     }
 
     public void render() {
-        parent.pushMatrix();
-        parent.fill(color);
+        parent.fill(this.color);
         renderPolygon(centerX, centerY, size, 6);
-        parent.popMatrix();
+        String data = "" + level + " " + terrain + " " + piece + "";
+        parent.fill(0,100,255);
+        parent.textSize(9);
+        parent.text(data, centerX - 25, centerY);
     }
 
     private void renderPolygon(float x, float y, float radius, int npoints) {
@@ -52,4 +76,15 @@ public class Hexagon {
     public boolean isPointWithinHex(int x, int y) {
         return parent.dist(centerX + 10, centerY + 10, x, y) <= 25;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Hexagon hex = (Hexagon) o;
+
+        return centerX == hex.centerX && centerY == hex.centerY;
+    }
+
 }

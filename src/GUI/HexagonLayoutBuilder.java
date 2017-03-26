@@ -22,13 +22,13 @@ public class HexagonLayoutBuilder {
                     if(j % 2 == 0) {
                         Hexagon hex = new Hexagon(j * 45, i * 50, 30);
                         hex.setParent(parent);
-                        hex.setColor(Color.WHITE);
+                        hex.setColor(parent.color(255,255,255));
                         listOfHexesOnDisplay.add(hex);
                     }
                     else {
                         Hexagon hex = new Hexagon(j * 45, i * 50 - 25, 30);
                         hex.setParent(parent);
-                        hex.setColor(Color.WHITE);
+                        hex.setColor(parent.color(255,255,255));
                         listOfHexesOnDisplay.add(hex);
                     }
                 }
