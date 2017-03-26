@@ -37,4 +37,10 @@ public class GamePieceMap {
         GamePiece gamePiece = mapContainingPiecesAtLocations.get(location);
         return gamePiece.getPlayer();
     }
+
+    public GamePiece getPieceAtLocation(Location location){
+        GamePiece gamePiece = mapContainingPiecesAtLocations.get(location);
+        return gamePiece;
+    }
+
 }
