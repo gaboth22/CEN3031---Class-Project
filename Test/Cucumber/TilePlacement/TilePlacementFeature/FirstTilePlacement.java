@@ -1,4 +1,4 @@
-package Cucumber;
+package Cucumber.TilePlacement.TilePlacementFeature;
 
 import GameBoard.*;
 import Location.Location;
@@ -12,7 +12,7 @@ import cucumber.api.java.en.Then;
 import Tile.Tile.Tile;
 import org.junit.Assert;
 
-public class FirstTileBadPlacement {
+public class FirstTilePlacement {
     private GameBoard gameBoard;
     private TileBuilder builder;
     private TilePlacementPhase placementPhase;
@@ -31,7 +31,7 @@ public class FirstTileBadPlacement {
         Assert.assertEquals(1, gameBoard.getCurrentTurn());
     }
 
-    @When("^the active player places a tile not at the origin$")
+    @When("^the active player tries to place a tile incorrectly$")
     public void placeFirstTileAgain() throws Exception {
         Location notOrigin = new Location(1,2);
         firstTile = builder.getTileWithLocations(notOrigin,
@@ -50,5 +50,17 @@ public class FirstTileBadPlacement {
     @Then("^then the insertion should not be valid$")
     public void theInsertionShouldBeInvalid() {
         Assert.assertTrue(insertionFailed);
+    }
+
+    @When("^the active player places a tile")
+    public void placeFirstTile() throws Exception {
+        firstTile = builder.getTileAtOrigin();
+        placementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, firstTile);
+        gameBoard.doTilePlacementPhase(placementPhase);
+    }
+
+    @Then("^the tile should be placed at center of table")
+    public void tileShouldBeAtCenterOfTable() throws Exception {
+        Assert.assertTrue(gameBoard.hasTileAt(firstTile.getArrayOfTerrainLocations()));
     }
 }

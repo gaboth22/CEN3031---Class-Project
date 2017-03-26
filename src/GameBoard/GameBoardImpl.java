@@ -1,5 +1,11 @@
 package GameBoard;
 
+import GamePieceMap.*;
+import Location.Location;
+import Play.BuildPhase.BuildPhase;
+import Play.BuildPhase.BuildPhaseException;
+import Play.Rule.PiecePlacementRules.*;
+import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
 import GamePieceMap.GamePieceMap;
 import Location.Location;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
@@ -111,8 +117,108 @@ public class GameBoardImpl implements GameBoard {
             if(!tileMap.hasHexagonAt(locationsInTile[i]))
                 return false;
         }
+      
+        return true;
+    }
+
+    @Override
+    public void doBuildPhase(BuildPhase buildPhase) throws Exception {
+
+        if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.VILLAGER) {
+
+            if(attemptSettlementExpansion(buildPhase)) {
+                gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
+                                            buildPhase.getGamePiece());
+            }
+
+            else if(attemptSettlementFoundation(buildPhase)) {
+                gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
+                                            buildPhase.getGamePiece());
+            }
+
+            else {
+                throw new BuildPhaseException();
+            }
+        }
+
+        else if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TIGER ||
+                buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TOTORO) {
+            if(attemptSpecialConstruction(buildPhase)) {
+                gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
+                                            buildPhase.getGamePiece());
+            }
+            else {
+                throw new BuildPhaseException();
+            }
+        }
+    }
+
+    private boolean attemptSettlementExpansion(BuildPhase buildPhase) {
+        try {
+            GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+                                                            buildPhase.getGamePiece(),
+                                                            buildPhase.getLocationToPlacePieceOn());
+            HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
+            HexMustBeNextToPlayerSettlementRule.applyRule(gamePieceMap,
+                                                            buildPhase.getLocationToPlacePieceOn(),
+                                                            buildPhase.getPlayerID());
+        }
+        catch(InvalidPiecePlacementRuleException e) {
+            System.out.println(e.getClass());
+            return false;
+        }
 
         return true;
     }
 
+    private boolean attemptSettlementFoundation(BuildPhase buildPhase) {
+        try {
+            GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+                                                            buildPhase.getGamePiece(),
+                                                            buildPhase.getLocationToPlacePieceOn());
+            HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
+
+        }
+        catch(InvalidPiecePlacementRuleException e) {
+            System.out.println(e.getClass());
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean attemptSpecialConstruction(BuildPhase buildPhase) {
+        try {
+            GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+                                                            buildPhase.getGamePiece(),
+                                                            buildPhase.getLocationToPlacePieceOn());
+
+            HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
+
+            HexMustBeNextToPlayerSettlementRule.applyRule(gamePieceMap,
+                                                            buildPhase.getLocationToPlacePieceOn(),
+                                                            buildPhase.getPlayerID());
+
+            if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TIGER) {
+                HexHeightMustBeThreeOrHigherRule.applyRule(tileMap, buildPhase.getLocationToPlacePieceOn());
+            }
+
+            else if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TOTORO) {
+                SettlementSizeMustBeFiveOrGreaterRule.applyRule(gamePieceMap,
+                                                                buildPhase.getLocationToPlacePieceOn(),
+                                                                buildPhase.getPlayerID());
+            }
+
+            SettlementMustNotAlreadyHaveSpecialPieceRule.applyRule(gamePieceMap,
+                                                                buildPhase.getLocationToPlacePieceOn(),
+                                                                buildPhase.getPlayerID(),
+                                                                buildPhase.getTypeOfPieceToPlace());
+        }
+        catch (InvalidPiecePlacementRuleException e) {
+            System.out.println(e.getClass());
+            return false;
+        }
+      
+        return true;
+    }
 }
