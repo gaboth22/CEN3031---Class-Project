@@ -48,5 +48,6 @@
         <jarDirectory url="file://$MODULE_DIR$/cucumberJar" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="ProcessingCore" level="project" />
   </component>
 </module>
