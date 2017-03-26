@@ -33,4 +33,21 @@ public class TileImpl implements Tile {
         locationArray = volcanoLeftRightLocations.toArray(locationArray);
         return locationArray;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tile tile = (Tile) o;
+        Location[] locations = tile.getArrayOfTerrainLocations();
+        Terrain[] terrains = tile.getArrayOfTerrains();
+
+        for(int i = 0; i < locations.length; i++) {
+            if(!locations[i].equals(volcanoLeftRightLocations.get(i)) ||
+                    terrains[i] != volcanoLeftRightTerrains.get(i))
+                return false;
+        }
+        return true;
+    }
 }

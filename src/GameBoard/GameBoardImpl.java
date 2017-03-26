@@ -111,6 +111,7 @@ public class GameBoardImpl implements GameBoard {
         return tileMap.getAllHexagons();
     }
 
+
     @Override
     public boolean hasTileAt(Location[] locationsInTile) {
         for(int i = 0; i < locationsInTile.length; i++) {
