@@ -57,6 +57,23 @@ public class TileImplTest {
         }
     }
 
+    @Test
+    public void equalsIsSymmetric() {
+        Tile tileTwo = new TileImpl(terrainList, locationList);
+        Assert.assertTrue(tileTwo.equals(tile) && tile.equals(tileTwo));
+        Assert.assertTrue(tile.hashCode() == tileTwo.hashCode());
+    }
+
+    @Test
+    public void tileCreationIsFinal() {
+        Tile tileTwo = new TileImpl(terrainList, locationList);
+        Location[] locations = tile.getArrayOfTerrainLocations();
+        Terrain[] terrains = tile.getArrayOfTerrains();
+        locations[0] = new Location(4,4);
+        terrains[0] = Terrain.GRASSLANDS;
+        Assert.assertEquals(tileTwo, tile);
+    }
+
     @Test(expected = InvalidParameterException.class)
     public void firstTerrainMustBeTheVolcano() {
         givenTheTerrainListDoesNotHaveTheVolcanoAsTheFirstTerrain();

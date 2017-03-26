@@ -9,7 +9,7 @@ import java.util.List;
 public class TileImpl implements Tile {
     private List<Terrain> volcanoLeftRightTerrains;
     private List<Location> volcanoLeftRightLocations;
-    private String errorMessage = "The first terrain should always be the volcano, but it is: ";
+    private static String errorMessage = "The first terrain should always be the volcano, but it is: ";
 
     public TileImpl(List<Terrain> terrainList, List<Location> locationList) {
         if(terrainList.get(0) != Terrain.VOLCANO) {
@@ -49,5 +49,12 @@ public class TileImpl implements Tile {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = volcanoLeftRightTerrains != null ? volcanoLeftRightTerrains.hashCode() : 0;
+        result = 31 * result + (volcanoLeftRightLocations != null ? volcanoLeftRightLocations.hashCode() : 0);
+        return result;
     }
 }
