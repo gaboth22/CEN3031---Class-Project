@@ -74,6 +74,16 @@ public class TileImplTest {
         Assert.assertEquals(tileTwo, tile);
     }
 
+    @Test
+    public void notEqualsTileAreNotEqual() {
+        terrainList = givenIHaveAListOfTerrains(Terrain.VOLCANO, Terrain.JUNGLE, Terrain.ROCKY);
+        locationList = givenIHaveAListOfTerrainLocations(new Location(0,0),
+                new Location(0, 1),
+                new Location(1, -1));
+        Tile tileTwo = new TileImpl(terrainList, locationList);
+        Assert.assertTrue(!tileTwo.equals(tile) && !tile.equals(tileTwo));
+    }
+
     @Test(expected = InvalidParameterException.class)
     public void firstTerrainMustBeTheVolcano() {
         givenTheTerrainListDoesNotHaveTheVolcanoAsTheFirstTerrain();
