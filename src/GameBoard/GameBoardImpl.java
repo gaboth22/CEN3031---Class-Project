@@ -7,6 +7,8 @@ import GamePieceMap.GamePieceMap;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementPhaseException;
 import TileMap.*;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class GameBoardImpl implements GameBoard {
@@ -19,6 +21,9 @@ public class GameBoardImpl implements GameBoard {
     private NukeTileHelper nukeTileHelper;
     private BuildPhaseHelper buildPhaseHelper;
 
+    int playerOneScore;
+    int playerTWoScore;
+
     public GameBoardImpl() {
         this.gamePieceMap = new GamePieceMap();
         this.tileMap = new HexagonMap();
@@ -26,26 +31,37 @@ public class GameBoardImpl implements GameBoard {
         this.tilePlacementHelper = new TilePlacementHelper();
         this.nukeTileHelper = new NukeTileHelper();
         this.buildPhaseHelper = new BuildPhaseHelper();
+        this.playerOneScore = 0;
+        this.playerTWoScore = 0;
     }
 
     @Override
     public void doTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception {
-        if(tilePlacementHelper.attemptFirstTilePlacementOrSimpleTilePlacement(tilePlacementPhase, tileMap, turnNumber, FIRST_TURN)) {
+
+        if(tilePlacementHelper.attemptFirstTilePlacementOrSimpleTilePlacement(
+            tilePlacementPhase,
+            tileMap,
+            turnNumber,
+            FIRST_TURN)) {
+
             tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
             incrementTurnNumber();
-            return;
         }
 
-        else if(nukeTileHelper.attemptNuke(tilePlacementPhase, tileMap)) {
-            nukeTileHelper.removeNukedVillagersFromGamePieceMap();
-            nukeTileHelper.updateTileMapWithNewlyInsertedTile();
-            return;
+        else if(nukeTileHelper.attemptNuke(tilePlacementPhase, tileMap, gamePieceMap)) {
+
+            nukeTileHelper.removeNukedVillagersFromGamePieceMap(tilePlacementPhase, gamePieceMap);
+            nukeTileHelper.updateTileMapWithNewlyInsertedTile(tilePlacementPhase, tileMap);
         }
 
-        throw new TilePlacementPhaseException();
+        else {
+            throw new TilePlacementPhaseException();
+        }
     }
 
-    private void incrementTurnNumber() { this.turnNumber++; }
+    private void incrementTurnNumber() {
+        this.turnNumber++;
+    }
 
     @Override
     public int getCurrentTurn() {
@@ -54,7 +70,7 @@ public class GameBoardImpl implements GameBoard {
 
     @Override
     public Map<Location, Hexagon> getGameBoardHexagons() {
-        return tileMap.getAllHexagons();
+        return new HashMap<Location, Hexagon>(tileMap.getAllHexagons());
     }
 
     @Override

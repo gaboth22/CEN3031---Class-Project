@@ -6,9 +6,20 @@ import Play.TilePlacementPhase.TilePlacementPhase;
 import TileMap.*;
 
 public class TilePlacementHelper {
+    private boolean wasFirstTilePlaced;
 
-    boolean attemptFirstTilePlacementOrSimpleTilePlacement(TilePlacementPhase tilePlacementPhase, TileMap tileMap, int turnNumber, int firstTurn) {
-        return attemptFirstTilePlacement(tilePlacementPhase, tileMap, turnNumber, firstTurn) ||
+    public TilePlacementHelper() {
+        wasFirstTilePlaced = false;
+    }
+
+    boolean attemptFirstTilePlacementOrSimpleTilePlacement(
+            TilePlacementPhase tilePlacementPhase,
+            TileMap tileMap,
+            int turnNumber,
+            int firstTurn)
+            throws InvalidTilePlacementRuleException {
+
+        return  attemptFirstTilePlacement(tilePlacementPhase, tileMap, turnNumber, firstTurn) ||
                 attemptSimpleTilePlacement(tilePlacementPhase, tileMap);
     }
 
@@ -16,11 +27,21 @@ public class TilePlacementHelper {
         tileMap.insertTile(tilePlacementPhase.getTileToPlace());
     }
 
-    public boolean attemptFirstTilePlacement(TilePlacementPhase placementPhase, TileMap tileMap, int turnNumber, int firstTurn) {
+    public boolean attemptFirstTilePlacement(
+            TilePlacementPhase placementPhase,
+            TileMap tileMap,
+            int turnNumber,
+            int firstTurn)
+            throws InvalidTilePlacementRuleException {
+
         try {
             if(turnNumber != firstTurn)
                 throw new InvalidTilePlacementRuleException();
-            applyRulesForFirstTilePlacement(placementPhase, tileMap);
+
+            if(!wasFirstTilePlaced) {
+                applyRulesForFirstTilePlacement(placementPhase, tileMap);
+                wasFirstTilePlaced = true;
+            }
         }
         catch( InvalidTilePlacementRuleException e) {
             System.out.println(e.getClass());
@@ -30,7 +51,9 @@ public class TilePlacementHelper {
         return true;
     }
 
-    private void applyRulesForFirstTilePlacement(TilePlacementPhase placementPhase, TileMap tileMap) throws InvalidTilePlacementRuleException {
+    private void applyRulesForFirstTilePlacement(TilePlacementPhase placementPhase, TileMap tileMap)
+            throws InvalidTilePlacementRuleException {
+
         HexesBelowShouldBeAtLevelZeroRule.applyRule(tileMap, placementPhase.getTileToPlace());
         FirstTileMustBePlacedWithVolcanoAtCenterOfBoard.applyRule(tileMap, placementPhase.getTileToPlace());
     }
@@ -47,8 +70,13 @@ public class TilePlacementHelper {
         return true;
     }
 
-    private void applyRulesForSimpleTilePlacement(TilePlacementPhase placementPhase, TileMap tileMap) throws InvalidTilePlacementRuleException {
+    private void applyRulesForSimpleTilePlacement(
+            TilePlacementPhase placementPhase,
+            TileMap tileMap)
+            throws InvalidTilePlacementRuleException {
+
         HexesBelowShouldBeAtLevelZeroRule.applyRule(tileMap, placementPhase.getTileToPlace());
         TileMustTouchOneEdgeRule.applyRule(tileMap, placementPhase.getTileToPlace());
+        wasFirstTilePlaced = true;
     }
 }

@@ -1,21 +1,43 @@
 package GameBoard;
 
 import GamePieceMap.*;
+import Location.Location;
+import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildPhaseException;
 import Play.Rule.PiecePlacementRules.*;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
+import Settlements.Creation.Settlement;
+import Settlements.Creation.SettlementCreator;
 import TileMap.*;
 
 class BuildPhaseHelper {
 
-    void typeOfPieceToPlaceIsVillager(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap) throws Exception {
+    void typeOfPieceToPlaceIsVillager(
+            BuildPhase buildPhase,
+            TileMap tileMap,
+            GamePieceMap gamePieceMap)
+            throws Exception {
+
         if(attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap)) {
-            gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
-                    buildPhase.getGamePiece());
+
+            Location[] locs = AdjacentLocationArrayGetter.getArrayOfAdjacentLocationsTo(buildPhase.getLocationToPlacePieceOn());
+            Settlement s = null;
+            for(Location loc : locs) {
+                s = SettlementCreator.getSettlementAt(gamePieceMap, loc);
+                if(s.getNumberOfHexesInSettlement() > 1 && s.getSettlementOwner() == buildPhase.getPlayerID())
+                    break;
+            }
+
+            if(s != null) {
+                //for locations adjacent to settlement that are not volcanos
+                gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
+                        buildPhase.getGamePiece());
+            }
         }
 
         else if(attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap)) {
+
             gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
                     buildPhase.getGamePiece());
         }
@@ -26,9 +48,9 @@ class BuildPhaseHelper {
     }
 
     void typeOfPieceToPlaceIsTigerOrTotoro(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap) throws Exception {
+
         if(attemptSpecialConstruction(buildPhase, tileMap, gamePieceMap)) {
-            gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
-                    buildPhase.getGamePiece());
+            gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(), buildPhase.getGamePiece());
         }
 
         else {
@@ -37,6 +59,7 @@ class BuildPhaseHelper {
     }
 
     private boolean attemptSettlementExpansion(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap) {
+
         try {
             attemptSettlementExpansionRules(buildPhase, tileMap, gamePieceMap);
         }
@@ -48,20 +71,29 @@ class BuildPhaseHelper {
         return true;
     }
 
-    private void attemptSettlementExpansionRules(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap)
+    private void attemptSettlementExpansionRules(
+            BuildPhase buildPhase,
+            TileMap tileMap,
+            GamePieceMap gamePieceMap)
             throws InvalidPiecePlacementRuleException {
-        GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap, buildPhase.getGamePiece(),
+
+        GamePieceCannotBePlacedOnVolcanoRule.applyRule(
+                tileMap,
+                buildPhase.getGamePiece(),
                 buildPhase.getLocationToPlacePieceOn());
+
         HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
-        HexMustBeNextToPlayerSettlementRule.applyRule(gamePieceMap,
+
+        HexMustBeNextToPlayerSettlementRule.applyRule(
+                gamePieceMap,
                 buildPhase.getLocationToPlacePieceOn(),
                 buildPhase.getPlayerID());
     }
 
     private boolean attemptSettlementFoundation(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap) {
+
         try {
             attemptSettlementFoundationRules(buildPhase, tileMap, gamePieceMap);
-
         }
         catch(InvalidPiecePlacementRuleException e) {
             System.out.println(e.getClass());
@@ -71,15 +103,22 @@ class BuildPhaseHelper {
         return true;
     }
 
-    private void attemptSettlementFoundationRules(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap)
+    private void attemptSettlementFoundationRules(
+            BuildPhase buildPhase,
+            TileMap tileMap,
+            GamePieceMap gamePieceMap)
             throws InvalidPiecePlacementRuleException {
-        GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+
+        GamePieceCannotBePlacedOnVolcanoRule.applyRule(
+                tileMap,
                 buildPhase.getGamePiece(),
                 buildPhase.getLocationToPlacePieceOn());
+
         HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
     }
 
     private boolean attemptSpecialConstruction(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap) {
+
         try {
             attemptSpecialConstructionRules(buildPhase, tileMap, gamePieceMap);
 
@@ -88,12 +127,14 @@ class BuildPhaseHelper {
             }
 
             else if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TOTORO) {
-                SettlementSizeMustBeFiveOrGreaterRule.applyRule(gamePieceMap,
+                SettlementSizeMustBeFiveOrGreaterRule.applyRule(
+                        gamePieceMap,
                         buildPhase.getLocationToPlacePieceOn(),
                         buildPhase.getPlayerID());
             }
 
-            SettlementMustNotAlreadyHaveSpecialPieceRule.applyRule(gamePieceMap,
+            SettlementMustNotAlreadyHaveSpecialPieceRule.applyRule(
+                    gamePieceMap,
                     buildPhase.getLocationToPlacePieceOn(),
                     buildPhase.getPlayerID(),
                     buildPhase.getTypeOfPieceToPlace());
@@ -106,15 +147,21 @@ class BuildPhaseHelper {
         return true;
     }
 
-    private void attemptSpecialConstructionRules(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap)
+    private void attemptSpecialConstructionRules(
+            BuildPhase buildPhase,
+            TileMap tileMap,
+            GamePieceMap gamePieceMap)
             throws InvalidPiecePlacementRuleException{
-        GamePieceCannotBePlacedOnVolcanoRule.applyRule(tileMap,
+
+        GamePieceCannotBePlacedOnVolcanoRule.applyRule(
+                tileMap,
                 buildPhase.getGamePiece(),
                 buildPhase.getLocationToPlacePieceOn());
 
         HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
 
-        HexMustBeNextToPlayerSettlementRule.applyRule(gamePieceMap,
+        HexMustBeNextToPlayerSettlementRule.applyRule(
+                gamePieceMap,
                 buildPhase.getLocationToPlacePieceOn(),
                 buildPhase.getPlayerID());
     }
