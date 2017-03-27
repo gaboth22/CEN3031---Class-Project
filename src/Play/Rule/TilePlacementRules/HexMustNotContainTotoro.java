@@ -6,17 +6,16 @@ import GamePieceMap.*;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
 
 public class HexMustNotContainTotoro {
-    privateStaticString errorMessage = "You cannot place a tile on a totoro sanctuary.";
 
-    public static void applyRule(GameMap pieceMap, Tile tileToPlace)
+    public static void applyRule(GamePieceMap pieceMap, Tile tileToPlace)
         throws InvalidTilePlacementRuleException {
-        Location[] locations =  tileToPlace.getArrayOfTileLocations();
-        for (int i = 0; i < 3; i++) {
-            if (!pieceMap.containsKey(locations[i])) {
+        Location[] locations =  tileToPlace.getArrayOfTerrainLocations();
+        for (int i = 0; i < locations.length; i++) {
+            if (!pieceMap.isThereAPieceAt(locations[i])) {
                 break;
             }
-            if (pieceMap.getPieceTypeAtLocation(location[i]) == TypeOfPiece.TOTORO) {
-                throw new InavlidTilePlacementRuleException(errorMessage);
+            if (pieceMap.getPieceTypeAtLocation(locations[i]) == TypeOfPiece.TOTORO) {
+                throw new InvalidTilePlacementRuleException("You cannot place a tile on a totoro sanctuary.");
             }
         }
     }
