@@ -42,5 +42,4 @@ public class GamePieceMap {
         GamePiece gamePiece = mapContainingPiecesAtLocations.get(location);
         return gamePiece;
     }
-
 }
