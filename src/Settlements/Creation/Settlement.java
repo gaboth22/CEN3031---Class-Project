@@ -25,7 +25,7 @@ public class Settlement {
     }
 
     /*
-     * Used by Settlement Creator
+     * Used by settlement creator. Not to be used for game-rule enforcement
      */
     public void markPieceInSettlement(Location location, GamePiece gamePiece) throws SettlementException {
         if(numberOfHexesInSettlement == 0) {
@@ -107,6 +107,10 @@ public class Settlement {
 
     public TypeOfPiece getTypeOfPieceAt(Location location) {
         return settlementLocations.get(location).getPieceType();
+    }
+
+    public Set<Location> getSetOfLocationsInSettlement() {
+        return settlementLocations.keySet();
     }
 
     @Override
