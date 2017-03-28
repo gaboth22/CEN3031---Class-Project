@@ -4,13 +4,13 @@ import Location.Location;
 import java.security.InvalidParameterException;
 
 public class Position {
-    private Location location;
-    private int height;
-    private String errorMessage = "Position height can never be < 0, and it was set to: ";
+    private final Location location;
+    private final int height;
+    private static final String ERROR_MESSAGE = "Position height can never be < 0, and it was set to: ";
 
     public Position(Location location, int height) throws InvalidParameterException {
         if(height < 0)
-            throw new InvalidParameterException(errorMessage + height);
+            throw new InvalidParameterException(ERROR_MESSAGE + height);
 
         this.location = location;
         this.height = height;
