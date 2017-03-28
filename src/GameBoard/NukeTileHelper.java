@@ -11,7 +11,7 @@ import Play.Rule.TilePlacementRules.VolcanoMustBeOnTopOfVolcanoRule;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import TileMap.*;
 
-class NukeTileHelper {
+public class NukeTileHelper {
 
     void removeNukedVillagersFromGamePieceMap(TilePlacementPhase tilePlacementPhase, GamePieceMap pieceMap) {
 
@@ -26,7 +26,7 @@ class NukeTileHelper {
         tileMap.insertTile(placementPhase.getTileToPlace());
     }
 
-    boolean attemptNuke(TilePlacementPhase placementPhase, TileMap tileMap, GamePieceMap pieceMap) {
+    public boolean attemptNuke(TilePlacementPhase placementPhase, TileMap tileMap, GamePieceMap pieceMap) {
 
         try {
             applyRulesForAttemptNuke(placementPhase, tileMap, pieceMap);

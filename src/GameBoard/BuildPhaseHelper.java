@@ -11,7 +11,7 @@ import Settlements.Creation.Settlement;
 import Settlements.Creation.SettlementCreator;
 import TileMap.*;
 
-class BuildPhaseHelper {
+public class BuildPhaseHelper {
 
     void typeOfPieceToPlaceIsVillager(
             BuildPhase buildPhase,
