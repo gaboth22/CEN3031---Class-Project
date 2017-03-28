@@ -110,7 +110,7 @@ public class Settlement {
     }
 
     public Set<Location> getSetOfLocationsInSettlement() {
-        return settlementLocations.keySet();
+        return new HashSet<Location>(settlementLocations.keySet());
     }
 
     @Override

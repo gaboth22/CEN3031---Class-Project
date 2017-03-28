@@ -134,7 +134,8 @@ public class SettlementTest {
     @Test
     public void changesToTheReturnedSetAreNotReflectedInTheSettlement() throws Exception {
         addThreeVillagersToSettlement();
-
+        whenIChangeTheReturnedSet();
+        thenANewSetReturnedByTheSettlementWillNotBeEqualToTheChangedSet();
     }
 
     private Set<Location> whenIChangeTheReturnedSet() {
