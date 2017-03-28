@@ -6,12 +6,16 @@ import Play.BuildPhase.BuildPhase;
 import GamePieceMap.GamePieceMap;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementPhaseException;
+import Player.PlayerID;
 import TileMap.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameBoardImpl implements GameBoard {
+    private static final int totoroScore = 200;
+    private static final int tigerScore = 75;
+
     private GamePieceMap gamePieceMap;
     private TileMap tileMap;
     private int turnNumber;
@@ -22,7 +26,7 @@ public class GameBoardImpl implements GameBoard {
     private BuildPhaseHelper buildPhaseHelper;
 
     int playerOneScore;
-    int playerTWoScore;
+    int playerTwoScore;
 
     public GameBoardImpl() {
         this.gamePieceMap = new GamePieceMap();
@@ -32,7 +36,7 @@ public class GameBoardImpl implements GameBoard {
         this.nukeTileHelper = new NukeTileHelper();
         this.buildPhaseHelper = new BuildPhaseHelper();
         this.playerOneScore = 0;
-        this.playerTWoScore = 0;
+        this.playerTwoScore = 0;
     }
 
     @Override
@@ -63,6 +67,35 @@ public class GameBoardImpl implements GameBoard {
         this.turnNumber++;
     }
 
+    private void updateScoreWhenVillagerPlaced(PlayerID playerID){
+        if(playerID == PlayerID.PLAYER_ONE){
+            this.playerOneScore += buildPhaseHelper.getLastPlayScoreForVillagers();
+        }
+        else{
+            this.playerTwoScore += buildPhaseHelper.getLastPlayScoreForVillagers();
+        }
+        buildPhaseHelper.setLastPlayVillagerScoreToZero();
+    }
+
+    private void updateScoreWhenTigerOrTotoroPlaced(TypeOfPiece type, PlayerID playerID){
+        if(playerID == PlayerID.PLAYER_ONE){
+            if(type == TypeOfPiece.TIGER){
+                this.playerOneScore += tigerScore;
+            }
+            else{
+                this.playerOneScore += totoroScore;
+            }
+        }
+        else{
+            if(type == TypeOfPiece.TIGER){
+                this.playerTwoScore += tigerScore;
+            }
+            else{
+                this.playerTwoScore += totoroScore;
+            }
+        }
+    }
+
     @Override
     public int getCurrentTurn() {
         return turnNumber;
@@ -88,11 +121,13 @@ public class GameBoardImpl implements GameBoard {
 
         if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.VILLAGER) {
             buildPhaseHelper.typeOfPieceToPlaceIsVillager(buildPhase, tileMap, gamePieceMap);
+            updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
         }
 
         else if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TIGER ||
                 buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TOTORO) {
             buildPhaseHelper.typeOfPieceToPlaceIsTigerOrTotoro(buildPhase, tileMap, gamePieceMap);
+            updateScoreWhenTigerOrTotoroPlaced(buildPhase.getTypeOfPieceToPlace(), buildPhase.getPlayerID());
         }
     }
 }

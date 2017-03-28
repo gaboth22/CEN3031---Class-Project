@@ -12,6 +12,7 @@ import Settlements.Creation.SettlementCreator;
 import TileMap.*;
 
 class BuildPhaseHelper {
+    private int lastPlayVillagerScore = 0;
 
     void typeOfPieceToPlaceIsVillager(
             BuildPhase buildPhase,
@@ -30,9 +31,11 @@ class BuildPhaseHelper {
             }
 
             if(s != null) {
-                //for locations adjacent to settlement that are not volcanos
+                //TODO: for locations adjacent to settlement that are not volcanos
                 gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
                         buildPhase.getGamePiece());
+                //TODO: call update function every time a meeple is inserted
+                updateLastPlayScoreForVillagers(buildPhase, tileMap);
             }
         }
 
@@ -40,6 +43,7 @@ class BuildPhaseHelper {
 
             gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(),
                     buildPhase.getGamePiece());
+            updateLastPlayScoreForVillagers(buildPhase, tileMap);
         }
 
         else {
@@ -164,5 +168,19 @@ class BuildPhaseHelper {
                 gamePieceMap,
                 buildPhase.getLocationToPlacePieceOn(),
                 buildPhase.getPlayerID());
+    }
+
+    private void updateLastPlayScoreForVillagers(BuildPhase buildPhase, TileMap tileMap){
+        Location loc = buildPhase.getLocationToPlacePieceOn();
+        int height = tileMap.getHeightAt(loc);
+        lastPlayVillagerScore += height;
+    }
+
+    public void setLastPlayVillagerScoreToZero(){
+        lastPlayVillagerScore = 0;
+    }
+
+    public int getLastPlayScoreForVillagers(){
+        return lastPlayVillagerScore;
     }
 }
