@@ -16,16 +16,27 @@ public class SettlementExpansion {
                                                             Settlement settlement,
                                                             Terrain terrain) {
         Set<Location> locationsInSettlement = settlement.getSetOfLocationsInSettlement();
-        Set<Location> locationsToExpandTo = findLocationsToExpandInto(hexMap, locationsInSettlement, pieceMap, terrain);
-        return 0;
+        List<Location> locationsToExpandTo = findLocationsToExpandInto(hexMap, locationsInSettlement, pieceMap, terrain);
+
+        return costOfExpansion(hexMap, locationsToExpandTo);
     }
 
-    private static Set<Location> findLocationsToExpandInto(Map<Location, Hexagon> hexMap,
+    private static int costOfExpansion(Map<Location, Hexagon> hexMap, List<Location> locationsToExpandTo) {
+        int totalNumberOfMeeples = 0;
+        for(int i = 0; i < locationsToExpandTo.size(); i++) {
+            if(hexMap.containsKey(locationsToExpandTo.get(i))) {
+                totalNumberOfMeeples += hexMap.get(locationsToExpandTo.get(i)).getHeight();
+            }
+        }
+        return totalNumberOfMeeples;
+    }
+
+    private static List<Location> findLocationsToExpandInto(Map<Location, Hexagon> hexMap,
                                                            Set<Location> locationsInSettlement,
                                                            GamePieceMap pieceMap,
                                                            Terrain terrainToExpand) {
 
-        Set<Location> locationsToExpandInto = new HashSet<Location>();
+        List<Location> locationsToExpandInto = new ArrayList<Location>();
 
         Queue<Location> locationsToCheck = new LinkedList<>(locationsInSettlement);
         Set<Location> locationsVisited = locationsInSettlement;
@@ -37,22 +48,17 @@ public class SettlementExpansion {
             for(int i = 0; i < toCheck.length; i++) {
                 Location currLocation = toCheck[i];
 
-                boolean isValidLocation = hexMap.containsKey(currLocation) &&
+                boolean isValidLocation = !locationsVisited.contains(currLocation) &&
+                        hexMap.containsKey(currLocation) &&
                         hexMap.get(currLocation).getTerrain() == terrainToExpand &&
-                        !pieceMap.isThereAPieceAt(currLocation) &&
-                        !locationsVisited.contains(currLocation);
+                        !pieceMap.isThereAPieceAt(currLocation) ;
 
                 if(isValidLocation) {
                     locationsToExpandInto.add(currLocation);
                     locationsToCheck.add(currLocation);
                 }
                 locationsVisited.add(currLocation);
-
-
             }
-
-
-
         }
         return locationsToExpandInto;
     }
