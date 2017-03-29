@@ -173,7 +173,7 @@ class BuildPhaseHelper {
     private void updateLastPlayScoreForVillagers(BuildPhase buildPhase, TileMap tileMap){
         Location loc = buildPhase.getLocationToPlacePieceOn();
         int height = tileMap.getHeightAt(loc);
-        lastPlayVillagerScore += height;
+        lastPlayVillagerScore += height * height;
     }
 
     public void setLastPlayVillagerScoreToZero(){
