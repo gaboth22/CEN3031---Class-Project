@@ -1,21 +1,21 @@
-package PublisherTest;
+package SenderTest;
 
-import Publisher.Publisher;
-import Publisher.PublisherData.PublisherData;
-import Subscriber.Subscriber;
+import Sender.Sender;
+import Sender.SenderData.SenderData;
+import Receiver.Receiver;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PublisherTest {
-    private Publisher pub;
-    private Subscriber sub;
-    private PublisherData data;
+public class SenderTest {
+    private Sender pub;
+    private Receiver sub;
+    private SenderData data;
 
     @Before
     public void initializeInstances() {
-        pub = new Publisher();
-        sub = new SubscriberTestDouble();
+        pub = new Sender();
+        sub = new ReceiverTestDouble();
     }
 
     @Test
@@ -27,7 +27,7 @@ public class PublisherTest {
     }
 
     public void givenTheDataToBePublishedIs(String data) {
-        this.data = new PublisherDataTestDouble(data);
+        this.data = new SenderDataTestDouble(data);
     }
     private void givenTheSubscriberHasSubscribedToThePublisher() {
         pub.subscribe(sub);
@@ -38,7 +38,7 @@ public class PublisherTest {
     }
 
     public void theDataReceivedBySubscriberShouldBe(String data) {
-        String dataReceivedBySubscriber = ((SubscriberTestDouble) sub).getReceivedData();
+        String dataReceivedBySubscriber = ((ReceiverTestDouble) sub).getReceivedData();
         Assert.assertEquals(dataReceivedBySubscriber, data);
     }
 
@@ -52,12 +52,12 @@ public class PublisherTest {
     }
 
     public void theDataReceivedShouldNotBe(String data) {
-        String dataReceivedBySubscriber = ((SubscriberTestDouble) sub).getReceivedData();
+        String dataReceivedBySubscriber = ((ReceiverTestDouble) sub).getReceivedData();
         Assert.assertFalse(dataReceivedBySubscriber.equals(data));
     }
 
     public void butTheDataShouldBeInstead(String data) {
-        String dataReceivedBySubscriber = ((SubscriberTestDouble) sub).getReceivedData();
+        String dataReceivedBySubscriber = ((ReceiverTestDouble) sub).getReceivedData();
         Assert.assertEquals(dataReceivedBySubscriber, data);
     }
 }
