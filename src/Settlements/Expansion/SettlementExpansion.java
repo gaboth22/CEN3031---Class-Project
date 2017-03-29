@@ -22,13 +22,13 @@ public class SettlementExpansion {
     }
 
     private static int costOfExpansion(Map<Location, Hexagon> hexMap, List<Location> locationsToExpandTo) {
-        int totalNumberOfMeeples = 0;
+        int totalNumberOfVillagersRequired = 0;
         for(int i = 0; i < locationsToExpandTo.size(); i++) {
             if(hexMap.containsKey(locationsToExpandTo.get(i))) {
-                totalNumberOfMeeples += hexMap.get(locationsToExpandTo.get(i)).getHeight();
+                totalNumberOfVillagersRequired += hexMap.get(locationsToExpandTo.get(i)).getHeight();
             }
         }
-        return totalNumberOfMeeples;
+        return totalNumberOfVillagersRequired;
     }
 
     private static List<Location> findLocationsToExpandInto(Map<Location, Hexagon> hexMap,
@@ -62,4 +62,6 @@ public class SettlementExpansion {
         }
         return locationsToExpandInto;
     }
+
+
 }
