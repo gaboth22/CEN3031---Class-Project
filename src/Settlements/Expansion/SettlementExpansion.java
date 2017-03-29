@@ -3,25 +3,28 @@ package Settlements.Expansion;
 import GamePieceMap.GamePieceMap;
 import Location.Location;
 import Settlements.Creation.Settlement;
-import TileMap.TileMap;
+import TileMap.*;
 import Terrain.Terrain.Terrain;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class SettlementExpansion {
 
-    public int numberOfVillagersRequiredForExpansion(TileMap tileMap,
+    public int numberOfVillagersRequiredForExpansion(Map<Location, Hexagon> hexMap,
                                                      GamePieceMap pieceMap,
                                                      Settlement settlement,
                                                      Terrain terrain) {
         Set<Location> locationsInSettlement = settlement.getSetOfLocationsInSettlement();
-        Set<Location> locationsToExpandTo = findLocationsToExpandInto(tileMap, locationsInSettlement, terrain);
+        Set<Location> locationsToExpandTo = findLocationsToExpandInto(hexMap, locationsInSettlement, pieceMap, terrain);
         return 0;
     }
 
-    private Set<Location> findLocationsToExpandInto(TileMap tileMap, Set<Location> locationsInSettlement, Terrain terrainToExpand) {
+    private Set<Location> findLocationsToExpandInto(Map<Location, Hexagon> hexMap,
+                                                    Set<Location> locationsInSettlement,
+                                                    GamePieceMap pieceMap,
+                                                    Terrain terrainToExpand) {
+
+        Set<Location> locationsToExpandInto = new HashSet<Location>();
 
         Queue<Location> locationsToCheck = new LinkedList<>(locationsInSettlement);
         Set<Location> locationsVisited = locationsInSettlement;
@@ -31,5 +34,6 @@ public class SettlementExpansion {
         }
         return null;
     }
+
 
 }
