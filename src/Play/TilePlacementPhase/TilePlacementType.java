@@ -2,5 +2,6 @@ package Play.TilePlacementPhase;
 
 public enum TilePlacementType {
     NUKE,
-    SIMPLE_PLACEMENT
+    SIMPLE_PLACEMENT,
+    FIRST_PLACEMENT
 }

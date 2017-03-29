@@ -4,8 +4,11 @@ import GamePieceMap.*;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import GamePieceMap.GamePieceMap;
+import Play.BuildPhase.BuildPhaseException;
+import Play.BuildPhase.BuildType;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementPhaseException;
+import Play.TilePlacementPhase.TilePlacementType;
 import Player.PlayerID;
 import TileMap.*;
 
@@ -41,30 +44,111 @@ public class GameBoardImpl implements GameBoard {
 
     @Override
     public void doTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception {
+        if (tilePlacementPhase.getTilePlacementType() == TilePlacementType.FIRST_PLACEMENT) {
+            if (tilePlacementHelper.attemptFirstTilePlacement(
+                    tilePlacementPhase,
+                    tileMap)) {
 
-        if(tilePlacementHelper.attemptFirstTilePlacementOrSimpleTilePlacement(
-            tilePlacementPhase,
-            tileMap,
-            turnNumber,
-            FIRST_TURN)) {
-
-            tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
-            incrementTurnNumber();
+                tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
+                incrementTurnNumber();
+            }
+            else throw new TilePlacementPhaseException("First placement failed");
         }
+        else if (tilePlacementPhase.getTilePlacementType() == TilePlacementType.SIMPLE_PLACEMENT) {
+            if (tilePlacementHelper.attemptSimpleTilePlacement(
+                    tilePlacementPhase,
+                    tileMap)) {
 
-        else if(nukeTileHelper.attemptNuke(tilePlacementPhase, tileMap, gamePieceMap)) {
-
-            nukeTileHelper.removeNukedVillagersFromGamePieceMap(tilePlacementPhase, gamePieceMap);
-            nukeTileHelper.updateTileMapWithNewlyInsertedTile(tilePlacementPhase, tileMap);
+                tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
+                incrementTurnNumber();
+            }
+            else throw new TilePlacementPhaseException("Simple placement failed");
         }
+        else if (tilePlacementPhase.getTilePlacementType() == TilePlacementType.NUKE) {
+            if (nukeTileHelper.attemptNuke(
+                    tilePlacementPhase,
+                    tileMap,
+                    gamePieceMap)) {
 
-        else {
-            throw new TilePlacementPhaseException();
+                nukeTileHelper.updateTileMapWithNewlyInsertedTile(tilePlacementPhase, tileMap);
+                nukeTileHelper.removeNukedVillagersFromGamePieceMap(tilePlacementPhase, gamePieceMap);
+                incrementTurnNumber();
+            }
+            else throw new TilePlacementPhaseException("Nuking failed");
         }
     }
 
     private void incrementTurnNumber() {
         this.turnNumber++;
+    }
+
+    @Override
+    public int getCurrentTurn() {
+        return turnNumber;
+    }
+
+    @Override
+    public Map<Location, Hexagon> getGameBoardHexagons() {
+        return new HashMap<Location, Hexagon>(tileMap.getAllHexagons());
+    }
+
+    @Override
+    public boolean hasTileAt(Location[] locationsInTile) {
+        for(int i = 0; i < locationsInTile.length; i++) {
+            if(!tileMap.hasHexagonAt(locationsInTile[i]))
+                return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void doBuildPhase(BuildPhase buildPhase) throws Exception {
+        if(buildPhase.getBuildType() == BuildType.FOUND){
+            if(buildPhaseHelper.attemptSettlementFoundation(
+                    buildPhase,
+                    tileMap,
+                    gamePieceMap)){
+
+                buildPhaseHelper.insertVillager(buildPhase, gamePieceMap, tileMap);
+                updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+            }
+            else throw new BuildPhaseException("Settlement foundation failed");
+        }
+        else if(buildPhase.getBuildType() == BuildType.EXPAND) {
+            if(buildPhaseHelper.attemptSettlementExpansion(
+                    buildPhase,
+                    tileMap,
+                    gamePieceMap)){
+
+                buildPhaseHelper.expandSettlement();
+                updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+            }
+            else throw new BuildPhaseException("Settlement expansion failed");
+        }
+        else if(buildPhase.getBuildType() == BuildType.PLACE_TOTORO) {
+            if(buildPhaseHelper.attemptTotoroPlacement(
+                    buildPhase,
+                    tileMap,
+                    gamePieceMap)){
+
+                buildPhaseHelper.insertSpecialPiece(buildPhase, gamePieceMap);
+                updateScoreWhenTigerOrTotoroPlaced(buildPhase.getTypeOfPieceToPlace(), buildPhase.getPlayerID());
+
+            }
+            else throw new BuildPhaseException("Totoro placement failed");
+        }
+        else if(buildPhase.getBuildType() == BuildType.PLACE_TIGER){
+            if(buildPhaseHelper.attemptTigerPlacement(
+                    buildPhase,
+                    tileMap,
+                    gamePieceMap)) {
+
+                buildPhaseHelper.insertSpecialPiece(buildPhase, gamePieceMap);
+                updateScoreWhenTigerOrTotoroPlaced(buildPhase.getTypeOfPieceToPlace(), buildPhase.getPlayerID());
+            }
+            else throw new BuildPhaseException("Tiger placement failed");
+        }
     }
 
     private void updateScoreWhenVillagerPlaced(PlayerID playerID){
@@ -93,41 +177,6 @@ public class GameBoardImpl implements GameBoard {
             else{
                 this.playerTwoScore += totoroScore;
             }
-        }
-    }
-
-    @Override
-    public int getCurrentTurn() {
-        return turnNumber;
-    }
-
-    @Override
-    public Map<Location, Hexagon> getGameBoardHexagons() {
-        return new HashMap<Location, Hexagon>(tileMap.getAllHexagons());
-    }
-
-    @Override
-    public boolean hasTileAt(Location[] locationsInTile) {
-        for(int i = 0; i < locationsInTile.length; i++) {
-            if(!tileMap.hasHexagonAt(locationsInTile[i]))
-                return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void doBuildPhase(BuildPhase buildPhase) throws Exception {
-
-        if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.VILLAGER) {
-            buildPhaseHelper.typeOfPieceToPlaceIsVillager(buildPhase, tileMap, gamePieceMap);
-            updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
-        }
-
-        else if(buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TIGER ||
-                buildPhase.getTypeOfPieceToPlace() == TypeOfPiece.TOTORO) {
-            buildPhaseHelper.typeOfPieceToPlaceIsTigerOrTotoro(buildPhase, tileMap, gamePieceMap);
-            updateScoreWhenTigerOrTotoroPlaced(buildPhase.getTypeOfPieceToPlace(), buildPhase.getPlayerID());
         }
     }
 }

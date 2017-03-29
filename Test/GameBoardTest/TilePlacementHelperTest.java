@@ -43,33 +43,6 @@ public class TilePlacementHelperTest {
     }
 
     @Test
-    public void attemptFirstTilePlacementIsNotFirstTurnTest() throws InvalidTilePlacementRuleException {
-        tilePlacementHelper.attemptFirstTilePlacement(
-                tilePlacementPhase,
-                tileMap,
-                2,
-                1);
-    }
-
-    @Test
-    public void firstTilePlaceShouldNotBePerformedSinceNotFirstTurn() throws InvalidTilePlacementRuleException {
-        assertFalse(tilePlacementHelper.attemptFirstTilePlacement(
-                tilePlacementPhase,
-                tileMap,
-                2,
-                1));
-    }
-
-    @Test
-    public void firstTilePlaceShouldSucceedSinceFirstTurn() throws InvalidTilePlacementRuleException {
-        assertTrue(tilePlacementHelper.attemptFirstTilePlacement(
-                tilePlacementPhase,
-                tileMap,
-                1,
-                1));
-    }
-
-    @Test
     public void simplePlacementShouldSucceedSincePlacementAdjacentToOtherTile() throws Exception{
         Tile atOrigin = tileBuilder.getTileAtOrigin();
         Tile adjacent = tileBuilder.getAdjacentTile(atOrigin);
