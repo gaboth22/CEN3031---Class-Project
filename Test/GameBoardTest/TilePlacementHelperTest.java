@@ -52,7 +52,7 @@ public class TilePlacementHelperTest {
     }
 
     @Test
-    public void simpleTilePlacementShoulFailSincePlacingOnTopOfOtherTile() throws Exception {
+    public void simpleTilePlacementShouldFailSincePlacingOnTopOfOtherTile() throws Exception {
         givenThereIsATileAtTheOrigin();
         assertFalse(tilePlacementHelper.attemptSimpleTilePlacement(tilePlacementPhase, tileMap));
     }
