@@ -14,32 +14,36 @@ import Sender.SenderData.SenderData;
 import Receiver.Receiver;
 
 public class Steve {
+
     private PlayerID playingAs;
+
     private Receiver generatePlayRequestReceiver;
     private Receiver gameBoardAckReceiver;
-    private Sender getGameBoardStateRequestSender;
     private Receiver gameBoardStateReceiver;
-    private Sender doBuildPlaySender;
-    private Sender doTilePlacementPlaySender;
+
+    private Sender getGameBoardStateRequestSender;
+    private Sender doBuildPhaseRequestSender;
+    private Sender doTilePlacementPhaseRequestSender;
+
     private GameBoardState currentGameBoardState;
-    private boolean receivedGeneratePlayRequest;
-    private PlayAck lastReceivedAck;
 
     public Steve() {
-        receivedGeneratePlayRequest = false;
+
+        doBuildPhaseRequestSender = new Sender();
+        doTilePlacementPhaseRequestSender = new Sender();
+        getGameBoardStateRequestSender = new Sender();
+        currentGameBoardState = null;
 
         gameBoardAckReceiver = new Receiver() {
             @Override
             public void callback(SenderData data) {
-                lastReceivedAck = ((PlayAckSenderData) data).getData();
-                evaluateAck(lastReceivedAck);
+                evaluateAck(((PlayAckSenderData) data).getData());
             }
         };
 
         generatePlayRequestReceiver = new Receiver() {
             @Override
             public void callback(SenderData data) {
-                receivedGeneratePlayRequest = true;
                 generatePlay();
             }
         };
@@ -50,11 +54,11 @@ public class Steve {
                 currentGameBoardState = ((GameBoardStateSenderData) data).getData();
             }
         };
+    }
 
-        doBuildPlaySender = new Sender();
-        doTilePlacementPlaySender = new Sender();
-        getGameBoardStateRequestSender = new Sender();
-        currentGameBoardState = null;
+
+    public void playAs(PlayerID player) {
+        playingAs = player;
     }
 
     private void evaluateAck(PlayAck ack) {
@@ -96,59 +100,39 @@ public class Steve {
 
     private void sendBuildPlayToGameBoard(BuildPhase play) {
         BuildPhaseSenderData playData = new BuildPhaseSenderData(play);
-        doBuildPlaySender.publish(playData);
+        doBuildPhaseRequestSender.publish(playData);
     }
 
     private void sendTilePlacementPlayToGameBoard(TilePlacementPhase play) {
         TilePlacementPhaseSenderData playData = new TilePlacementPhaseSenderData(play);
-        doTilePlacementPlaySender.publish(playData);
+        doTilePlacementPhaseRequestSender.publish(playData);
     }
 
     public Receiver getGeneratePlayRequestReceiver() {
         return generatePlayRequestReceiver;
     }
 
-    public void playAs(PlayerID player) {
-        playingAs = player;
+    public Receiver getGameBoardAckReceiver() {
+        return gameBoardAckReceiver;
     }
 
-    public void setGameBoardStateSender(Sender pub) {
-        pub.subscribe(gameBoardStateReceiver);
+    public Receiver getGameBoardStateReceiver() {
+        return gameBoardStateReceiver;
     }
 
-    public void setGameBoardAckSender(Sender pub) {
-        pub.subscribe(gameBoardAckReceiver);
+    public Sender getGetGameBoardStateRequestSender() {
+        return getGameBoardStateRequestSender;
     }
 
-    public void setGameBoardDoBuildReceiver(Receiver sub) {
-        doBuildPlaySender.subscribe(sub);
+    public Sender getDoBuildPhaseRequestSender() {
+        return doBuildPhaseRequestSender;
     }
 
-    public void setGameBoardDoTilePlacementReceiver(Receiver sub) {
-        doTilePlacementPlaySender.subscribe(sub);
-    }
-
-    public void setGameBoardStateRequestReceiver(Receiver sub) {
-        getGameBoardStateRequestSender.subscribe(sub);
+    public Sender getDoTilePlacementPhaseRequestSender() {
+        return doTilePlacementPhaseRequestSender;
     }
 
     public GameBoardState getCurrentGameBoardState() {
         return currentGameBoardState;
-    }
-
-    public void forceRequestGameBoardState() {
-        sendGetGameBoardStateRequest();
-    }
-
-    public void forceSendPlayToGameBoard(Object play) {
-        sendPlayToGameBoard(play);
-    }
-
-    public boolean receivedGeneratePlayRequest() {
-        return receivedGeneratePlayRequest;
-    }
-
-    public PlayAck getLastReceivedAck() {
-        return lastReceivedAck;
     }
 }
