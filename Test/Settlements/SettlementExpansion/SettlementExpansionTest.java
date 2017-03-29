@@ -2,13 +2,20 @@ package Settlements.SettlementExpansion;
 
 import GamePieceMap.GamePieceMap;
 import Movement.*;
+import Player.PlayerID;
+import Settlements.Creation.Settlement;
+import Settlements.Creation.SettlementCreator;
+import Settlements.Expansion.*;
 import Terrain.Terrain.Terrain;
 import Tile.Tile.Tile;
 import Tile.TileFactory.TileFactory;
 import TileMap.*;
 import Location.*;
 import TileTest.TileInformationGeneratorTestDouble.TileInformationGeneratorWithOrientationTestDouble;
+import GamePieceMap.*;
+
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -130,14 +137,26 @@ public class SettlementExpansionTest {
         return generatedArray;
     }
 
+    @Test
+    public void bigGameBoardExpansionShouldGiveValidNumber() throws Exception {
+        hexMap = getTopLevelHexagons(getLargeHexagonBoard());
+    }
+
     private void addLocationsOnLargeHexagonBoard() {
 
     }
 
     @Test
-    public void theLocationsForExpansionShouldBeValid() throws Exception {
+    public void theLocationsForSimpleLineExpansionShouldBeValid() throws Exception {
         hexMap = getTopLevelHexagons(simpleLineOfExpandableTerrain());
+        addPieceToOrigin();
 
+        Settlement settlementToExpand = SettlementCreator.getSettlementAt(pieceMap, new Location(0,0));
+        int numberOfVillagersRequired = SettlementExpansion.numberOfVillagersRequiredForExpansion(hexMap,
+                pieceMap,
+                settlementToExpand,
+                Terrain.GRASSLANDS);
+        Assert.assertEquals(2, numberOfVillagersRequired);
     }
 
 
@@ -148,6 +167,10 @@ public class SettlementExpansionTest {
                 new Hexagon(1, new Location(0,1), 1, Terrain.GRASSLANDS),
                 new Hexagon(1, new Location(0,2), 1, Terrain.GRASSLANDS)
         };
+    }
+
+    private void addPieceToOrigin() throws Exception {
+        pieceMap.insertAPieceAt(new Location(0,0), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
     }
 
     @After
