@@ -5,17 +5,17 @@ import Location.Location;
 import GamePieceMap.*;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
 
-public class HexMustNotContainTiger {
+public class HexesBelowMustNotContainTotoro {
 
     public static void applyRule(GamePieceMap pieceMap, Tile tileToPlace)
-            throws InvalidTilePlacementRuleException {
+        throws InvalidTilePlacementRuleException {
         Location[] locations =  tileToPlace.getArrayOfTerrainLocations();
         for (int i = 0; i < locations.length; i++) {
             if (!pieceMap.isThereAPieceAt(locations[i])) {
-                break;
+                continue;
             }
-            if (pieceMap.getPieceTypeAtLocation(locations[i]) == TypeOfPiece.TIGER) {
-                throw new InvalidTilePlacementRuleException("You cannot place a tile on a tiger playground.");
+            if (pieceMap.getPieceTypeAtLocation(locations[i]) == TypeOfPiece.TOTORO) {
+                throw new InvalidTilePlacementRuleException("You cannot place a tile on a totoro sanctuary.");
             }
         }
     }
