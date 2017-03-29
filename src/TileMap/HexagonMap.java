@@ -37,6 +37,10 @@ public class HexagonMap implements TileMap {
         return false;
     }
 
+    public int getHeightAt(Location location){
+        return mapOfHeights.get(location);
+    }
+
     public Hexagon getHexagonAt(Location location) {
         if(numberOfTilesInMap == 0 || !mapOfHeights.containsKey(location)){
             //TODO: Implement some sort of error here?

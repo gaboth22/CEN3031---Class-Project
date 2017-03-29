@@ -6,22 +6,8 @@ import Play.TilePlacementPhase.TilePlacementPhase;
 import TileMap.*;
 
 public class TilePlacementHelper {
-    private boolean wasFirstTilePlaced;
 
-    public TilePlacementHelper() {
-        wasFirstTilePlaced = false;
-    }
-
-    boolean attemptFirstTilePlacementOrSimpleTilePlacement(
-            TilePlacementPhase tilePlacementPhase,
-            TileMap tileMap,
-            int turnNumber,
-            int firstTurn)
-            throws InvalidTilePlacementRuleException {
-
-        return  attemptFirstTilePlacement(tilePlacementPhase, tileMap, turnNumber, firstTurn) ||
-                attemptSimpleTilePlacement(tilePlacementPhase, tileMap);
-    }
+    public TilePlacementHelper() {}
 
     void insertTile(TilePlacementPhase tilePlacementPhase, TileMap tileMap) throws Exception {
         tileMap.insertTile(tilePlacementPhase.getTileToPlace());
@@ -29,25 +15,16 @@ public class TilePlacementHelper {
 
     public boolean attemptFirstTilePlacement(
             TilePlacementPhase placementPhase,
-            TileMap tileMap,
-            int turnNumber,
-            int firstTurn)
+            TileMap tileMap)
             throws InvalidTilePlacementRuleException {
 
         try {
-            if(turnNumber != firstTurn)
-                throw new InvalidTilePlacementRuleException();
-
-            if(!wasFirstTilePlaced) {
-                applyRulesForFirstTilePlacement(placementPhase, tileMap);
-                wasFirstTilePlaced = true;
-            }
+            applyRulesForFirstTilePlacement(placementPhase, tileMap);
         }
-        catch( InvalidTilePlacementRuleException e) {
+        catch(InvalidTilePlacementRuleException e) {
             System.out.println(e.getClass());
             return false;
         }
-
         return true;
     }
 
@@ -66,7 +43,6 @@ public class TilePlacementHelper {
             System.out.println(e.getClass());
             return false;
         }
-
         return true;
     }
 
@@ -77,6 +53,5 @@ public class TilePlacementHelper {
 
         HexesBelowShouldBeAtLevelZeroRule.applyRule(tileMap, placementPhase.getTileToPlace());
         TileMustTouchOneEdgeRule.applyRule(tileMap, placementPhase.getTileToPlace());
-        wasFirstTilePlaced = true;
     }
 }

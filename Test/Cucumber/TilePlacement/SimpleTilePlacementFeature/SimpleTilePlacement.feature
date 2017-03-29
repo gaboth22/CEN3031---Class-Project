@@ -1,4 +1,4 @@
-Feature: FirstTilePlacement
+Feature: SimpleTilePlacement
 
     Scenario: On a turn other than the first, player simply places tile on lowest level
       Given tiles have already been placed on board

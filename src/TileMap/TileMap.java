@@ -14,6 +14,7 @@ public interface TileMap {
     Map<Location, Hexagon> getAllHexagons();
     List<Hexagon> getListOfHexagons(Location[] locations);
     boolean theLocationsAreAtTheSameHeight(List<Hexagon> hexagons);
+    int getHeightAt(Location location);
 
 
 }

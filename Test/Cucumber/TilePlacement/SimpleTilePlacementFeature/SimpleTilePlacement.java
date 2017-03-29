@@ -4,6 +4,7 @@ import GameBoard.*;
 import Location.Location;
 import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
 import Play.TilePlacementPhase.TilePlacementPhase;
+import Play.TilePlacementPhase.TilePlacementType;
 import Player.PlayerID;
 import TileBuilder.TileBuilder;
 import cucumber.api.java.en.Given;
@@ -27,6 +28,7 @@ public class SimpleTilePlacement {
         origin = new Location(0, 0);
         gameBoard = new GameBoardImpl();
         placementPhase1 = new TilePlacementPhase(PlayerID.PLAYER_ONE, firstTile);
+        placementPhase1.setTilePlacementType(TilePlacementType.FIRST_PLACEMENT);
         gameBoard.doTilePlacementPhase(placementPhase1);
     }
 
@@ -34,6 +36,7 @@ public class SimpleTilePlacement {
     public void simplePlaceTile() throws Exception {
         secondTile = tileBuilder.getAdjacentTile(firstTile);
         placementPhase2 = new TilePlacementPhase(PlayerID.PLAYER_ONE, secondTile);
+        placementPhase2.setTilePlacementType(TilePlacementType.SIMPLE_PLACEMENT);
         gameBoard.doTilePlacementPhase(placementPhase2);
     }
 
