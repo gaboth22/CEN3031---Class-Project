@@ -17,7 +17,7 @@ public class HexMap {
         }
 
         for(int x = -1; x > -10; x--) {
-            map.put(new Location(x, 9), new Coordinate(360 - (45 * -(x+1)), -100 + (25 * -(x+1))));
+            map.put(new Location(x, 9), new Coordinate(360 - (45 * -(x+1)), -150 + (25 * -(x+1))));
         }
 
         for(int x = 0; x < 10; x++) {
@@ -25,7 +25,7 @@ public class HexMap {
         }
 
         for(int x = -1; x > -10; x--) {
-            map.put(new Location(x, 8), new Coordinate(360 - (45 * -(x+1)), -50 + (25 * -(x+1))));
+            map.put(new Location(x, 8), new Coordinate(360 - (45 * -(x+1)), -100 + (25 * -(x+1))));
         }
 
 
@@ -34,7 +34,7 @@ public class HexMap {
         }
 
         for(int x = -1; x > -10; x--) {
-            map.put(new Location(x, 7), new Coordinate(360 - (45 * -(x+1)), 0 + (25 * -(x+1))));
+            map.put(new Location(x, 7), new Coordinate(360 - (45 * -(x+1)), -50 + (25 * -(x+1))));
         }
 
         for(int x = 0; x < 10; x++) {
@@ -42,7 +42,7 @@ public class HexMap {
         }
 
         for(int x = -1; x > -10; x--) {
-            map.put(new Location(x, 6), new Coordinate(360 - (45 * -(x+1)), 50 + (25 * -(x+1))));
+            map.put(new Location(x, 6), new Coordinate(360 - (45 * -(x+1)), 0 + (25 * -(x+1))));
         }
 
         for(int x = 0; x < 10; x++) {
@@ -50,7 +50,7 @@ public class HexMap {
         }
 
         for(int x = -1; x > -10; x--) {
-            map.put(new Location(x, 5), new Coordinate(360 - (45 * -(x+1)), 100 + (25 * -(x+1))));
+            map.put(new Location(x, 5), new Coordinate(360 - (45 * -(x+1)), 50 + (25 * -(x+1))));
         }
 
         for(int x = 0; x < 10; x++) {
@@ -58,7 +58,7 @@ public class HexMap {
         }
 
         for(int x = -1; x > -10; x--) {
-            map.put(new Location(x, 4), new Coordinate(360 - (45 * -(x+1)), 150 + (25 * -(x+1))));
+            map.put(new Location(x, 4), new Coordinate(360 - (45 * -(x+1)), 100 + (25 * -(x+1))));
         }
 
         for(int x = 0; x < 10; x++) {
