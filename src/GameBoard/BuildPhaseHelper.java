@@ -2,18 +2,12 @@ package GameBoard;
 
 import GamePieceMap.*;
 import Location.Location;
-import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
 import Play.BuildPhase.BuildPhase;
-import Play.BuildPhase.BuildPhaseException;
-import Play.BuildPhase.BuildType;
 import Play.Rule.PiecePlacementRules.*;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
-import Player.Player;
-import Settlements.Creation.Settlement;
-import Settlements.Creation.SettlementCreator;
 import TileMap.*;
 
-class BuildPhaseHelper {
+public class BuildPhaseHelper {
     private int lastPlayVillagerScore = 0;
 
     public void insertVillager(BuildPhase buildPhase, GamePieceMap gamePieceMap, TileMap tileMap) throws Exception{
@@ -171,11 +165,6 @@ class BuildPhaseHelper {
                 buildPhase.getPlayerID());
 
         HexBelowMustNotHavePieceRule.applyRule(gamePieceMap, buildPhase.getLocationToPlacePieceOn());
-
-        SettlementSizeMustBeFiveOrGreaterRule.applyRule(
-                gamePieceMap,
-                buildPhase.getLocationToPlacePieceOn(),
-                buildPhase.getPlayerID());
 
         SettlementMustNotAlreadyHaveSpecialPieceRule.applyRule(
                 gamePieceMap,
