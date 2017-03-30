@@ -11,24 +11,27 @@ import Tile.Tile.Tile;
 import processing.core.PApplet;
 import processing.core.PImage;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.List;
 import processing.core.PFont;
 
 public class HexLayoutGui extends PApplet {
 
+    public HexLayoutGui() {
+        update = null;
+    }
+
+    private String update;
     private ArrayList<Coordinate> coordinates;
     private PImage background;
     private PFont font;
     private List<Tile> tilesOnDisplay;
     private List<GamePiece> piecesOnDisplay;
     private List<Hexagon> hexesOnDisplay;
-    private Scanner input;
     private HexMap hexMap;
     private boolean showTiles;
 
-    public static void main(String[] args) {
-        PApplet.main("GUI.HexLayoutGui");
+    public void updateGui(String update) {
+        this.update = update;
     }
 
     public void settings() {
@@ -44,7 +47,6 @@ public class HexLayoutGui extends PApplet {
         hexesOnDisplay = new ArrayList<>();
         tilesOnDisplay = new ArrayList<Tile>();
         piecesOnDisplay = new ArrayList<GamePiece>();
-        input = new Scanner(System.in);
         hexMap = new HexMap();
         imageMode(CENTER);
         setFrameRate();
@@ -88,78 +90,79 @@ public class HexLayoutGui extends PApplet {
 
     private void getUserPlay() {
 
-        System.out.println("Enter play: ");
-        String play = input.nextLine();
-        GameDataParser parser = new GameDataParser(play);
-        BuildPhase buildPhase;
-        TilePlacementPhase tilePlacementPhase;
+        if(this.update != null) {
 
-        if(parser.getPlayType().equals("piece")) {
-            try {
-                buildPhase = parser.getBuildPhase();
-                PlayerID pid = buildPhase.getPlayerID();
-                TypeOfPiece piece = buildPhase.getTypeOfPieceToPlace();
-                Location loc = buildPhase.getLocationToPlacePieceOn();
-                String pieceString = "";
-                String pidString = "";
-                if(pid == PlayerID.PLAYER_TWO)
-                    pidString = "P2";
-                else
-                    pidString = "P1";
+            GameDataParser parser = new GameDataParser(this.update);
+            this.update = null;
+            BuildPhase buildPhase;
+            TilePlacementPhase tilePlacementPhase;
 
-                if(piece == TypeOfPiece.TIGER)
-                    pieceString = pidString + "-" + "TI";
-                else if(piece == TypeOfPiece.TOTORO)
-                    pieceString = pidString + "-" + "TO";
-                else
-                    pieceString = pidString + "-" + "VI";
+            if (parser.getPlayType().equals("piece")) {
+                try {
+                    buildPhase = parser.getBuildPhase();
+                    PlayerID pid = buildPhase.getPlayerID();
+                    TypeOfPiece piece = buildPhase.getTypeOfPieceToPlace();
+                    Location loc = buildPhase.getLocationToPlacePieceOn();
+                    String pieceString = "";
+                    String pidString = "";
+                    if (pid == PlayerID.PLAYER_TWO)
+                        pidString = "P2";
+                    else
+                        pidString = "P1";
 
-                Coordinate coord = hexMap.getCoordinateFromLocation(loc);
-                for(Hexagon hex : hexesOnDisplay) {
-                    if(hex.getCenterX() == coord.x && hex.getCenterY() == coord.y) {
-                        hex.setPiece(pieceString);
-                        break;
-                    }
-                }
-            }
-            catch (Exception e) {}
-        }
-        else {
-            try {
-                tilePlacementPhase = parser.getTilePlacementPhase();
-                Tile toPlace = tilePlacementPhase.getTileToPlace();
-                Location[] l = toPlace.getArrayOfTerrainLocations();
-                Terrain[] t = toPlace.getArrayOfTerrains();
+                    if (piece == TypeOfPiece.TIGER)
+                        pieceString = pidString + "-" + "TI";
+                    else if (piece == TypeOfPiece.TOTORO)
+                        pieceString = pidString + "-" + "TO";
+                    else
+                        pieceString = pidString + "-" + "VI";
 
-                float r = random(0, 255);
-                float g = random(0, 255);
-                float b = random(0, 255);
-
-                for(Hexagon hex : hexesOnDisplay) {
-
-                    for(int i = 0; i < l.length; i++) {
-                        Coordinate c = hexMap.getCoordinateFromLocation(l[i]);
-                        if(hex.getCenterX() == c.x && hex.getCenterY() == c.y) {
-                            hex.setTerrain(terrainToString(t[i]));
-                            int prevLevel = Integer.parseInt(hex.getLevel());
-                            hex.setLevel(Integer.toString(prevLevel + 1));
-                            hex.setColor(color(r,g,b,100));
-                            hex.setPiece("");
+                    Coordinate coord = hexMap.getCoordinateFromLocation(loc);
+                    for (Hexagon hex : hexesOnDisplay) {
+                        if (hex.getCenterX() == coord.x && hex.getCenterY() == coord.y) {
+                            hex.setPiece(pieceString);
+                            break;
                         }
                     }
+                } catch (Exception e) {
                 }
+            }
+            else {
+                try {
+                    tilePlacementPhase = parser.getTilePlacementPhase();
+                    Tile toPlace = tilePlacementPhase.getTileToPlace();
+                    Location[] l = toPlace.getArrayOfTerrainLocations();
+                    Terrain[] t = toPlace.getArrayOfTerrains();
 
-                for(int i  = 0; i < t.length; i++) {
-                    Hexagon hex = getHex(l[i],color(r,g,b,100),t[i]);
-                    if(!hexesOnDisplay.contains(hex))
-                        hexesOnDisplay.add(hex);
+                    float r = random(0, 255);
+                    float g = random(0, 255);
+                    float b = random(0, 255);
+
+                    for (Hexagon hex : hexesOnDisplay) {
+
+                        for (int i = 0; i < l.length; i++) {
+                            Coordinate c = hexMap.getCoordinateFromLocation(l[i]);
+                            if (hex.getCenterX() == c.x && hex.getCenterY() == c.y) {
+                                hex.setTerrain(terrainToString(t[i]));
+                                int prevLevel = Integer.parseInt(hex.getLevel());
+                                hex.setLevel(Integer.toString(prevLevel + 1));
+                                hex.setColor(color(r, g, b, 100));
+                                hex.setPiece("");
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < t.length; i++) {
+                        Hexagon hex = getHex(l[i], color(r, g, b, 100), t[i]);
+                        if (!hexesOnDisplay.contains(hex))
+                            hexesOnDisplay.add(hex);
+                    }
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
                 }
             }
-            catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
+
         }
-
     }
 
     private String terrainToString(Terrain t) {
