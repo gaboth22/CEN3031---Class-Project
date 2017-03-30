@@ -43,11 +43,8 @@ public class NukeTileHelperTest {
     @Test
     public void nukeTileAttemptSucceeds() throws InvalidTileLocationException,
             LocationOccupiedException, LocationNotEmptyException {
-        Location originTileLocation1 = new Location(0,0);
-        Location originTileLocation2 = new Location(0,1);
-        Location originTileLocation3 = new Location(1,0);
 
-        Tile originTile = tileBuilder.getTileWithLocations(originTileLocation1, originTileLocation2, originTileLocation3);
+        Tile originTile = tileBuilder.getTileAtOrigin();
         tileMap.insertTile(originTile);
 
         Location adjTileLocation1 = new Location(1,1);

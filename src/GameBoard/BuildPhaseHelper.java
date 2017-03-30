@@ -2,10 +2,7 @@ package GameBoard;
 
 import GamePieceMap.*;
 import Location.Location;
-import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
 import Play.BuildPhase.BuildPhase;
-import Play.BuildPhase.BuildPhaseException;
-import Play.BuildPhase.BuildType;
 import Play.Rule.PiecePlacementRules.*;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
 import Player.Player;
@@ -14,7 +11,7 @@ import Settlements.Creation.SettlementCreator;
 import Tile.Tile.Tile;
 import TileMap.*;
 
-class BuildPhaseHelper {
+public class BuildPhaseHelper {
     private int lastPlayVillagerScore = 0;
     private SettlementExpansionHelper expansionHelper;
 
