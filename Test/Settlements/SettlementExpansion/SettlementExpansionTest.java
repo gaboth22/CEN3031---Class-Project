@@ -60,9 +60,9 @@ public class SettlementExpansionTest {
         Hexagon[] generatedArray = new Hexagon[]{
 
                 //Tile 1
-                new Hexagon(1, new Location(-6,5), 1, Terrain.VOLCANO),
-                new Hexagon(1, new Location(-6,4), 1, Terrain.GRASSLANDS),
-                new Hexagon(1, new Location(-5,4), 1, Terrain.GRASSLANDS),
+                new Hexagon(1, new Location(-6,4), 1, Terrain.VOLCANO),
+                new Hexagon(1, new Location(-6,3), 1, Terrain.GRASSLANDS),
+                new Hexagon(1, new Location(-5,3), 1, Terrain.GRASSLANDS),
 
                 //Tile 2
                 new Hexagon(2, new Location(-6,2), 1, Terrain.VOLCANO),
@@ -75,21 +75,21 @@ public class SettlementExpansionTest {
                 new Hexagon(3, new Location(-4,-1), 1, Terrain.ROCKY),
 
                 //Tile 4
-                new Hexagon(4, new Location(-4,4), 1, Terrain.GRASSLANDS),
-                new Hexagon(4, new Location(-3,4), 1, Terrain.VOLCANO),
+                new Hexagon(4, new Location(-4,3), 1, Terrain.GRASSLANDS),
+                new Hexagon(4, new Location(-3,3), 1, Terrain.VOLCANO),
                 new Hexagon(4, new Location(-3,2), 1, Terrain.GRASSLANDS),
 
                 //Tile 5 : Other two tiles are covered
-                new Hexagon(5, new Location(-3,5), 1, Terrain.LAKE),
+                new Hexagon(5, new Location(-3,4), 1, Terrain.LAKE),
 
                 //Tile 6
                 new Hexagon(6, new Location(-3,0), 1, Terrain.VOLCANO),
                 new Hexagon(6, new Location(-3,-1), 1, Terrain.JUNGLE),
 
                 //Tile 7
-                new Hexagon(7, new Location(-2,5), 2, Terrain.VOLCANO),
-                new Hexagon(7, new Location(-2,4), 2, Terrain.LAKE),
-                new Hexagon(7, new Location(-1,4), 2, Terrain.ROCKY),
+                new Hexagon(7, new Location(-2,4), 2, Terrain.VOLCANO),
+                new Hexagon(7, new Location(-2,3), 2, Terrain.LAKE),
+                new Hexagon(7, new Location(-1,3), 2, Terrain.ROCKY),
 
                 //Tile 8
                 new Hexagon(8, new Location(-2,2), 1, Terrain.GRASSLANDS),
@@ -141,18 +141,18 @@ public class SettlementExpansionTest {
         hexMap = getTopLevelHexagons(getLargeHexagonBoard());
         addLocationsOnLargeHexagonBoard();
 
-        Settlement settlementToExpand = SettlementCreator.getSettlementAt(pieceMap, new Location(-2,4));
+        Settlement settlementToExpand = SettlementCreator.getSettlementAt(pieceMap, new Location(-2,3));
         int numberOfVillagersRequired = SettlementExpansion.numberOfVillagersRequiredForExpansion(hexMap,
                 pieceMap,
                 settlementToExpand,
                 Terrain.GRASSLANDS);
 
-        Assert.assertEquals(13, numberOfVillagersRequired);
+        Assert.assertEquals(14, numberOfVillagersRequired);
     }
 
     private void addLocationsOnLargeHexagonBoard() throws Exception {
-        pieceMap.insertAPieceAt(new Location(-2,4), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
-        pieceMap.insertAPieceAt(new Location(-1,4), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+        pieceMap.insertAPieceAt(new Location(-2,3), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
+        pieceMap.insertAPieceAt(new Location(-1,3), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
     }
 
     @Test
