@@ -18,7 +18,7 @@ class BuildPhaseHelper {
     private int lastPlayVillagerScore = 0;
     private SettlementExpansionHelper expansionHelper;
 
-    public void setSettlementExpansionHelper(SettlementExpansionHelperImpl expansionHelper){
+    public void setSettlementExpansionHelper(SettlementExpansionHelper expansionHelper){
         this.expansionHelper = expansionHelper;
     }
 
