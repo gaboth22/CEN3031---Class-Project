@@ -9,7 +9,7 @@ import java.util.List;
 public class GameBoardState {
     private int p1Score;
     private int p2Score;
-    private int turnNumer;
+    private int turnNumber;
     private List<Hexagon> placedHexagons;
     private List<Settlement> p1Settlements;
     private List<Settlement> p2Settlements;
@@ -26,11 +26,15 @@ public class GameBoardState {
 
         this.p1Score = p1Score;
         this.p2Score = p2Score;
-        this.turnNumer = turnNumber;
+        this.turnNumber = turnNumber;
         this.placedHexagons = placedHexagons;
         this.p1Settlements = p1Settlements;
         this.p2Settlements = p2Settlements;
         this.placeableLocations = placeableLocations;
+    }
+
+    public int getTurnNumber() {
+        return turnNumber;
     }
 
     public int getP1Score() {

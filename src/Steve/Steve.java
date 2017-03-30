@@ -1,5 +1,6 @@
 package Steve;
 
+import Debug.*;
 import GameBoard.GameBoardState;
 import GameBoard.GameBoardStateSenderData;
 import GameBoard.PhasePublisherData.BuildPhaseSenderData;
@@ -13,9 +14,13 @@ import Sender.Sender;
 import Sender.SenderData.SenderData;
 import Receiver.Receiver;
 
+import java.security.InvalidParameterException;
+
 public class Steve {
 
     private PlayerID playingAs;
+
+    private PlayGenerator playGenerator;
 
     private Receiver generatePlayRequestReceiver;
     private Receiver gameBoardAckReceiver;
@@ -61,6 +66,10 @@ public class Steve {
         playingAs = player;
     }
 
+    public void setPlayGenerator(PlayGenerator generator) {
+        this.playGenerator = generator;
+    }
+
     private void evaluateAck(PlayAck ack) {
         if(ack == PlayAck.VALID_PLAY)
             return;
@@ -70,14 +79,8 @@ public class Steve {
 
     private void generatePlay() {
         sendGetGameBoardStateRequest();
-        while(currentGameBoardState == null) {}
-        Object play = PlayGenerator.generateEducatedPlay(currentGameBoardState, playingAs);
+        Object play = playGenerator.generateEducatedPlay(currentGameBoardState, playingAs);
         sendPlayToGameBoard(play);
-        resetCurrentGameBoardStateToNull();
-    }
-
-    private void resetCurrentGameBoardStateToNull() {
-        currentGameBoardState = null;
     }
 
     private void sendPlayToGameBoard(Object play) {
@@ -87,6 +90,10 @@ public class Steve {
 
         else if(play instanceof TilePlacementPhase) {
             sendTilePlacementPlayToGameBoard((TilePlacementPhase) play);
+        }
+        else {
+            Debug.print("Invalid play object passed to Steve", DebugLevel.ERROR);
+            throw new InvalidParameterException("Invalid play object passed to Steve");
         }
     }
 

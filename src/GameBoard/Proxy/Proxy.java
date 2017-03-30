@@ -15,6 +15,7 @@ import Sender.SenderData.SenderData;
 
 public class Proxy {
     private GameBoard board;
+    private GameBoardStateBuilder stateBuilder;
     private Sender gameBoardStateSender;
     private Sender gameBoardAckSender;
     private Receiver gameBoardStateRequestReceiver;
@@ -94,8 +95,12 @@ public class Proxy {
         return true;
     }
 
+    public void setGameBoardStateBuilder(GameBoardStateBuilder builder) {
+        stateBuilder = builder;
+    }
+
     private GameBoardState buildGameBoardState() {
-        return GameBoardStateBuilder.buildGameBoardState(board);
+        return stateBuilder.buildGameBoardState(board);
     }
 
     public Sender getGameBoardStateSender() {
