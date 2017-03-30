@@ -78,30 +78,6 @@ public class GameBoardImpl implements GameBoard {
         }
     }
 
-    private void incrementTurnNumber() {
-        this.turnNumber++;
-    }
-
-    @Override
-    public int getCurrentTurn() {
-        return turnNumber;
-    }
-
-    @Override
-    public Map<Location, Hexagon> getGameBoardHexagons() {
-        return new HashMap<Location, Hexagon>(tileMap.getAllHexagons());
-    }
-
-    @Override
-    public boolean hasTileAt(Location[] locationsInTile) {
-        for(int i = 0; i < locationsInTile.length; i++) {
-            if(!tileMap.hasHexagonAt(locationsInTile[i]))
-                return false;
-        }
-
-        return true;
-    }
-
     @Override
     public void doBuildPhase(BuildPhase buildPhase) throws Exception {
         if(buildPhase.getBuildType() == BuildType.FOUND){
@@ -121,7 +97,7 @@ public class GameBoardImpl implements GameBoard {
                     tileMap,
                     gamePieceMap)){
 
-                buildPhaseHelper.expandSettlement();
+                buildPhaseHelper.expandSettlement(buildPhase, tileMap, gamePieceMap);
                 updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
             }
             else throw new BuildPhaseException("Settlement expansion failed");
@@ -178,5 +154,29 @@ public class GameBoardImpl implements GameBoard {
                 this.playerTwoScore += totoroScore;
             }
         }
+    }
+
+    private void incrementTurnNumber() {
+        this.turnNumber++;
+    }
+
+    @Override
+    public int getCurrentTurn() {
+        return turnNumber;
+    }
+
+    @Override
+    public Map<Location, Hexagon> getGameBoardHexagons() {
+        return new HashMap<Location, Hexagon>(tileMap.getAllHexagons());
+    }
+
+    @Override
+    public boolean hasTileAt(Location[] locationsInTile) {
+        for(int i = 0; i < locationsInTile.length; i++) {
+            if(!tileMap.hasHexagonAt(locationsInTile[i]))
+                return false;
+        }
+
+        return true;
     }
 }
