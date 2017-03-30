@@ -1,22 +1,18 @@
 package Settlements.Expansion;
 
-import GamePieceMap.GamePieceMap;
 import Location.Location;
 import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
+import Player.PlayerID;
 import Settlements.Creation.Settlement;
 import TileMap.*;
 import Terrain.Terrain.Terrain;
+import GamePieceMap.*;
 
 import java.util.*;
 
 public class SettlementExpansion {
 
-    public static int numberOfVillagersRequiredForExpansion(Map<Location, Hexagon> hexMap,
-                                                            GamePieceMap pieceMap,
-                                                            Settlement settlement,
-                                                            Terrain terrain) {
-        Set<Location> locationsInSettlement = settlement.getSetOfLocationsInSettlement();
-        List<Location> locationsToExpandTo = findLocationsToExpandInto(hexMap, locationsInSettlement, pieceMap, terrain);
+    public static int numVillagersRequiredToExpansion(Map<Location, Hexagon> hexMap, List<Location> locationsToExpandTo) {
 
         return costOfExpansion(hexMap, locationsToExpandTo);
     }
@@ -31,11 +27,11 @@ public class SettlementExpansion {
         return totalNumberOfVillagersRequired;
     }
 
-    private static List<Location> findLocationsToExpandInto(Map<Location, Hexagon> hexMap,
-                                                           Set<Location> locationsInSettlement,
+    public static List<Location> findLocationsToExpandInto(Map<Location, Hexagon> hexMap,
+                                                           Settlement settlement,
                                                            GamePieceMap pieceMap,
                                                            Terrain terrainToExpand) {
-
+        Set<Location> locationsInSettlement = settlement.getSetOfLocationsInSettlement();
         List<Location> locationsToExpandInto = new ArrayList<Location>();
 
         Queue<Location> locationsToCheck = new LinkedList<>(locationsInSettlement);
@@ -63,5 +59,21 @@ public class SettlementExpansion {
         return locationsToExpandInto;
     }
 
+    public static void expandSettlement(GamePieceMap pieceMap,
+                                        Settlement settlement,
+                                        List<Location> locationsToExpandTo) throws LocationNotEmptyException {
 
+        expandSettlementFromList(pieceMap, locationsToExpandTo, settlement);
+    }
+
+    private static void expandSettlementFromList(GamePieceMap pieceMap, List<Location> locationsToExpandTo, Settlement settlement) throws LocationNotEmptyException {
+
+        PlayerID id = settlement.getSettlementOwner();
+        TypeOfPiece pieceType = TypeOfPiece.VILLAGER;
+
+        for(Location toExpandTo : locationsToExpandTo) {
+            GamePiece gamePiece = new GamePiece(id, pieceType);
+            pieceMap.insertAPieceAt(toExpandTo, gamePiece);
+        }
+    }
 }

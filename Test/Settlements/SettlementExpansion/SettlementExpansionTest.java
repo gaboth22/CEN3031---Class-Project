@@ -55,7 +55,7 @@ public class SettlementExpansionTest {
         return generatedMap;
     }
 
-    private Hexagon[] getLargeHexagonBoard() {
+    private Hexagon[] largeHexagonBoard() {
         //Tile by Tile in each Column Starting from Column -6
         Hexagon[] generatedArray = new Hexagon[]{
 
@@ -137,22 +137,45 @@ public class SettlementExpansionTest {
     }
 
     @Test
+    public void gettingLocationsToExpandToShouldReturnAValidList() throws Exception {
+        hexMap = getTopLevelHexagons(largeHexagonBoard());
+    }
+
+    @Test
     public void bigGameBoardExpansionShouldGiveValidNumber() throws Exception {
-        hexMap = getTopLevelHexagons(getLargeHexagonBoard());
-        addLocationsOnLargeHexagonBoard();
+        hexMap = getTopLevelHexagons(largeHexagonBoard());
+        addPlayerOneLocationsOnLargeHexagonBoard();
 
-        Settlement settlementToExpand = SettlementCreator.getSettlementAt(pieceMap, new Location(-2,3));
-        int numberOfVillagersRequired = SettlementExpansion.numberOfVillagersRequiredForExpansion(hexMap,
-                pieceMap,
-                settlementToExpand,
-                Terrain.GRASSLANDS);
-
+        int numberOfVillagersRequired = getNumberOfVillagersRequiredToExpand(new Location(-2,3), Terrain.GRASSLANDS);
         Assert.assertEquals(14, numberOfVillagersRequired);
     }
 
-    private void addLocationsOnLargeHexagonBoard() throws Exception {
+    private int getNumberOfVillagersRequiredToExpand(Location locationToExpandFrom, Terrain terrainToExpandInto) {
+        Settlement settlementToExpand = SettlementCreator.getSettlementAt(pieceMap, locationToExpandFrom);
+        List<Location> locationsToExpandTo = SettlementExpansion.findLocationsToExpandInto(hexMap,
+                settlementToExpand,
+                pieceMap,
+                terrainToExpandInto);
+
+        return SettlementExpansion.numVillagersRequiredToExpansion(hexMap, locationsToExpandTo);
+    }
+
+    private void addPlayerOneLocationsOnLargeHexagonBoard() throws Exception {
         pieceMap.insertAPieceAt(new Location(-2,3), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
         pieceMap.insertAPieceAt(new Location(-1,3), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
+    }
+
+    @Test
+    public void bigGameBoardExpansionShouldBeBlockedByEnemySettlement() throws Exception {
+        hexMap = getTopLevelHexagons(largeHexagonBoard());
+        addPlayerOneLocationsOnLargeHexagonBoard();
+        addPlayerTwoLocationsOnLargeHexagonBoard();
+
+        Assert.assertEquals(1, getNumberOfVillagersRequiredToExpand(new Location(-2,3), Terrain.GRASSLANDS));
+    }
+
+    private void addPlayerTwoLocationsOnLargeHexagonBoard() throws Exception {
+        pieceMap.insertAPieceAt(new Location(-2,2), new GamePiece(PlayerID.PLAYER_TWO, TypeOfPiece.TOTORO));
     }
 
     @Test
@@ -160,12 +183,47 @@ public class SettlementExpansionTest {
         hexMap = getTopLevelHexagons(simpleLineOfExpandableTerrain());
         addPieceToOrigin();
 
-        Settlement settlementToExpand = SettlementCreator.getSettlementAt(pieceMap, new Location(0,0));
-        int numberOfVillagersRequired = SettlementExpansion.numberOfVillagersRequiredForExpansion(hexMap,
-                pieceMap,
-                settlementToExpand,
-                Terrain.GRASSLANDS);
-        Assert.assertEquals(2, numberOfVillagersRequired);
+        Location locationOfSettlement = new Location(0,0);
+        Terrain terrainToExpandInto = Terrain.GRASSLANDS;
+        Assert.assertEquals(2, getNumberOfVillagersRequiredToExpand(locationOfSettlement, terrainToExpandInto));
+    }
+
+    @Test
+    public void theLocationsInASimpleLineExpansionShouldBeUpdated() throws Exception {
+        hexMap = getTopLevelHexagons(simpleLineOfExpandableTerrain());
+        addPieceToOrigin();
+
+        Location locationOfSettlement = new Location(0,0);
+        Terrain terrainToExpandInto = Terrain.GRASSLANDS;
+
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationOfSettlement);
+        List<Location> locations = SettlementExpansion.findLocationsToExpandInto(hexMap, settlement, pieceMap, terrainToExpandInto);
+        expandVillage(settlement, locations);
+        checkLocationsWereAdded(locations);
+    }
+
+    @Test
+    public void theLocationsInLargeGameBoardShouldBeUpdated() throws Exception {
+        hexMap = getTopLevelHexagons(largeHexagonBoard());
+        addPlayerOneLocationsOnLargeHexagonBoard();
+
+        Location locationOfSettlement = new Location(-2,3);
+        Terrain terrainToExpandInto = Terrain.GRASSLANDS;
+
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, locationOfSettlement);
+        List<Location> locations = SettlementExpansion.findLocationsToExpandInto(hexMap, settlement, pieceMap, terrainToExpandInto);
+        expandVillage(settlement, locations);
+        checkLocationsWereAdded(locations);
+    }
+
+    private void expandVillage(Settlement settlement, List<Location> locations) throws Exception {
+        SettlementExpansion.expandSettlement(pieceMap, settlement, locations);
+    }
+
+    private void checkLocationsWereAdded(List<Location> toCheck) throws Exception {
+        for(Location loc : toCheck) {
+            Assert.assertEquals(TypeOfPiece.VILLAGER, pieceMap.getPieceAtLocation(loc).getPieceType());
+        }
     }
 
     private Hexagon[] simpleLineOfExpandableTerrain() {
