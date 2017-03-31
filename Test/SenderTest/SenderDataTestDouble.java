@@ -1,11 +1,11 @@
-package ServerReceiver.ServerIncomingData;
+package SenderTest;
 
 import Sender.SenderData.SenderData;
 
-public class ServerIncomingData implements SenderData<String> {
+public class SenderDataTestDouble implements SenderData<String> {
     private String data;
 
-    public ServerIncomingData(String data) {
+    public SenderDataTestDouble(String data) {
         this.data = data;
     }
 
