@@ -5,14 +5,15 @@ import processing.core.PApplet;
 
 public class GuiThread extends Thread {
     private HexLayoutGui hexLayoutGui;
+    private Thread consoleThread;
 
     public GuiThread() {
         hexLayoutGui = new HexLayoutGui();
-        Thread consoleThread = new GetInputFromConsoleThread(this);
-        consoleThread.start();
+        consoleThread = new GetInputFromConsoleThread(this);
     }
 
     public void run() {
+        consoleThread.start();
         String[] args = new String[]{"GUI.HexLayoutGui"};
         PApplet.runSketch(args, hexLayoutGui);
 
