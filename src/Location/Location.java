@@ -1,8 +1,8 @@
 package Location;
 
 public class Location {
-    private int y;
-    private int x;
+    private final int y;
+    private final int x;
 
     public Location(int x, int y) {
         this.y = y;

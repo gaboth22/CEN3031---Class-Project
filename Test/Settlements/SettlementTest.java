@@ -16,6 +16,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Set;
+
 public class SettlementTest {
 
     Settlement settlement;
@@ -24,6 +26,8 @@ public class SettlementTest {
 
     Location locationToAdd;
     GamePiece gamePiece;
+
+    Set<Location> testSet;
 
     @Before
     public void setUp() throws Exception {
@@ -106,6 +110,44 @@ public class SettlementTest {
     private void thenTheTotoroShouldBeAt(Location location) {
         Assert.assertTrue(settlement.hasTotoroSanctuary());
         Assert.assertEquals(TypeOfPiece.TOTORO, settlement.getTypeOfPieceAt(location));
+    }
+
+    @Test
+    public void getSetOfLocationsInSettlementShouldReturnAllLocations() throws Exception {
+        addThreeVillagersToSettlement();
+        thenTheSetShouldBeValid();
+        andTheSetShouldContainNoOtherLocations();
+    }
+
+    private void thenTheSetShouldBeValid() {
+        Set<Location> set = settlement.getSetOfLocationsInSettlement();
+        Assert.assertTrue(set.contains(new Location(0,0)));
+        Assert.assertTrue(set.contains(new Location(0,1)));
+        Assert.assertTrue(set.contains(new Location(0,2)));
+    }
+
+    private void andTheSetShouldContainNoOtherLocations() {
+        Set<Location> set = settlement.getSetOfLocationsInSettlement();
+        Assert.assertFalse(set.contains(new Location(0,3)));
+    }
+
+    @Test
+    public void changesToTheReturnedSetAreNotReflectedInTheSettlement() throws Exception {
+        addThreeVillagersToSettlement();
+        whenIChangeTheReturnedSet();
+        thenANewSetReturnedByTheSettlementWillNotBeEqualToTheChangedSet();
+    }
+
+    private Set<Location> whenIChangeTheReturnedSet() {
+        testSet = settlement.getSetOfLocationsInSettlement();
+        testSet.remove(new Location(0,0));
+        testSet.remove(new Location(0,2));
+        return testSet;
+    }
+
+    private void thenANewSetReturnedByTheSettlementWillNotBeEqualToTheChangedSet() {
+        Set<Location> originalSet = settlement.getSetOfLocationsInSettlement();
+        Assert.assertFalse(originalSet.equals(testSet));
     }
 
     @Test
