@@ -1,6 +1,9 @@
 package GamePieceMap;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 import Location.Location;
 import Player.PlayerID;
 
@@ -41,5 +44,9 @@ public class GamePieceMap {
     public GamePiece getPieceAtLocation(Location location){
         GamePiece gamePiece = mapContainingPiecesAtLocations.get(location);
         return gamePiece;
+    }
+
+    public Set<Location> getSetOfOccupiedLocations() {
+        return new HashSet<Location>(mapContainingPiecesAtLocations.keySet());
     }
 }

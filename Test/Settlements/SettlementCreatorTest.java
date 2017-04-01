@@ -146,6 +146,14 @@ public class SettlementCreatorTest {
         };
     }
 
+    @Test
+    public void villageFiveShouldHaveCorrectPositions() throws Exception {
+        Settlement settlement = SettlementCreator.getSettlementAt(pieceMap, new Location(-5,-5));
+
+        Assert.assertEquals(TypeOfPiece.VILLAGER, settlement.getTypeOfPieceAt(new Location(-5,-5)));
+        Assert.assertEquals(TypeOfPiece.TIGER, settlement.getTypeOfPieceAt(new Location(-4, -5)));
+    }
+
     @After
     public void tearDown() throws Exception {
         pieceMap = null;
@@ -212,7 +220,11 @@ public class SettlementCreatorTest {
                 new Location(2,-1),
                 new Location(3,-2),
                 new Location(3,-3),
-                new Location(2,-2)
+                new Location(2,-2),
+
+                //Village Five: One Villager, One Tiger
+                new Location(-5,-5),
+                new Location(-4,-5)
         };
     }
 
@@ -237,6 +249,10 @@ public class SettlementCreatorTest {
                 new GamePiece(playerID, TypeOfPiece.VILLAGER),
                 new GamePiece(playerID, TypeOfPiece.VILLAGER),
                 new GamePiece(playerID, TypeOfPiece.TOTORO),
+                new GamePiece(playerID, TypeOfPiece.TIGER),
+
+                //Village Five:
+                new GamePiece(playerID, TypeOfPiece.VILLAGER),
                 new GamePiece(playerID, TypeOfPiece.TIGER)
         };
     }
