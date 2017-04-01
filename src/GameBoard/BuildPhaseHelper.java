@@ -6,13 +6,11 @@ import Play.BuildPhase.BuildPhase;
 import Play.Rule.PiecePlacementRules.*;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
 import Player.Player;
-import Settlements.Creation.Settlement;
-import Settlements.Creation.SettlementCreator;
-import Tile.Tile.Tile;
 import TileMap.*;
 
 public class BuildPhaseHelper {
     private int lastPlayVillagerScore = 0;
+    private int lastPlayVillagersUsed = 0;
     private SettlementExpansionHelper expansionHelper;
 
     public void setSettlementExpansionHelper(SettlementExpansionHelper expansionHelper){
@@ -22,6 +20,7 @@ public class BuildPhaseHelper {
     public void insertVillager(BuildPhase buildPhase, GamePieceMap gamePieceMap, TileMap tileMap) throws Exception{
         gamePieceMap.insertAPieceAt(buildPhase.getLocationToPlacePieceOn(), buildPhase.getGamePiece());
         updateLastPlayScoreForVillager(buildPhase.getLocationToPlacePieceOn(), tileMap);
+        updateLastPlayVillagersUsed(buildPhase.getLocationToPlacePieceOn(), tileMap);
     }
 
     public void insertSpecialPiece(BuildPhase buildPhase, GamePieceMap gamePieceMap) throws Exception{
@@ -34,15 +33,17 @@ public class BuildPhaseHelper {
         Location[] locationsExpandedTo = expansionHelper.getListOfLocationsExpandedTo();
         for(int i = 0; i < locationsExpandedTo.length; i++){
             updateLastPlayScoreForVillager(buildPhase.getLocationToPlacePieceOn(), tileMap);
+            updateLastPlayVillagersUsed(buildPhase.getLocationToPlacePieceOn(), tileMap);
         }
     }
 
     public boolean attemptSettlementFoundation(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap) {
+            GamePieceMap gamePieceMap,
+            Player activePlayer) {
         try {
-            attemptSettlementFoundationRules(buildPhase, tileMap, gamePieceMap);
+            attemptSettlementFoundationRules(buildPhase, tileMap, gamePieceMap, activePlayer);
         }
         catch(InvalidPiecePlacementRuleException e) {
             System.out.println(e.getClass());
@@ -54,8 +55,13 @@ public class BuildPhaseHelper {
     private void attemptSettlementFoundationRules(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap)
+            GamePieceMap gamePieceMap,
+            Player activePlayer)
             throws InvalidPiecePlacementRuleException {
+
+        FoundationMustBeLevelOneRule.applyRule(tileMap, buildPhase.getLocationToPlacePieceOn());
+
+        PlayerMustHavePieceRule.applyRule(activePlayer, gamePieceMap, buildPhase, tileMap);
 
         GamePieceCannotBePlacedOnVolcanoRule.applyRule(
                 tileMap,
@@ -68,9 +74,11 @@ public class BuildPhaseHelper {
     public boolean attemptSettlementExpansion(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap) {
+            GamePieceMap gamePieceMap,
+            Player activePlayer) {
+
         try {
-            attemptSettlementExpansionRules(buildPhase, tileMap, gamePieceMap);
+            attemptSettlementExpansionRules(buildPhase, tileMap, gamePieceMap, activePlayer);
         }
         catch(InvalidPiecePlacementRuleException e) {
             System.out.println(e.getClass());
@@ -82,8 +90,11 @@ public class BuildPhaseHelper {
     private void attemptSettlementExpansionRules(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap)
+            GamePieceMap gamePieceMap,
+            Player activePlayer)
             throws InvalidPiecePlacementRuleException {
+
+        PlayerMustHavePieceRule.applyRule(activePlayer, gamePieceMap, buildPhase, tileMap);
 
         GamePieceCannotBePlacedOnVolcanoRule.applyRule(
                 tileMap,
@@ -101,11 +112,11 @@ public class BuildPhaseHelper {
     public boolean attemptTotoroPlacement(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap) {
+            GamePieceMap gamePieceMap,
+            Player activePlayer) {
 
         try{
-            attemptTotoroPlacementRules(buildPhase, tileMap, gamePieceMap);
-
+            attemptTotoroPlacementRules(buildPhase, tileMap, gamePieceMap, activePlayer);
         }
         catch(InvalidPiecePlacementRuleException e){
             System.out.println(e.getClass());
@@ -117,8 +128,11 @@ public class BuildPhaseHelper {
     private void attemptTotoroPlacementRules(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap)
+            GamePieceMap gamePieceMap,
+            Player activePlayer)
             throws InvalidPiecePlacementRuleException{
+
+        PlayerMustHavePieceRule.applyRule(activePlayer, gamePieceMap, buildPhase, tileMap);
 
         GamePieceCannotBePlacedOnVolcanoRule.applyRule(
                 tileMap,
@@ -147,10 +161,11 @@ public class BuildPhaseHelper {
     public boolean attemptTigerPlacement(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap) {
+            GamePieceMap gamePieceMap,
+            Player activePlayer) {
 
         try{
-            attemptTigerPlacementRules(buildPhase, tileMap, gamePieceMap);
+            attemptTigerPlacementRules(buildPhase, tileMap, gamePieceMap, activePlayer);
         }
         catch(InvalidPiecePlacementRuleException e){
             System.out.println(e.getClass());
@@ -162,8 +177,11 @@ public class BuildPhaseHelper {
     private void attemptTigerPlacementRules(
             BuildPhase buildPhase,
             TileMap tileMap,
-            GamePieceMap gamePieceMap)
+            GamePieceMap gamePieceMap,
+            Player activePlayer)
             throws InvalidPiecePlacementRuleException{
+
+        PlayerMustHavePieceRule.applyRule(activePlayer, gamePieceMap, buildPhase, tileMap);
 
         GamePieceCannotBePlacedOnVolcanoRule.applyRule(
                 tileMap,buildPhase.getGamePiece(),
@@ -190,11 +208,24 @@ public class BuildPhaseHelper {
         lastPlayVillagerScore += height * height;
     }
 
+    private void updateLastPlayVillagersUsed(Location locationVillagerPlacedOn, TileMap tileMap){
+        int height = tileMap.getHeightAt(locationVillagerPlacedOn);
+        lastPlayVillagersUsed += height;
+    }
+
     public void setLastPlayVillagerScoreToZero(){
         lastPlayVillagerScore = 0;
     }
 
+    public void setLastPlayVillagersUsedToZero(){
+        lastPlayVillagersUsed = 0;
+    }
+
     public int getLastPlayScoreForVillagers(){
         return lastPlayVillagerScore;
+    }
+
+    public int getLastPlayVillagersUsed(){
+        return lastPlayVillagersUsed;
     }
 }
