@@ -31,6 +31,9 @@ public class Steve {
     private Sender doTilePlacementPhaseRequestSender;
 
     private GameBoardState currentGameBoardState;
+    private StevePlayType requestedPlayType;
+
+    private Object lastValidPlay;
 
     public Steve() {
 
@@ -38,6 +41,7 @@ public class Steve {
         doTilePlacementPhaseRequestSender = new Sender();
         getGameBoardStateRequestSender = new Sender();
         currentGameBoardState = null;
+        lastValidPlay = null;
 
         gameBoardAckReceiver = new Receiver() {
             @Override
@@ -49,6 +53,7 @@ public class Steve {
         generatePlayRequestReceiver = new Receiver() {
             @Override
             public void callback(SenderData data) {
+                requestedPlayType = ((StevePlayTypeSenderData) data).getData();
                 generatePlay();
             }
         };
@@ -79,8 +84,8 @@ public class Steve {
 
     private void generatePlay() {
         sendGetGameBoardStateRequest();
-        Object play = playGenerator.generateEducatedPlay(currentGameBoardState, playingAs);
-        sendPlayToGameBoard(play);
+        lastValidPlay = playGenerator.generateEducatedPlay(currentGameBoardState, playingAs, requestedPlayType);
+        sendPlayToGameBoard(lastValidPlay);
     }
 
     private void sendPlayToGameBoard(Object play) {
@@ -141,5 +146,9 @@ public class Steve {
 
     public GameBoardState getCurrentGameBoardState() {
         return currentGameBoardState;
+    }
+
+    public Object getLastValidPlay() {
+        return lastValidPlay;
     }
 }
