@@ -1,21 +1,21 @@
 package ServerReceiver;
 
-import Publisher.Publisher;
+import Sender.Sender;
 import ServerReceiver.ServerIncomingData.ServerIncomingData;
-import Subscriber.Subscriber;
+import Receiver.Receiver;
 
 public class ServerReceiver {
-    private Publisher serverDataPublisher;
+    private Sender serverDataSender;
 
     public ServerReceiver() {
-        serverDataPublisher = new Publisher();
+        serverDataSender = new Sender();
     }
 
-    public void subscribe(Subscriber s) {
-        serverDataPublisher.subscribe(s);
+    public void subscribe(Receiver r) {
+        serverDataSender.subscribe(r);
     }
 
     public void sendData(ServerIncomingData data) {
-        serverDataPublisher.publish(data);
+        serverDataSender.publish(data);
     }
 }
