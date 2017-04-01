@@ -2,7 +2,11 @@ package GameBoardTest;
 
 import GamePieceMap.*;
 import Play.BuildPhase.BuildPhase;
+import Play.BuildPhase.BuildType;
+import Player.Player;
 import Player.PlayerID;
+import Settlements.Creation.Settlement;
+import Settlements.SettlementException.SettlementException;
 import TileBuilder.TileBuilder;
 import TileMap.*;
 import org.junit.Before;
@@ -21,6 +25,7 @@ public class BuildPhaseHelperTest {
     private BuildPhase buildPhase;
     private TileBuilder tileBuilder;
     private BuildPhaseHelper buildPhaseHelper;
+    private Player activePlayer;
 
     @Before
     public void initializeInstances() {
@@ -29,6 +34,7 @@ public class BuildPhaseHelperTest {
         gamePieceMap = new GamePieceMap();
         buildPhaseHelper = new BuildPhaseHelper();
         tileBuilder = new TileBuilder();
+        activePlayer = new Player(firstPlayer);
     }
 
     @Test
@@ -36,12 +42,12 @@ public class BuildPhaseHelperTest {
             throws InvalidTileLocationException, LocationOccupiedException {
 
         createAndPlaceTileAtOrigin();
-
         GamePiece firstVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
         Location newSettlementLocation = new Location(0, 1);
         buildPhase = new BuildPhase(firstVillage, newSettlementLocation);
+        buildPhase.setBuildType(BuildType.FOUND);
 
-        assertTrue(buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap));
+        assertTrue(buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
     @Test
@@ -53,26 +59,29 @@ public class BuildPhaseHelperTest {
         GamePiece firstVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
         Location settlementLocationOnTopOfVolcano = new Location(0, 0);
         buildPhase = new BuildPhase(firstVillage, settlementLocationOnTopOfVolcano);
-
-        assertFalse(buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap));
+        buildPhase.setBuildType(BuildType.FOUND);
+        assertFalse(buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
     @Test
     public void settlementExpansionAttemptSucceeds()
-            throws InvalidTileLocationException, LocationOccupiedException, LocationNotEmptyException {
+            throws InvalidTileLocationException, LocationOccupiedException, LocationNotEmptyException, SettlementException {
 
         createAndPlaceTileAtOrigin();
 
         GamePiece firstVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
         GamePiece expansionVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
+        Settlement settlement = new Settlement();
 
         Location firstVillageLocation = new Location(1, 0);
         Location expansionLocation = new Location(0, 1);
 
         gamePieceMap.insertAPieceAt(firstVillageLocation, firstVillage);
-        buildPhase = new BuildPhase(expansionVillage, expansionLocation);
+        settlement.markPieceInSettlement(firstVillageLocation, firstVillage);
+        buildPhase = new BuildPhase(expansionVillage, expansionLocation, settlement);
+        buildPhase.setBuildType(BuildType.EXPAND);
 
-        assertTrue(buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap));
+        assertTrue(buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
     @Test
@@ -83,9 +92,11 @@ public class BuildPhaseHelperTest {
 
         GamePiece firstVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
         Location firstVillageLocation = new Location(1, 0);
-        buildPhase = new BuildPhase(firstVillage, firstVillageLocation);
+        Settlement settlement = new Settlement();
+        buildPhase = new BuildPhase(firstVillage, firstVillageLocation,settlement);
+        buildPhase.setBuildType(BuildType.EXPAND);
 
-        assertFalse(buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap));
+        assertFalse(buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
     @Test
@@ -122,7 +133,7 @@ public class BuildPhaseHelperTest {
         Location totoroPlacementLocation = new Location(0, 4);
         buildPhase = new BuildPhase(totoroToPlace, totoroPlacementLocation);
 
-        assertTrue(buildPhaseHelper.attemptTotoroPlacement(buildPhase, tileMap, gamePieceMap));
+        assertTrue(buildPhaseHelper.attemptTotoroPlacement(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
     @Test
@@ -135,7 +146,7 @@ public class BuildPhaseHelperTest {
         Location totoroPlacementLocation = new Location(1, 0);
         buildPhase = new BuildPhase(totoroToPlace, totoroPlacementLocation);
 
-        assertFalse(buildPhaseHelper.attemptTotoroPlacement(buildPhase, tileMap, gamePieceMap));
+        assertFalse(buildPhaseHelper.attemptTotoroPlacement(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
     @Test
@@ -185,10 +196,9 @@ public class BuildPhaseHelperTest {
         gamePieceMap.insertAPieceAt(level3Tile12, firstVillage);
         buildPhase = new BuildPhase(tigerToPlace, level3Tile13);
 
-        assertTrue(buildPhaseHelper.attemptTigerPlacement(buildPhase, tileMap, gamePieceMap));
+        assertTrue(buildPhaseHelper.attemptTigerPlacement(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
-    @Ignore("this test wont pass due to the fact that attemptTigerPlacement in BuildPhaseHelper does not check if the level is 3+")
     @Test
     public void tigerPlacementAttemptFailsWithAdjacentSettlementButTileIsFirstLevel()
             throws InvalidTileLocationException, LocationOccupiedException, LocationNotEmptyException {
@@ -204,7 +214,7 @@ public class BuildPhaseHelperTest {
         gamePieceMap.insertAPieceAt(settlementLocation, firstVillage);
         buildPhase = new BuildPhase(tigerToPlace, tigerLocation);
 
-        assertFalse(buildPhaseHelper.attemptTigerPlacement(buildPhase, tileMap, gamePieceMap));
+        assertFalse(buildPhaseHelper.attemptTigerPlacement(buildPhase, tileMap, gamePieceMap, activePlayer));
     }
 
     private void createAndPlaceTileAtOrigin()

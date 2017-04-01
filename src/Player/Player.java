@@ -1,5 +1,14 @@
 package Player;
 
+import Location.Location;
+import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
+import Settlements.Creation.Settlement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import GamePieceMap.GamePiece;
+
 public class Player {
     private static final int MAX_VILLAGER_COUNT = 20;
     private static final int MAX_TOTORO_COUNT = 3;
@@ -8,20 +17,32 @@ public class Player {
     private int villagerCount;
     private int totoroCount;
     private int tigerCount;
+    private int score;
+    private List<Settlement> settlements;
 
     public Player(PlayerID id) {
         this.id = id;
-        this.villagerCount = new Integer(MAX_VILLAGER_COUNT);
-        this.totoroCount = new Integer(MAX_TOTORO_COUNT);
-        this.tigerCount = new Integer(MAX_TIGER_COUNT);
+        this.villagerCount = MAX_VILLAGER_COUNT;
+        this.totoroCount = MAX_TOTORO_COUNT;
+        this.tigerCount = MAX_TIGER_COUNT;
+        this.score = 0;
+        this.settlements = new ArrayList<>();
     }
 
     public PlayerID getID() {
         return this.id;
     }
 
-    public void decrementVillagerCount() {
-        this.villagerCount--;
+    public List<Settlement> getListOfSettlements() {
+        return new ArrayList<>(settlements);
+    }
+
+    public void setListOfSettlements(List<Settlement> listOfSettlements) {
+        settlements = listOfSettlements;
+    }
+
+    public void decrementVillagerCount(int amountToDecrement) {
+        this.villagerCount -= amountToDecrement;
     }
 
     public void decrementTotoroCount() {
@@ -42,5 +63,13 @@ public class Player {
 
     public int getTigerCount(){
         return tigerCount;
+    }
+
+    public int getScore(){
+        return score;
+    }
+
+    public void addPoints(int points){
+        score += points;
     }
 }

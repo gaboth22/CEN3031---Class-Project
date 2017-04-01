@@ -15,6 +15,10 @@ public class GamePieceMap {
         mapContainingPiecesAtLocations = new HashMap<Location, GamePiece>();
     }
 
+    public GamePieceMap(GamePieceMap gamePieceMap){
+        mapContainingPiecesAtLocations = new HashMap<Location, GamePiece>(gamePieceMap.mapContainingPiecesAtLocations);
+    }
+
     public boolean isThereAPieceAt(Location location){
         return mapContainingPiecesAtLocations.containsKey(location);
     }

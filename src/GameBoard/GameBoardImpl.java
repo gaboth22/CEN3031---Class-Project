@@ -2,6 +2,7 @@ package GameBoard;
 
 import GamePieceMap.*;
 import Location.Location;
+import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
 import Play.BuildPhase.BuildPhase;
 import GamePieceMap.GamePieceMap;
 import Play.BuildPhase.BuildPhaseException;
@@ -9,11 +10,15 @@ import Play.BuildPhase.BuildType;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementPhaseException;
 import Play.TilePlacementPhase.TilePlacementType;
-import Player.PlayerID;
+import Player.*;
+import Settlements.Creation.Settlement;
+import Settlements.Creation.SettlementCreator;
+import Terrain.Terrain.Terrain;
+import Tile.Tile.FirstTileImpl;
+import Tile.Tile.Tile;
 import TileMap.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GameBoardImpl implements GameBoard {
     private static final int totoroScore = 200;
@@ -28,8 +33,8 @@ public class GameBoardImpl implements GameBoard {
     private NukeTileHelper nukeTileHelper;
     private BuildPhaseHelper buildPhaseHelper;
 
-    int playerOneScore;
-    int playerTwoScore;
+    private Player playerOne;
+    private Player playerTwo;
 
     public GameBoardImpl() {
         this.gamePieceMap = new GamePieceMap();
@@ -38,8 +43,27 @@ public class GameBoardImpl implements GameBoard {
         this.tilePlacementHelper = new TilePlacementHelper();
         this.nukeTileHelper = new NukeTileHelper();
         this.buildPhaseHelper = new BuildPhaseHelper();
-        this.playerOneScore = 0;
-        this.playerTwoScore = 0;
+        this.playerOne = new Player(PlayerID.PLAYER_ONE);
+        this.playerTwo = new Player(PlayerID.PLAYER_TWO);
+
+        Location[] firstTileLocations = new Location[] {
+                new Location(0, 0),
+                new Location(-1 , 1),
+                new Location(1, 0),
+                new Location(1, -1),
+                new Location(-1, 0)
+        };
+        Terrain[] firstTileTerrains = new Terrain[] {
+                Terrain.VOLCANO,
+                Terrain.LAKE,
+                Terrain.GRASSLANDS,
+                Terrain.ROCKY,
+                Terrain.JUNGLE
+        };
+
+        Tile firstTile = new FirstTileImpl(Arrays.asList(firstTileTerrains), Arrays.asList(firstTileLocations));
+
+
     }
 
     @Override
@@ -73,6 +97,7 @@ public class GameBoardImpl implements GameBoard {
                 nukeTileHelper.updateTileMapWithNewlyInsertedTile(tilePlacementPhase, tileMap);
                 nukeTileHelper.removeNukedVillagersFromGamePieceMap(tilePlacementPhase, gamePieceMap);
                 incrementTurnNumber();
+                settlementListUpdateForTilePhase(tilePlacementPhase);
             }
             else throw new TilePlacementPhaseException("Nuking failed");
         }
@@ -80,14 +105,27 @@ public class GameBoardImpl implements GameBoard {
 
     @Override
     public void doBuildPhase(BuildPhase buildPhase) throws Exception {
+
+        Player activePlayer;
+
+        if(buildPhase.getPlayerID() == PlayerID.PLAYER_ONE)
+            activePlayer = playerOne;
+        else
+            activePlayer = playerTwo;
+
         if(buildPhase.getBuildType() == BuildType.FOUND){
+
             if(buildPhaseHelper.attemptSettlementFoundation(
                     buildPhase,
                     tileMap,
-                    gamePieceMap)){
+                    gamePieceMap,
+                    activePlayer)){
 
                 buildPhaseHelper.insertVillager(buildPhase, gamePieceMap, tileMap);
                 updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+                villagerPieceAmountDecrement(buildPhase.getPlayerID());
+                settlementListUpdateForBuildPhase(buildPhase);
+
             }
             else throw new BuildPhaseException("Settlement foundation failed");
         }
@@ -95,10 +133,12 @@ public class GameBoardImpl implements GameBoard {
             if(buildPhaseHelper.attemptSettlementExpansion(
                     buildPhase,
                     tileMap,
-                    gamePieceMap)){
+                    gamePieceMap,
+                    activePlayer)){
 
                 buildPhaseHelper.expandSettlement(buildPhase, tileMap, gamePieceMap);
                 updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+                settlementListUpdateForBuildPhase(buildPhase);
             }
             else throw new BuildPhaseException("Settlement expansion failed");
         }
@@ -106,10 +146,13 @@ public class GameBoardImpl implements GameBoard {
             if(buildPhaseHelper.attemptTotoroPlacement(
                     buildPhase,
                     tileMap,
-                    gamePieceMap)){
+                    gamePieceMap,
+                    activePlayer)){
 
                 buildPhaseHelper.insertSpecialPiece(buildPhase, gamePieceMap);
-                updateScoreWhenTigerOrTotoroPlaced(buildPhase.getTypeOfPieceToPlace(), buildPhase.getPlayerID());
+                updateScoreWhenTigerOrTotoroPlaced(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+                specialPieceAmountDecrement(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+                settlementListUpdateForBuildPhase(buildPhase);
 
             }
             else throw new BuildPhaseException("Totoro placement failed");
@@ -118,10 +161,13 @@ public class GameBoardImpl implements GameBoard {
             if(buildPhaseHelper.attemptTigerPlacement(
                     buildPhase,
                     tileMap,
-                    gamePieceMap)) {
+                    gamePieceMap,
+                    activePlayer)) {
 
                 buildPhaseHelper.insertSpecialPiece(buildPhase, gamePieceMap);
-                updateScoreWhenTigerOrTotoroPlaced(buildPhase.getTypeOfPieceToPlace(), buildPhase.getPlayerID());
+                updateScoreWhenTigerOrTotoroPlaced(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+                specialPieceAmountDecrement(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+                settlementListUpdateForBuildPhase(buildPhase);
             }
             else throw new BuildPhaseException("Tiger placement failed");
         }
@@ -129,31 +175,112 @@ public class GameBoardImpl implements GameBoard {
 
     private void updateScoreWhenVillagerPlaced(PlayerID playerID){
         if(playerID == PlayerID.PLAYER_ONE){
-            this.playerOneScore += buildPhaseHelper.getLastPlayScoreForVillagers();
+            playerOne.addPoints(buildPhaseHelper.getLastPlayScoreForVillagers());
         }
         else{
-            this.playerTwoScore += buildPhaseHelper.getLastPlayScoreForVillagers();
+            playerTwo.addPoints(buildPhaseHelper.getLastPlayScoreForVillagers());
         }
         buildPhaseHelper.setLastPlayVillagerScoreToZero();
     }
 
-    private void updateScoreWhenTigerOrTotoroPlaced(TypeOfPiece type, PlayerID playerID){
+    private void updateScoreWhenTigerOrTotoroPlaced(PlayerID playerID, TypeOfPiece typeOfPiece){
         if(playerID == PlayerID.PLAYER_ONE){
-            if(type == TypeOfPiece.TIGER){
-                this.playerOneScore += tigerScore;
+            if(typeOfPiece == TypeOfPiece.TIGER){
+                playerOne.addPoints(tigerScore);
             }
             else{
-                this.playerOneScore += totoroScore;
+                playerOne.addPoints(totoroScore);
             }
         }
         else{
-            if(type == TypeOfPiece.TIGER){
-                this.playerTwoScore += tigerScore;
+            if(typeOfPiece == TypeOfPiece.TIGER){
+                playerTwo.addPoints(tigerScore);
             }
             else{
-                this.playerTwoScore += totoroScore;
+                playerTwo.addPoints(totoroScore);
             }
         }
+    }
+
+    private void villagerPieceAmountDecrement(PlayerID playerID){
+        if(playerID == playerOne.getID()){
+            playerOne.decrementVillagerCount(buildPhaseHelper.getLastPlayVillagersUsed());
+        }
+        else{
+            playerTwo.decrementVillagerCount(buildPhaseHelper.getLastPlayVillagersUsed());
+        }
+        buildPhaseHelper.setLastPlayVillagersUsedToZero();
+    }
+
+    private void specialPieceAmountDecrement(PlayerID playerID, TypeOfPiece typeOfPiece){
+        if(playerID == PlayerID.PLAYER_ONE){
+            if(typeOfPiece == TypeOfPiece.TIGER){
+                playerOne.decrementTigerCount();
+            }
+            else{
+                playerOne.decrementTotoroCount();;
+            }
+        }
+        else{
+            if(typeOfPiece == TypeOfPiece.TIGER){
+                playerTwo.decrementTigerCount();
+            }
+            else{
+                playerTwo.decrementTotoroCount();
+            }
+        }
+    }
+
+    private void settlementListUpdateForTilePhase(TilePlacementPhase tilePlacementPhase){
+        Map<Location, Hexagon> placedHexes = tileMap.getAllHexagons();
+        Set<Location> locationsOfPlacedHexes =  placedHexes.keySet();
+
+        List<Settlement> activePlayerSettlements = new ArrayList<>();
+        List<Settlement> otherPlayerSettlements = new ArrayList<>();
+
+        PlayerID activePlayer = tilePlacementPhase.getPlayerID();
+
+        for(Location loc : locationsOfPlacedHexes) {
+            Settlement settlement = SettlementCreator.getSettlementAt(gamePieceMap, loc);
+
+            if (settlement.getSettlementOwner() == activePlayer &&
+                    !activePlayerSettlements.contains(settlement))
+                activePlayerSettlements.add(settlement);
+
+            if (settlement.getSettlementOwner() != activePlayer &&
+                    !otherPlayerSettlements.contains(settlement))
+                otherPlayerSettlements.add(settlement);
+        }
+
+        if(activePlayer == PlayerID.PLAYER_ONE)
+            playerOne.setListOfSettlements(activePlayerSettlements);
+        else
+            playerOne.setListOfSettlements(otherPlayerSettlements);
+
+        if(activePlayer == PlayerID.PLAYER_TWO)
+            playerTwo.setListOfSettlements(activePlayerSettlements);
+        else
+            playerTwo.setListOfSettlements(otherPlayerSettlements);
+    }
+
+    private void settlementListUpdateForBuildPhase(BuildPhase buildPhase){
+        Map<Location, Hexagon> placedHexes = tileMap.getAllHexagons();
+        Set<Location> locationsOfPlacedHexes =  placedHexes.keySet();
+
+        List<Settlement> activePlayerSettlements = new ArrayList<>();
+
+        for(Location loc : locationsOfPlacedHexes) {
+            Settlement settlement = SettlementCreator.getSettlementAt(gamePieceMap, loc);
+
+            if( settlement.getSettlementOwner() == buildPhase.getPlayerID() &&
+                    !activePlayerSettlements.contains(settlement))
+                activePlayerSettlements.add(settlement);
+        }
+
+        if(buildPhase.getPlayerID() == PlayerID.PLAYER_ONE)
+            playerOne.setListOfSettlements(activePlayerSettlements);
+        else
+            playerTwo.setListOfSettlements(activePlayerSettlements);
     }
 
     private void incrementTurnNumber() {
@@ -166,8 +293,8 @@ public class GameBoardImpl implements GameBoard {
     }
 
     @Override
-    public Map<Location, Hexagon> getGameBoardHexagons() {
-        return new HashMap<Location, Hexagon>(tileMap.getAllHexagons());
+    public Map<Location, Hexagon> getPlacedHexagons() {
+        return tileMap.getAllHexagons();
     }
 
     @Override
@@ -176,7 +303,49 @@ public class GameBoardImpl implements GameBoard {
             if(!tileMap.hasHexagonAt(locationsInTile[i]))
                 return false;
         }
-
         return true;
+    }
+
+    @Override
+    public int getPlayerOneScore(){
+        return playerOne.getScore();
+    }
+
+    @Override
+    public int getPlayerTwoScore(){
+        return playerTwo.getScore();
+    }
+
+    @Override
+    public List<Settlement> getPlayerOneSettlements(){
+        return playerOne.getListOfSettlements();
+    }
+
+    @Override
+    public List<Settlement> getPlayerTwoSettlements(){
+        return playerTwo.getListOfSettlements();
+    }
+
+    @Override
+    public List<Location> getPlaceableLocations(){
+        List<Location> placeableLocations = new ArrayList<Location>();
+
+        Map<Location, Hexagon> placedHexes = tileMap.getAllHexagons();
+        Set<Location> locationsOfPlacedHexes =  placedHexes.keySet();
+
+        for(Location loc : locationsOfPlacedHexes){
+            Location[] adjacents = AdjacentLocationArrayGetter.getArrayOfAdjacentLocationsTo(loc);
+            for(int i = 0; i < adjacents.length; i++){
+                if(!tileMap.hasHexagonAt(adjacents[i])){
+                    placeableLocations.add(adjacents[i]);
+                }
+            }
+        }
+        return placeableLocations;
+    }
+
+    @Override
+    public GamePieceMap getGamePieceMap(){
+        return new GamePieceMap(gamePieceMap);
     }
 }
