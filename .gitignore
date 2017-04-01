@@ -2,3 +2,4 @@
 /out
 /.idea/workspace.xml
 /.idea/kotlinc.xml
+/src/Log/log.log

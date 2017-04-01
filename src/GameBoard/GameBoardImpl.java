@@ -17,7 +17,6 @@ import Terrain.Terrain.Terrain;
 import Tile.Tile.FirstTileImpl;
 import Tile.Tile.Tile;
 import TileMap.*;
-
 import java.util.*;
 
 public class GameBoardImpl implements GameBoard {
@@ -36,6 +35,8 @@ public class GameBoardImpl implements GameBoard {
     private Player playerOne;
     private Player playerTwo;
 
+    private Tile firstTile;
+
     public GameBoardImpl() {
         this.gamePieceMap = new GamePieceMap();
         this.tileMap = new HexagonMap();
@@ -45,7 +46,10 @@ public class GameBoardImpl implements GameBoard {
         this.buildPhaseHelper = new BuildPhaseHelper();
         this.playerOne = new Player(PlayerID.PLAYER_ONE);
         this.playerTwo = new Player(PlayerID.PLAYER_TWO);
+        insertFirstTile();
+    }
 
+    private void insertFirstTile(){
         Location[] firstTileLocations = new Location[] {
                 new Location(0, 0),
                 new Location(-1 , 1),
@@ -53,6 +57,7 @@ public class GameBoardImpl implements GameBoard {
                 new Location(1, -1),
                 new Location(-1, 0)
         };
+
         Terrain[] firstTileTerrains = new Terrain[] {
                 Terrain.VOLCANO,
                 Terrain.LAKE,
@@ -61,9 +66,15 @@ public class GameBoardImpl implements GameBoard {
                 Terrain.JUNGLE
         };
 
-        Tile firstTile = new FirstTileImpl(Arrays.asList(firstTileTerrains), Arrays.asList(firstTileLocations));
+        firstTile = new FirstTileImpl(Arrays.asList(firstTileTerrains), Arrays.asList(firstTileLocations));
 
+        try {
+            tileMap.insertTile(firstTile);
+        } catch(Exception e) {}
+    }
 
+    public Tile getFirstTile() {
+        return firstTile;
     }
 
     @Override
@@ -74,7 +85,6 @@ public class GameBoardImpl implements GameBoard {
                     tileMap)) {
 
                 tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
-                incrementTurnNumber();
             }
             else throw new TilePlacementPhaseException("First placement failed");
         }
@@ -84,7 +94,6 @@ public class GameBoardImpl implements GameBoard {
                     tileMap)) {
 
                 tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
-                incrementTurnNumber();
             }
             else throw new TilePlacementPhaseException("Simple placement failed");
         }
@@ -96,7 +105,6 @@ public class GameBoardImpl implements GameBoard {
 
                 nukeTileHelper.updateTileMapWithNewlyInsertedTile(tilePlacementPhase, tileMap);
                 nukeTileHelper.removeNukedVillagersFromGamePieceMap(tilePlacementPhase, gamePieceMap);
-                incrementTurnNumber();
                 settlementListUpdateForTilePhase(tilePlacementPhase);
             }
             else throw new TilePlacementPhaseException("Nuking failed");
@@ -107,7 +115,6 @@ public class GameBoardImpl implements GameBoard {
     public void doBuildPhase(BuildPhase buildPhase) throws Exception {
 
         Player activePlayer;
-
         if(buildPhase.getPlayerID() == PlayerID.PLAYER_ONE)
             activePlayer = playerOne;
         else
@@ -125,6 +132,7 @@ public class GameBoardImpl implements GameBoard {
                 updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
                 villagerPieceAmountDecrement(buildPhase.getPlayerID());
                 settlementListUpdateForBuildPhase(buildPhase);
+                incrementTurnNumber();
 
             }
             else throw new BuildPhaseException("Settlement foundation failed");
@@ -139,6 +147,7 @@ public class GameBoardImpl implements GameBoard {
                 buildPhaseHelper.expandSettlement(buildPhase, tileMap, gamePieceMap);
                 updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
                 settlementListUpdateForBuildPhase(buildPhase);
+                incrementTurnNumber();
             }
             else throw new BuildPhaseException("Settlement expansion failed");
         }
@@ -153,6 +162,7 @@ public class GameBoardImpl implements GameBoard {
                 updateScoreWhenTigerOrTotoroPlaced(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
                 specialPieceAmountDecrement(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
                 settlementListUpdateForBuildPhase(buildPhase);
+                incrementTurnNumber();
 
             }
             else throw new BuildPhaseException("Totoro placement failed");
@@ -168,6 +178,7 @@ public class GameBoardImpl implements GameBoard {
                 updateScoreWhenTigerOrTotoroPlaced(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
                 specialPieceAmountDecrement(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
                 settlementListUpdateForBuildPhase(buildPhase);
+                incrementTurnNumber();
             }
             else throw new BuildPhaseException("Tiger placement failed");
         }
@@ -304,6 +315,15 @@ public class GameBoardImpl implements GameBoard {
                 return false;
         }
         return true;
+    }
+
+    public Player getPlayer(PlayerID playerID){
+        if(playerID == PlayerID.PLAYER_ONE){
+            return new Player(playerOne);
+        }
+        else{
+            return new Player(playerTwo);
+        }
     }
 
     @Override

@@ -59,6 +59,8 @@ public class BuildPhaseHelper {
             Player activePlayer)
             throws InvalidPiecePlacementRuleException {
 
+        FoundationMustBeLevelOneRule.applyRule(tileMap, buildPhase.getLocationToPlacePieceOn());
+
         PlayerMustHavePieceRule.applyRule(activePlayer, gamePieceMap, buildPhase, tileMap);
 
         GamePieceCannotBePlacedOnVolcanoRule.applyRule(
@@ -115,7 +117,6 @@ public class BuildPhaseHelper {
 
         try{
             attemptTotoroPlacementRules(buildPhase, tileMap, gamePieceMap, activePlayer);
-
         }
         catch(InvalidPiecePlacementRuleException e){
             System.out.println(e.getClass());

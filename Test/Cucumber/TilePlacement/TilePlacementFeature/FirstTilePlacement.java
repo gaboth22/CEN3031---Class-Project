@@ -53,17 +53,4 @@ public class FirstTilePlacement {
     public void theInsertionShouldBeInvalid() {
         Assert.assertTrue(insertionFailed);
     }
-
-    @When("^the active player places a tile")
-    public void placeFirstTile() throws Exception {
-        firstTile = builder.getTileAtOrigin();
-        placementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, firstTile);
-        placementPhase.setTilePlacementType(TilePlacementType.FIRST_PLACEMENT);
-        gameBoard.doTilePlacementPhase(placementPhase);
-    }
-
-    @Then("^the tile should be placed at center of table")
-    public void tileShouldBeAtCenterOfTable() throws Exception {
-        Assert.assertTrue(gameBoard.hasTileAt(firstTile.getArrayOfTerrainLocations()));
-    }
 }

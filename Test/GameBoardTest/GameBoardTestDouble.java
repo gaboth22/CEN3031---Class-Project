@@ -1,6 +1,7 @@
 package GameBoardTest;
 
 import GameBoard.GameBoard;
+import GamePieceMap.GamePieceMap;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
@@ -11,6 +12,7 @@ import TestExceptions.MethodCalledException;
 import TileMap.Hexagon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,8 +64,8 @@ public class GameBoardTestDouble implements GameBoard {
         return -100;
     }
 
-    public List<Hexagon> getPlacedHexagons() {
-        return new ArrayList<>();
+    public Map<Location, Hexagon> getPlacedHexagons() {
+        return new HashMap<Location, Hexagon>();
     }
 
     public List<Settlement> getP1Settlements() {
@@ -76,5 +78,25 @@ public class GameBoardTestDouble implements GameBoard {
 
     public List<Location> getPlaceableLocations() {
         return new ArrayList<Location>();
+    }
+
+    public int getPlayerOneScore() {
+        return getP1Score();
+    }
+
+    public int getPlayerTwoScore() {
+        return getP2Score();
+    }
+
+    public List<Settlement> getPlayerOneSettlements() {
+        return new ArrayList<>();
+    }
+
+    public List<Settlement> getPlayerTwoSettlements() {
+        return new ArrayList<>();
+    }
+
+    public GamePieceMap getGamePieceMap() {
+        return new GamePieceMap();
     }
 }

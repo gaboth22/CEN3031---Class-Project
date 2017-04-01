@@ -1,13 +1,8 @@
 package Player;
 
-import Location.Location;
-import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
 import Settlements.Creation.Settlement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import GamePieceMap.GamePiece;
 
 public class Player {
     private static final int MAX_VILLAGER_COUNT = 20;
@@ -27,6 +22,15 @@ public class Player {
         this.tigerCount = MAX_TIGER_COUNT;
         this.score = 0;
         this.settlements = new ArrayList<>();
+    }
+
+    public Player(Player playerToCopy){
+        this.id = playerToCopy.getID();
+        this.villagerCount = playerToCopy.getVillagerCount();
+        this.tigerCount = playerToCopy.getTigerCount();
+        this.villagerCount = playerToCopy.getVillagerCount();
+        this.score = playerToCopy.getScore();
+        this.settlements = playerToCopy.getListOfSettlements();
     }
 
     public PlayerID getID() {
