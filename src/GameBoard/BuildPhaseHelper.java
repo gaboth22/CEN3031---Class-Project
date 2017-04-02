@@ -31,6 +31,7 @@ public class BuildPhaseHelper {
         setSettlementExpansionHelper(new SettlementExpansionHelperImpl(buildPhase, tileMap, gamePieceMap));
         expansionHelper.expandSettlement();
         Location[] locationsExpandedTo = expansionHelper.getListOfLocationsExpandedTo();
+        System.out.println(locationsExpandedTo);
         for(int i = 0; i < locationsExpandedTo.length; i++){
             updateLastPlayScoreForVillager(buildPhase.getLocationToPlacePieceOn(), tileMap);
             updateLastPlayVillagersUsed(buildPhase.getLocationToPlacePieceOn(), tileMap);
