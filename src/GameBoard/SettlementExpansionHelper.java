@@ -1,8 +1,9 @@
 package GameBoard;
 
 import Location.*;
+import Play.BuildPhase.BuildPhaseException;
 
 public interface SettlementExpansionHelper {
-    void expandSettlement();
-    Location[] getListOfLocationsExpandedTo();
+    void expandSettlement() throws BuildPhaseException;
+    Location[] getArrayOfLocationsExpandedTo();
 }

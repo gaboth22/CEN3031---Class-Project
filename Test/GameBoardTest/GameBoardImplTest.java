@@ -213,6 +213,7 @@ public class GameBoardImplTest {
         tilePlacementPhaseTwo.setTilePlacementType(TilePlacementType.SIMPLE_PLACEMENT);
         gameBoard.doTilePlacementPhase(tilePlacementPhaseTwo);
 
+<<<<<<< HEAD
         GamePiece gamePieceOne = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER);
         BuildPhase buildPhaseOne = new BuildPhase(gamePieceOne, new Location(0,2));
         buildPhaseOne.setBuildType(BuildType.FOUND);
