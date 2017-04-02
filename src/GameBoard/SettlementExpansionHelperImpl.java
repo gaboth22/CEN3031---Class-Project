@@ -9,10 +9,14 @@ import TileMap.*;
 import GamePieceMap.*;
 import Location.*;
 
+import java.util.List;
+
 public class SettlementExpansionHelperImpl implements SettlementExpansionHelper {
     private BuildPhase buildPhase;
     private TileMap tileMap;
     private GamePieceMap gamePieceMap;
+
+    private List<Location> listOfLocationsExpandedTo;
 
     public SettlementExpansionHelperImpl(BuildPhase buildPhase, TileMap tileMap, GamePieceMap gamePieceMap){
         this.buildPhase = buildPhase;
@@ -24,23 +28,26 @@ public class SettlementExpansionHelperImpl implements SettlementExpansionHelper 
         Settlement settlementToExpand = buildPhase.getSettlement();
         Terrain terrainToExpandInto = getTerrainToPlaceOn(buildPhase, tileMap);
 
-        SettlementExpansion.findLocationsToExpandInto(tileMap.getAllHexagons(), settlementToExpand, gamePieceMap, terrainToExpandInto);
+        listOfLocationsExpandedTo = SettlementExpansion.findLocationsToExpandInto(tileMap.getAllHexagons(), settlementToExpand, gamePieceMap, terrainToExpandInto);
+        SettlementExpansion.expandSettlement(gamePieceMap,settlementToExpand, listOfLocationsExpandedTo);
     }
 
-    public Location[] getListOfLocationsExpandedTo(){
-        Location[] locs = null;
-        //TODO: implementation
-        return locs;
+    public Location[] getArrayOfLocationsExpandedTo() {
+        if(listOfLocationsExpandedTo == null) {
+            return new Location[] {};
+        }
+        Location[] locationsExpandedTo = new Location[] {};
+        locationsExpandedTo = listOfLocationsExpandedTo.toArray(locationsExpandedTo);
+        return locationsExpandedTo;
     }
 
     private Terrain getTerrainToPlaceOn(BuildPhase buildPhase, TileMap tileMap) throws BuildPhaseException {
         Location locationOfTerrain = buildPhase.getLocationToPlacePieceOn();
 
-        if(tileMap.hasHexagonAt(locationOfTerrain)) {
+        if (tileMap.hasHexagonAt(locationOfTerrain)) {
             Hexagon hexagonAtLocation = tileMap.getHexagonAt(locationOfTerrain);
             return hexagonAtLocation.getTerrain();
         }
         throw new BuildPhaseException("The location given by Build Phase for expansion, " + locationOfTerrain + ", does not have a hexagon.");
     }
-
 }

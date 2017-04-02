@@ -5,5 +5,5 @@ import Play.BuildPhase.BuildPhaseException;
 
 public interface SettlementExpansionHelper {
     void expandSettlement() throws BuildPhaseException;
-    Location[] getListOfLocationsExpandedTo();
+    Location[] getArrayOfLocationsExpandedTo();
 }
