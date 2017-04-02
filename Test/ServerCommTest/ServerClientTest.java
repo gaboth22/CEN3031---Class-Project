@@ -1,7 +1,7 @@
 package ServerCommTest;
 
 import LocalTestServer.LocalTestServer;
-import ServerComm.ServerClient;
+import GameMaster.ServerComm.ServerClient;
 import org.junit.*;
 import java.io.IOException;
 

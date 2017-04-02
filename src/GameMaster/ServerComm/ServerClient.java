@@ -1,4 +1,4 @@
-package ServerComm;
+package GameMaster.ServerComm;
 
 import java.io.*;
 import java.net.Socket;

@@ -1,4 +1,4 @@
-package ServerComm;
+package GameMaster.ServerComm;
 
 import Sender.SenderData.SenderData;
 

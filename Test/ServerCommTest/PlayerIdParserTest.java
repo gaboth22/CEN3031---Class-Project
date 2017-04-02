@@ -1,6 +1,6 @@
 package ServerCommTest;
 
-import ServerComm.Parsers.PlayerIdParser;
+import GameMaster.ServerComm.Parsers.PlayerIdParser;
 import org.junit.Assert;
 import org.junit.Test;
 

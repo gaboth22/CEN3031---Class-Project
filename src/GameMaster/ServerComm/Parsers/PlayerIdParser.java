@@ -1,4 +1,4 @@
-package ServerComm.Parsers;
+package GameMaster.ServerComm.Parsers;
 
 import java.security.InvalidParameterException;
 
