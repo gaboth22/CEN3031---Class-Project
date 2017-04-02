@@ -1,7 +1,7 @@
-package ServerReceiver;
+package ServerMessageParser;
 
 import Sender.Sender;
-import ServerReceiver.ServerIncomingData.ServerIncomingData;
+import ServerMessageParser.ServerData.ServerIncomingData;
 import Receiver.Receiver;
 
 public class ServerReceiver {

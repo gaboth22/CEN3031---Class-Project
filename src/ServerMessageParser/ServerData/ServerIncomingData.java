@@ -1,4 +1,4 @@
-package ServerReceiver.ServerIncomingData;
+package ServerMessageParser.ServerData;
 
 import Sender.SenderData.SenderData;
 

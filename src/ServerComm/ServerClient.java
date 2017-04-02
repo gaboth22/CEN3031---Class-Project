@@ -1,4 +1,4 @@
-package ServerClient;
+package ServerComm;
 
 import java.io.*;
 import java.net.Socket;
@@ -30,10 +30,22 @@ public class ServerClient {
     }
 
     private String format(String toFormat) {
-        return toFormat + "\n";
+        if(!toFormat.contains("\r\n"))
+            return toFormat + "\r\n";
+        else
+            return toFormat;
     }
 
     public String receiveData() throws IOException {
         return inputReader.readLine();
+    }
+
+    public void close() {
+        try {
+            clientSocket.close();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }
