@@ -14,7 +14,6 @@ public interface GameBoard {
     void doBuildPhase(BuildPhase buildPhase) throws Exception;
     void doTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception;
     Map<Location, Hexagon> getPlacedHexagons() throws Exception;
-    boolean hasTileAt(Location[] locationsInTile);
     int getCurrentTurn();
     int getPlayerOneScore();
     int getPlayerTwoScore();

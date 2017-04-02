@@ -305,24 +305,6 @@ public class GameBoardImpl implements GameBoard {
     }
 
     @Override
-    public boolean hasTileAt(Location[] locationsInTile) {
-        for(int i = 0; i < locationsInTile.length; i++) {
-            if(!tileMap.hasHexagonAt(locationsInTile[i]))
-                return false;
-        }
-        return true;
-    }
-
-    public Player getPlayer(PlayerID playerID){
-        if(playerID == PlayerID.PLAYER_ONE){
-            return new Player(playerOne);
-        }
-        else{
-            return new Player(playerTwo);
-        }
-    }
-
-    @Override
     public int getPlayerOneScore(){
         return playerOne.getScore();
     }

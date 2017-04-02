@@ -13,7 +13,6 @@ import Player.PlayerID;
 import Settlements.Creation.Settlement;
 import Tile.Tile.TileImpl;
 import TileMap.Hexagon;
-import cucumber.api.java.gl.E;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -212,7 +211,7 @@ public class GameBoardImplTest {
         TilePlacementPhase tilePlacementPhaseTwo = new TilePlacementPhase(PlayerID.PLAYER_ONE, getSecondSimpleTile());
         tilePlacementPhaseTwo.setTilePlacementType(TilePlacementType.SIMPLE_PLACEMENT);
         gameBoard.doTilePlacementPhase(tilePlacementPhaseTwo);
-        
+
         GamePiece gamePieceOne = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER);
         BuildPhase buildPhaseOne = new BuildPhase(gamePieceOne, new Location(0,2));
         buildPhaseOne.setBuildType(BuildType.FOUND);
@@ -420,12 +419,13 @@ public class GameBoardImplTest {
 
     @Test
     public void getPlacedHexagonsTest() throws Exception {
-
-    }
-
-    @Test
-    public void hasTileAt() throws Exception {
-
+        GameBoard gameBoard = new GameBoardImpl();
+        Map<Location, Hexagon> placedHexagons = gameBoard.getPlacedHexagons();
+        assertTrue(placedHexagons.containsKey(new Location(0,0)));
+        assertTrue(placedHexagons.containsKey(new Location(1,0)));
+        assertTrue(placedHexagons.containsKey(new Location(1,-1)));
+        assertTrue(placedHexagons.containsKey(new Location(-1,1)));
+        assertTrue(placedHexagons.containsKey(new Location(-1,0)));
     }
 
     @Test
@@ -494,8 +494,21 @@ public class GameBoardImplTest {
     }
 
     @Test
-    public void getPlaceableLocations() throws Exception {
-
+    public void getPlaceableLocationsTest() throws Exception {
+        GameBoard gameBoard = new GameBoardImpl();
+        List<Location> placeableLocations = gameBoard.getPlaceableLocations();
+        assertTrue(placeableLocations.contains(new Location(0,1)));
+        assertTrue(placeableLocations.contains(new Location(1,1)));
+        assertTrue(placeableLocations.contains(new Location(2,0)));
+        assertTrue(placeableLocations.contains(new Location(2,-1)));
+        assertTrue(placeableLocations.contains(new Location(2,-2)));
+        assertTrue(placeableLocations.contains(new Location(1,-2)));
+        assertTrue(placeableLocations.contains(new Location(0,-1)));
+        assertTrue(placeableLocations.contains(new Location(-1,-1)));
+        assertTrue(placeableLocations.contains(new Location(-2,0)));
+        assertTrue(placeableLocations.contains(new Location(-2,1)));
+        assertTrue(placeableLocations.contains(new Location(-2,2)));
+        assertTrue(placeableLocations.contains(new Location(-1,2)));
     }
 
 }
