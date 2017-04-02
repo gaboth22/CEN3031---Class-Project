@@ -1,4 +1,4 @@
-package Play.Rule.TilePlacementRules;
+package Play.Rule.PiecePlacementRules;
 
 import GamePieceMap.GamePiece;
 import GamePieceMap.TypeOfPiece;
