@@ -40,7 +40,7 @@ public class GameMaster {
             }
             else if (gamePhaseState == GamePhaseState.WAITING_FOR_ROUND_COUNT) {
 
-                waitRoundCount();
+                waitForRoundCount();
                 gamePhaseState = GamePhaseState.IN_ROUND;
             }
             else if (gamePhaseState == GamePhaseState.IN_ROUND) {
@@ -58,7 +58,7 @@ public class GameMaster {
 
         String messageFromServer = getStringFromServer();
 
-        while (messageFromServer != welcomeMessage)
+        while (messageFromServer != WELCOME_MESSAGE)
             messageFromServer = getStringFromServer();
     }
 
@@ -66,17 +66,17 @@ public class GameMaster {
 
         String messageFromServer = getStringFromServer();
 
-        while (!messageFromServer.contains(pidMessage))
+        while (!messageFromServer.contains(PID_MESSAGE))
             messageFromServer = getStringFromServer();
 
         ourPidFromServer = PlayerIdParser.getPlayerId(messageFromServer);
     }
 
-    private void waitRoundCount() {
+    private void waitForRoundCount() {
 
         String messageFromServer = getStringFromServer();
 
-        while (!messageFromServer.contains(roundCountMessage))
+        while (!messageFromServer.contains(ROUND_COUNT_MESSAGE))
             messageFromServer = getStringFromServer();
 
         roundCount = RoundCountParser.getRoundCount(messageFromServer);
@@ -172,19 +172,19 @@ public class GameMaster {
     }
 
     private boolean isPlayComingFromServer(String messageFromServer) {
-        return messageFromServer.contains(otherPlayersPlayMessage);
+        return messageFromServer.contains(OTHER_PLAYERS_PLAY_MESSAGE);
     }
 
     private boolean isRequestForOurPlay(String messageFromServer) {
-        return messageFromServer.contains(requestForOurPlayMessage);
+        return messageFromServer.contains(REQUEST_FOR_OUR_PLAY_MESSAGE);
     }
 
     private boolean isForfeit(String messageFromServer) {
-        return messageFromServer.contains(forfeitMessage);
+        return messageFromServer.contains(FORFEIT_MESSAGE);
     }
 
     private boolean isEndOfRound(String messageFromServer) {
-        return messageFromServer.contains(endOfRoundMessage);
+        return messageFromServer.contains(END_OF_ROUND_MESSAGE);
     }
 
     private boolean isNotOwnPlayBeingReportedBack(String messageFromServer) {
