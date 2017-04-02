@@ -1,7 +1,11 @@
 package GameBoard;
 
 import Play.BuildPhase.BuildPhase;
-import TileMap.TileMap;
+import Play.BuildPhase.BuildPhaseException;
+import Settlements.Creation.Settlement;
+import Settlements.Expansion.SettlementExpansion;
+import Terrain.Terrain.Terrain;
+import TileMap.*;
 import GamePieceMap.*;
 import Location.*;
 
@@ -16,15 +20,27 @@ public class SettlementExpansionHelperImpl implements SettlementExpansionHelper 
         this.gamePieceMap = gamePieceMap;
     }
 
-    public void expandSettlement(){
+    public void expandSettlement() throws BuildPhaseException {
+        Settlement settlementToExpand = buildPhase.getSettlement();
+        Terrain terrainToExpandInto = getTerrainToPlaceOn(buildPhase, tileMap);
 
-        //TODO: implementation
+        SettlementExpansion.findLocationsToExpandInto(tileMap.getAllHexagons(), settlementToExpand, gamePieceMap, terrainToExpandInto);
     }
 
     public Location[] getListOfLocationsExpandedTo(){
         Location[] locs = null;
         //TODO: implementation
         return locs;
+    }
+
+    private Terrain getTerrainToPlaceOn(BuildPhase buildPhase, TileMap tileMap) throws BuildPhaseException {
+        Location locationOfTerrain = buildPhase.getLocationToPlacePieceOn();
+
+        if(tileMap.hasHexagonAt(locationOfTerrain)) {
+            Hexagon hexagonAtLocation = tileMap.getHexagonAt(locationOfTerrain);
+            return hexagonAtLocation.getTerrain();
+        }
+        throw new BuildPhaseException("The location given by Build Phase for expansion, " + locationOfTerrain + ", does not have a hexagon.");
     }
 
 }

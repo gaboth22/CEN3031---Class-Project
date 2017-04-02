@@ -197,7 +197,7 @@ public class GameBoardImplTest {
         TilePlacementPhase tilePlacementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, getSecondSimpleTile());
 
         GamePiece gamePiece = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER);
-        BuildPhase buildPhase = new BuildPhase(gamePiece, new Location)
+
     }
 
     private Tile getSecondSimpleTile(){
