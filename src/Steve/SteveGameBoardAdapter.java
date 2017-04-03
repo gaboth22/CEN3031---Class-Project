@@ -5,7 +5,7 @@ import Receiver.Receiver;
 import Sender.Sender;
 
 public class SteveGameBoardAdapter {
-    public void Adapt(Steve steve, Proxy gameBoardProxy) {
+    public void adapt(Steve steve, Proxy gameBoardProxy) {
 
         Sender steveDoBuildPhaseRequestSender = steve.getDoBuildPhaseRequestSender();
         Sender steveDoTilePlacementPhaseRequestSender = steve.getDoTilePlacementPhaseRequestSender();
