@@ -20,8 +20,8 @@ import TileMap.*;
 import java.util.*;
 
 public class GameBoardImpl implements GameBoard {
-    private static final int totoroScore = 200;
-    private static final int tigerScore = 75;
+    private static final int TOTORO_SCORE = 200;
+    private static final int TIGER_SCORE = 75;
 
     private GamePieceMap gamePieceMap;
     private TileMap tileMap;
@@ -168,11 +168,7 @@ public class GameBoardImpl implements GameBoard {
             else throw new BuildPhaseException("Totoro placement failed");
         }
         else if(buildPhase.getBuildType() == BuildType.PLACE_TIGER){
-            if(buildPhaseHelper.attemptTigerPlacement(
-                    buildPhase,
-                    tileMap,
-                    gamePieceMap,
-                    activePlayer)) {
+            if(buildPhaseHelper.attemptTigerPlacement(buildPhase, tileMap, gamePieceMap, activePlayer)) {
 
                 buildPhaseHelper.insertSpecialPiece(buildPhase, gamePieceMap);
                 updateScoreWhenTigerOrTotoroPlaced(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
@@ -197,18 +193,18 @@ public class GameBoardImpl implements GameBoard {
     private void updateScoreWhenTigerOrTotoroPlaced(PlayerID playerID, TypeOfPiece typeOfPiece){
         if(playerID == PlayerID.PLAYER_ONE){
             if(typeOfPiece == TypeOfPiece.TIGER){
-                playerOne.addPoints(tigerScore);
+                playerOne.addPoints(TIGER_SCORE);
             }
             else{
-                playerOne.addPoints(totoroScore);
+                playerOne.addPoints(TOTORO_SCORE);
             }
         }
         else{
             if(typeOfPiece == TypeOfPiece.TIGER){
-                playerTwo.addPoints(tigerScore);
+                playerTwo.addPoints(TIGER_SCORE);
             }
             else{
-                playerTwo.addPoints(totoroScore);
+                playerTwo.addPoints(TOTORO_SCORE);
             }
         }
     }
@@ -229,7 +225,7 @@ public class GameBoardImpl implements GameBoard {
                 playerOne.decrementTigerCount();
             }
             else{
-                playerOne.decrementTotoroCount();;
+                playerOne.decrementTotoroCount();
             }
         }
         else{
@@ -251,8 +247,8 @@ public class GameBoardImpl implements GameBoard {
 
         PlayerID activePlayer = tilePlacementPhase.getPlayerID();
 
-        for(Location loc : locationsOfPlacedHexes) {
-            Settlement settlement = SettlementCreator.getSettlementAt(gamePieceMap, loc);
+        for(Location location : locationsOfPlacedHexes) {
+            Settlement settlement = SettlementCreator.getSettlementAt(gamePieceMap, location);
 
             if (settlement.getSettlementOwner() == activePlayer &&
                     !activePlayerSettlements.contains(settlement))
@@ -308,20 +304,11 @@ public class GameBoardImpl implements GameBoard {
         return tileMap.getAllHexagons();
     }
 
-    @Override
-    public boolean hasTileAt(Location[] locationsInTile) {
-        for(int i = 0; i < locationsInTile.length; i++) {
-            if(!tileMap.hasHexagonAt(locationsInTile[i]))
-                return false;
-        }
-        return true;
-    }
-
     public Player getPlayer(PlayerID playerID){
-        if(playerID == PlayerID.PLAYER_ONE){
+        if(playerID == PlayerID.PLAYER_ONE) {
             return new Player(playerOne);
         }
-        else{
+        else {
             return new Player(playerTwo);
         }
     }

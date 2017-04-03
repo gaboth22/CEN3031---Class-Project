@@ -61,19 +61,24 @@ public class SettlementExpansion {
 
     public static void expandSettlement(GamePieceMap pieceMap,
                                         Settlement settlement,
-                                        List<Location> locationsToExpandTo) throws LocationNotEmptyException {
+                                        List<Location> locationsToExpandTo) {
 
         expandSettlementFromList(pieceMap, locationsToExpandTo, settlement);
     }
 
-    private static void expandSettlementFromList(GamePieceMap pieceMap, List<Location> locationsToExpandTo, Settlement settlement) throws LocationNotEmptyException {
+    private static void expandSettlementFromList(GamePieceMap pieceMap, List<Location> locationsToExpandTo, Settlement settlement) {
 
         PlayerID id = settlement.getSettlementOwner();
         TypeOfPiece pieceType = TypeOfPiece.VILLAGER;
 
         for(Location toExpandTo : locationsToExpandTo) {
             GamePiece gamePiece = new GamePiece(id, pieceType);
-            pieceMap.insertAPieceAt(toExpandTo, gamePiece);
+            try{
+                pieceMap.insertAPieceAt(toExpandTo, gamePiece);
+            }
+            catch(LocationNotEmptyException ex) {
+                throw new IllegalArgumentException("The given location list is invalid");
+            }
         }
     }
 }
