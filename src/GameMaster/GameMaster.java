@@ -50,6 +50,9 @@ public class GameMaster extends Thread {
         this.gameTwo = gameTwo;
         gamePhaseState = GamePhaseState.SERVER_REGISTRATION;
 
+        gameOne.setPlayReceiver(this.gameOneStevePlayReceiver);
+        gameTwo.setPlayReceiver(this.gameTwoStevePlayReceiver);
+
         this.gameOne.start();
         this.gameTwo.start();
     }
