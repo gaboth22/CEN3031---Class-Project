@@ -1,4 +1,4 @@
-package ServerCommTest;
+package GameMasterTest.ServerCommTest;
 
 import LocalTestServer.LocalTestServer;
 import GameMaster.ServerComm.ServerClient;

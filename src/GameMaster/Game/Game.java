@@ -3,76 +3,102 @@ package GameMaster.Game;
 import GUI.GuiThread.GuiThread;
 import GameBoard.*;
 import GameBoard.Proxy.Proxy;
-import Play.BuildPhase.BuildPhase;
-import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
+import Receiver.Receiver;
+import Sender.Sender;
 import Steve.*;
 
-public class Game {
+public class Game extends Thread {
 
     private Steve steve;
+    private PlayGenerator playGenerator;
     private GameBoard gameBoard;
     private GuiThread guiThread;
     private Proxy gameBoardProxy;
-    private StevePlayRequester requester;
-    private TilePlacementPhase steveLastTilePlacement;
-    private BuildPhase steveLastPiecePlacement;
     private PlayerID activePlayer;
+    private Sender stevePlaySender;
 
-    public Game(PlayerID activePlayer) {
+    private String[] playInfoForSteve;
+    private String opponentPlay;
+
+    public Game() {
+    }
+
+    public Game(PlayerID activePlayer, PlayGenerator playGenerator) {
         this.activePlayer = activePlayer;
-        guiThread = new GuiThread();
+        this.playGenerator = playGenerator;
+
+        initializeGuiThread();
+        initializeSteve(playGenerator);
+        initializeGameBoard();
+        tieSteveAndGameBoardTogether();
+
+        playInfoForSteve = null;
+        opponentPlay = null;
+
+        stevePlaySender = new Sender();
+    }
+
+    private void initializeSteve(PlayGenerator playGenerator) {
         steve = new Steve();
         steve.playAs(activePlayer);
-        //TODO:
-        //PlayGenerator playGenerator = new PlayGenerator()
-        //steve.setPlayGenerator(playGenerator);
-        requester = new StevePlayRequester(steve);
+        steve.setPlayGenerator(playGenerator);
+    }
+
+    private void initializeGameBoard() {
         gameBoard = new GameBoardImpl();
         gameBoardProxy = new Proxy(gameBoard);
+    }
+
+    private void tieSteveAndGameBoardTogether() {
         SteveGameBoardAdapter adapter = new SteveGameBoardAdapter();
         adapter.adapt(steve, gameBoardProxy);
     }
 
+    private void initializeGuiThread() {
+        guiThread = new GuiThread();
+    }
+
     public void resetGameState() {
-        steve = new Steve();
-        steve.playAs(activePlayer);
-        //TODO:
-        //PlayGenerator playGenerator = new PlayGenerator()
-        //steve.setPlayGenerator(playGenerator);
-        requester = new StevePlayRequester(steve);
-        gameBoard = new GameBoardImpl();
-        gameBoardProxy = new Proxy(gameBoard);
-        SteveGameBoardAdapter adapter = new SteveGameBoardAdapter();
-        adapter.adapt(steve, gameBoardProxy);
+        steve = null;
+        gameBoard = null;
+        gameBoardProxy = null;
+
+        initializeSteve(playGenerator);
+        initializeGameBoard();
+        tieSteveAndGameBoardTogether();
+    }
+
+    public void setPlayReceiver(Receiver playReceiver) {
+        stevePlaySender.subscribe(playReceiver);
     }
 
     public void runWithGui() {
         guiThread.start();
     }
 
-    public void haveSteveDoTile(String tileFromServer) {
-        requester.requestTilePlacement(tileFromServer);
-        steveLastTilePlacement = (TilePlacementPhase) steve.getLastValidPlay();
+    public void haveSteveDoPlay(String gameId, String moveNumber, String tileFromServer) {
+        playInfoForSteve = new String[]{gameId, moveNumber, tileFromServer};
     }
 
-    public void haveSteveDoPiece() {
-        requester.requestBuild();
-        steveLastPiecePlacement = (BuildPhase) steve.getLastValidPlay();
+    public void enforceOpponentPlay(String playFromServer) {
+        opponentPlay = playFromServer;
     }
 
-    public String getStevesPlay() {
-        return StevePlayParser.parse(steveLastPiecePlacement, steveLastTilePlacement);
-    }
+    @Override
+    public void run() {
+        while(true) {
 
-    public void enforceOtherPlayersPlay(String playFromServer) {
-        TilePlacementPhase  tpPhase = ServerPlayParser.getServerTilePlacement(playFromServer);
-        BuildPhase bPhase = ServerPlayParser.getServerPiecePlacement(playFromServer);
-        try {
-            gameBoard.doTilePlacementPhase(tpPhase);
-            gameBoard.doBuildPhase(bPhase);
-        }
-        catch(Exception e) {
+            if(playInfoForSteve !=  null) {
+                //TODO: parse gameId, move number, tile info, and request that Steve do a tile placement phase
+                playInfoForSteve = null;
+                //TODO: send the formatted string with the play through stevePlaySender
+            }
+
+            if(opponentPlay != null) {
+                //TODO: do opponent play on game board
+                opponentPlay = null;
+            }
         }
     }
 }

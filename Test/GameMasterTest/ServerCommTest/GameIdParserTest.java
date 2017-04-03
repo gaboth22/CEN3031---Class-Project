@@ -1,4 +1,4 @@
-package ServerCommTest;
+package GameMasterTest.ServerCommTest;
 
 import GameMaster.ServerComm.Parsers.GameIdParser;
 import org.junit.Assert;

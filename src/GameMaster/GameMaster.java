@@ -3,27 +3,70 @@ package GameMaster;
 import GameMaster.Game.Game;
 import GameMaster.ServerComm.Parsers.*;
 import GameMaster.ServerComm.ServerClient;
+import Receiver.Receiver;
+import Sender.SenderData.SenderData;
 
 import static GameMaster.ServerComm.ServerMessages.*;
 import java.io.IOException;
 
-public class GameMaster {
+public class GameMaster extends Thread {
 
+    private Receiver gameOneStevePlayReceiver;
+    private Receiver gameTwoStevePlayReceiver;
+    private String gameOneStevePlay;
+    private String gameTwoStevePlay;
     private Game gameOne;
     private Game gameTwo;
     private ServerClient serverClient;
     private GamePhaseState gamePhaseState;
-    private int ourPidFromServer;
+    private String ourPidFromServer;
     private int roundCount;
 
     public GameMaster(ServerClient serverClient, Game gameOne, Game gameTwo) {
+        ourPidFromServer = null;
+        roundCount = 0;
+
+        gameOneStevePlayReceiver = new Receiver() {
+            @Override
+            public void callback(SenderData data) {
+                gameOneStevePlay = (String) data.getData();
+                sendStringToServer(gameOneStevePlay);
+            }
+        };
+
+        gameTwoStevePlayReceiver = new Receiver() {
+            @Override
+            public void callback(SenderData data) {
+                gameTwoStevePlay = (String) data.getData();
+                sendStringToServer(gameTwoStevePlay);
+            }
+        };
+
+        gameOneStevePlay = null;
+        gameTwoStevePlay = null;
 
         this.serverClient = serverClient;
         this.gameOne = gameOne;
         this.gameTwo = gameTwo;
         gamePhaseState = GamePhaseState.SERVER_REGISTRATION;
+
+        this.gameOne.start();
+        this.gameTwo.start();
     }
 
+    public GamePhaseState getCurrentGamePhaseState() {
+        return gamePhaseState;
+    }
+
+    public String getOurPidFromServer() {
+        return ourPidFromServer;
+    }
+
+    public int getRoundCount() {
+        return roundCount;
+    }
+
+    @Override
     public void run() {
 
         while(true) {
@@ -44,6 +87,8 @@ public class GameMaster {
                 gamePhaseState = GamePhaseState.IN_ROUND;
             }
             else if (gamePhaseState == GamePhaseState.IN_ROUND) {
+                gameOne.resetGameState();
+                gameTwo.resetGameState();
                 playRounds();
                 gamePhaseState = GamePhaseState.WAITING_FOR_CHALLENGE;
             }
@@ -56,28 +101,36 @@ public class GameMaster {
 
     private void waitToReceiveWelcomeMessage() {
 
-        String messageFromServer = getStringFromServer();
-
-        while (messageFromServer != WELCOME_MESSAGE)
-            messageFromServer = getStringFromServer();
+        while (true) {
+            String messageFromServer = getStringFromServer();
+            if(messageFromServer.equals(WELCOME_MESSAGE)) {
+                break;
+            }
+        }
     }
 
     private void waitToRetrievePlayerIdMessage() {
 
-        String messageFromServer = getStringFromServer();
+        String messageFromServer;
 
-        while (!messageFromServer.contains(PID_MESSAGE))
+        while (true) {
             messageFromServer = getStringFromServer();
+            if(messageFromServer.contains(PID_MESSAGE))
+                break;
+        }
 
         ourPidFromServer = PlayerIdParser.getPlayerId(messageFromServer);
     }
 
     private void waitForRoundCount() {
 
-        String messageFromServer = getStringFromServer();
+        String messageFromServer;
 
-        while (!messageFromServer.contains(ROUND_COUNT_MESSAGE))
+        while (true) {
             messageFromServer = getStringFromServer();
+            if(messageFromServer.contains(ROUND_COUNT_MESSAGE))
+                break;
+        }
 
         roundCount = RoundCountParser.getRoundCount(messageFromServer);
     }
@@ -86,10 +139,17 @@ public class GameMaster {
 
         for (int i = 0; i < roundCount; i++) {
             boolean isEndOfRound = false;
+            int forfeitCount = 0;
 
-            while (!isEndOfRound) {
+            while (!isEndOfRound && forfeitCount < 2) {
 
                 String messageFromServer = getStringFromServer();
+
+                if(isEndOfRound(messageFromServer))
+                    isEndOfRound = true;
+
+                if(isForfeit(messageFromServer))
+                    forfeitCount++;
 
                 if (isPlayComingFromServer(messageFromServer)) {
                     if(isNotOwnPlayBeingReportedBack(messageFromServer))
@@ -99,9 +159,6 @@ public class GameMaster {
                 else if(isRequestForOurPlay(messageFromServer)) {
                     performOwnPlay(messageFromServer);
                 }
-
-                else if(isEndOfRound(messageFromServer))
-                    isEndOfRound = true;
             }
         }
     }
@@ -111,12 +168,11 @@ public class GameMaster {
         String gameId = GameIdParser.getGameIdForOtherPlayersMove(messageFromServer);
         String play = OtherPlayersPlayParser.getPlay(messageFromServer);
 
-        if (gameId == "A") {
-            gameOne.enforceOtherPlayersPlay(play);
-        }
+        if (gameId == "A")
+            gameOne.enforceOpponentPlay(play);
 
         else
-            gameTwo.enforceOtherPlayersPlay(play);
+            gameTwo.enforceOpponentPlay(play);
 
     }
 
@@ -126,24 +182,10 @@ public class GameMaster {
         String tileInfo = TileInformationParser.getTile(messageFromServer);
 
         if(gameId == "A") {
-            gameOne.haveSteveDoTile(tileInfo);
-            gameOne.haveSteveDoPiece();
-            String moveReadyToSendToServer = OwnMoveFormatter.getFormattedMove(
-                    gameOne.getStevesPlay(),
-                    gameId,
-                    moveNumber);
-
-            sendStringToServer(moveReadyToSendToServer);
+            gameOne.haveSteveDoPlay(gameId, moveNumber, tileInfo);
         }
         else {
-            gameTwo.haveSteveDoTile(tileInfo);
-            gameTwo.haveSteveDoPiece();
-            String moveReadyToSendToServer = OwnMoveFormatter.getFormattedMove(
-                    gameTwo.getStevesPlay(),
-                    gameId,
-                    moveNumber);
-
-            sendStringToServer(moveReadyToSendToServer);
+            gameTwo.haveSteveDoPlay(gameId, moveNumber, tileInfo);
         }
     }
 
@@ -188,7 +230,7 @@ public class GameMaster {
     }
 
     private boolean isNotOwnPlayBeingReportedBack(String messageFromServer) {
-        int pidFromMove = PlayerIdParserFromMove.getPlayerId(messageFromServer);
-        return pidFromMove != ourPidFromServer;
+        String pidFromMove = PlayerIdParserFromServerMove.getPlayerId(messageFromServer);
+        return !pidFromMove.equals(ourPidFromServer);
     }
 }

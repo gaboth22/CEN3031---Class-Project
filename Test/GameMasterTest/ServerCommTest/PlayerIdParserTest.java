@@ -1,4 +1,4 @@
-package ServerCommTest;
+package GameMasterTest.ServerCommTest;
 
 import GameMaster.ServerComm.Parsers.PlayerIdParser;
 import org.junit.Assert;
@@ -8,14 +8,14 @@ import java.security.InvalidParameterException;
 
 public class PlayerIdParserTest {
     private String messageFromServer;
-    private int parsedId;
+    private String parsedId;
 
     @Test
     public void shouldGetTheRightPlayerIdFromTheParser() {
         String messageFromServer = "WAIT FOR THE TOURNAMENT TO BEGIN 1";
         givenTheMessageFromTheServerIs(messageFromServer);
         whenIParseTheMessage();
-        thenTheIdShouldBe(1);
+        thenTheIdShouldBe("1");
     }
 
     private void givenTheMessageFromTheServerIs(String message) {
@@ -26,7 +26,7 @@ public class PlayerIdParserTest {
         parsedId = PlayerIdParser.getPlayerId(messageFromServer);
     }
 
-    private void thenTheIdShouldBe(int expectedId) {
+    private void thenTheIdShouldBe(String expectedId) {
         Assert.assertEquals(expectedId, parsedId);
     }
 
@@ -35,10 +35,10 @@ public class PlayerIdParserTest {
         String messageFromServer = "WAIT FOR THE TOURNAMENT TO BEGIN 1";
         givenTheMessageFromTheServerIs(messageFromServer);
         whenIParseTheMessage();
-        thenTheIdShouldNotBe(3);
+        thenTheIdShouldNotBe("3");
     }
 
-    private void thenTheIdShouldNotBe(int notExpected) {
+    private void thenTheIdShouldNotBe(String notExpected) {
         Assert.assertNotEquals(notExpected, parsedId);
     }
 

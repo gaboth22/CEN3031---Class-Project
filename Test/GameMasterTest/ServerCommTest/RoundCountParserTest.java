@@ -1,4 +1,4 @@
-package ServerCommTest;
+package GameMasterTest.ServerCommTest;
 
 import GameMaster.ServerComm.Parsers.RoundCountParser;
 import org.junit.Assert;
@@ -31,7 +31,7 @@ public class RoundCountParserTest {
     }
 
     @Test
-    public void theRounCoundShouldNotBeIncorrect() {
+    public void theRoundCountShouldNotBeIncorrect() {
         String message = "BEGIN ROUND 1 OF 10";
         givenTheMessageReceivedIs(message);
         whenIParseTheMessage();
