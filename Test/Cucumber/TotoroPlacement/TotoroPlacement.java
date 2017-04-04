@@ -1,10 +1,13 @@
 package Cucumber.TotoroPlacement;
 
 import GameBoard.BuildPhaseHelper;
+import GameBoard.GameBoardImpl;
 import GamePieceMap.*;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
+import Play.TilePlacementPhase.TilePlacementPhase;
+import Play.TilePlacementPhase.TilePlacementType;
 import Player.Player;
 import Player.PlayerID;
 import Settlements.Creation.Settlement;
@@ -19,6 +22,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class TotoroPlacement {
 
+    /*
     private PlayerID firstPlayer;
     private TileMap tileMap;
     private GamePieceMap gamePieceMap;
@@ -30,7 +34,82 @@ public class TotoroPlacement {
     private Settlement secondSettlement;
     private boolean totoroBuildSucceeds;
     private boolean totoroJoinsBothSettlements;
+    */
+    private GameBoardImpl gameBoard;
+    private TilePlacementPhase tilePlacementPhase;
+    private TileBuilder tileBuilder;
+    private BuildPhase buildPhase;
+    private PlayerID firstPlayer;
+    private Settlement settlement;
 
+    @Given("^an existing settlement of size 5 or more$")
+    public void creatingSettlementOfSizeFiveOrMore() throws Exception {
+
+        initializeInstances();
+
+        Location tile11 = new Location(0,2);
+        Location tile12 = new Location(-1,2);
+        Location tile13 = new Location(0,1);
+
+        createAndPlaceTileAt(tile11, tile12, tile13);
+        Location settlementFoundation = new Location(-1, 0);
+        findSettlementAtSpecificLocation(settlementFoundation);
+
+        Location expansion1 = new Location(-1,1);
+        Location expansion2 = new Location(0,1);
+        Location expansion3 = new Location(-1,2);
+        Location expansion4 = new Location(1,0);
+
+        expandSettlementAtSpecificLocation(expansion1);
+        expandSettlementAtSpecificLocation(expansion2);
+        expandSettlementAtSpecificLocation(expansion3);
+        expandSettlementAtSpecificLocation(expansion4);
+    }
+
+    @When("^a player places a totoro on an adjacent hex$")
+    public void placingATotoroAdjacentToSettlement() {
+
+    }
+
+    @Then("^the totoro becomes part of the settlement$")
+    public void checkIfSettlementSizeIsNow6() {
+
+    }
+
+    private void initializeInstances() {
+        gameBoard = new GameBoardImpl();
+        tileBuilder = new TileBuilder();
+        firstPlayer = PlayerID.PLAYER_ONE;
+        settlement = new Settlement();
+    }
+
+    private void createAndPlaceTileAt(Location l1, Location l2, Location l3) throws Exception {
+        Tile adjacentTile = tileBuilder.getTileWithLocations(l1, l2, l3);
+        tilePlacementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, adjacentTile);
+        tilePlacementPhase.setTilePlacementType(TilePlacementType.SIMPLE_PLACEMENT);
+        gameBoard.doTilePlacementPhase(tilePlacementPhase);
+    }
+
+    private void findSettlementAtSpecificLocation(Location location) throws Exception {
+
+        GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
+
+        buildPhase = new BuildPhase(standardVillage, location);
+        buildPhase.setBuildType(BuildType.FOUND);
+        settlement.markPieceInSettlement(location, standardVillage);
+        gameBoard.doBuildPhase(buildPhase);
+    }
+
+    private void expandSettlementAtSpecificLocation(Location location) throws Exception {
+
+        GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
+
+        buildPhase = new BuildPhase(standardVillage, location, settlement);
+        buildPhase.setBuildType(BuildType.EXPAND);
+        settlement.markPieceInSettlement(location, standardVillage);
+        gameBoard.doBuildPhase(buildPhase);
+    }
+    /*
     @Given("^an existing settlement of size 5 or more$")
     public void creatingSettlementOfSizeFiveOrMore()
             throws InvalidTileLocationException, LocationOccupiedException, LocationNotEmptyException, SettlementException {
@@ -345,4 +424,5 @@ public class TotoroPlacement {
         settlement.locationIsInSettlement(volcanoLocation);
         settlement.markPieceInSettlement(volcanoLocation, totoroToPlaceOnVolcano);
     }
+    */
 }
