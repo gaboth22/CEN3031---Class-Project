@@ -51,8 +51,7 @@ public class Game extends Thread {
     }
 
     private void tieSteveAndGameBoardTogether() {
-        SteveGameBoardAdapter adapter = new SteveGameBoardAdapter();
-        adapter.adapt(steve, gameBoardProxy);
+        //TODO: establish link somehow
     }
 
     private void initializeGuiThread() {

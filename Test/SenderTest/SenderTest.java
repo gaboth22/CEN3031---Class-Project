@@ -29,6 +29,7 @@ public class SenderTest {
     public void givenTheDataToBePublishedIs(String data) {
         this.data = new SenderDataTestDouble(data);
     }
+
     private void givenTheSubscriberHasSubscribedToThePublisher() {
         pub.subscribe(sub);
     }

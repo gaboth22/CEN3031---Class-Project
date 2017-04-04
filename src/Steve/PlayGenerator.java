@@ -1,8 +1,11 @@
 package Steve;
 
 import GameBoard.GameBoardState;
+import Play.TilePlacementPhase.TilePlacementPhase;
+import Play.BuildPhase.*;
 import Player.PlayerID;
 
 public interface PlayGenerator {
-    Object generateEducatedPlay(GameBoardState gameBoardState, PlayerID activePlayer, StevePlayType playType);
+    TilePlacementPhase generateTilePlay(GameBoardState gameBoardState, PlayerID activePlayer, TriHexTileStructure tileToPlace);
+    BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer);
 }
