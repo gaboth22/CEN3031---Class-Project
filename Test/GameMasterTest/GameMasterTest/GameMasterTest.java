@@ -9,7 +9,6 @@ import org.junit.*;
 import java.io.IOException;
 import Networking.*;
 
-@Ignore
 public class GameMasterTest {
     private LocalTestServer testServer;
     private ServerClient serverClient;

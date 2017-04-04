@@ -12,6 +12,4 @@ public class TriHexTileStructure {
         leftTerrain = terrains[0];
         rightTerrain = terrains[1];
     }
-
-
 }

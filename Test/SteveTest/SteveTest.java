@@ -1,26 +1,10 @@
 package SteveTest;
 
 import GameBoard.GameBoardState;
-import GameBoard.GameBoardStateSenderData;
-import GameBoard.PhasePublisherData.BuildPhaseSenderData;
-import GameBoard.PhasePublisherData.TilePlacementPhaseSenderData;
-import GameBoard.PlayAck.PlayAck;
-import GameBoard.PlayAck.PlayAckSenderData;
-import GamePieceMap.GamePiece;
-import GamePieceMap.TypeOfPiece;
-import Location.Location;
-import Play.BuildPhase.BuildPhase;
-import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
-import Sender.Sender;
-import Sender.SenderData.SenderData;
 import Steve.*;
-import Receiver.Receiver;
 import TileBuilder.TileBuilder;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
-import Tile.Tile.Tile;
 
 public class SteveTest {
 
@@ -42,6 +26,7 @@ public class SteveTest {
                 null,
                 null,
                 0,
+                null,
                 null,
                 null);
 

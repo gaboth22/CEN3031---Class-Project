@@ -27,6 +27,10 @@ public class Game extends Thread {
     private String[] playInfoForSteve;
     private String opponentPlay;
 
+    private long timeAtStartOfTurn;
+    private final static long TURN_LENGTH = 1500;
+    private final static long SAFETY_NET = 500;
+
     public Game() {
     }
 
@@ -95,11 +99,14 @@ public class Game extends Thread {
             if(playInfoForSteve != null) {
                 synchronized (this) {
                     //TODO: parse gameId, move number, tile info, and request that Steve do a tile placement phase
-                    TilePlacementPhase tilePlacementPhase = generateTilePhase(getCurrentGameState());
-                    BuildPhase buildPhase = generateBuildPhase(getCurrentGameState());
+                    timeAtStartOfTurn = System.currentTimeMillis();
+
+                    long timeDue = timeAtStartOfTurn + TURN_LENGTH - SAFETY_NET;
+                    TilePlacementPhase tilePlacementPhase = generateTilePhase(getCurrentGameState(), timeDue);
+                    BuildPhase buildPhase = generateBuildPhase(getCurrentGameState(), timeDue);
 
                     playInfoForSteve = null;
-                    sendStevePlayToGameMaster();
+                    sendStevePlayToGameMaster(buildPhase, tilePlacementPhase);
                 }
             }
 
@@ -112,7 +119,7 @@ public class Game extends Thread {
         }
     }
 
-    private void sendStevePlayToGameMaster() {
+    private void sendStevePlayToGameMaster(BuildPhase steveBuildPhase, TilePlacementPhase steveTilePlacementPhase) {
         String formattedMessageForServer = StevePlayParser.parse(steveBuildPhase, steveTilePlacementPhase);
         stevePlaySender.publish(new SenderData() {
             @Override
@@ -147,15 +154,80 @@ public class Game extends Thread {
         return stateBuilder.buildGameBoardState(gameBoard);
     }
 
-    private TilePlacementPhase generateTilePhase(GameBoardState gameState) {
-        //TODO: validate play
+    private TilePlacementPhase generateTilePhase(GameBoardState gameState, long timeDue) {
 
-        return playGenerator.generateTilePlay(gameState, activePlayer, );
+        giveSteveTileToPlace();
+
+        TilePlacementPhase optimalMove = searchForOptimalMove(gameState, timeDue);
+
+        if(optimalMove != null) {
+            return optimalMove;
+        }
+
+        return getSimpleMove(gameState);
     }
 
-    private BuildPhase generateBuildPhase(GameBoardState gameState) {
-        //TODO: validate play
+    private void giveSteveTileToPlace() {
+        //TODO: convert server string to Tile
+        TriHexTileStructure triHex = null;
+        steve.setTileToPlace(triHex);
+    }
 
-        return playGenerator.generateBuildPlay(gameState, activePlayer);
+    private TilePlacementPhase searchForOptimalMove(GameBoardState state, long timeDue) {
+        while(System.currentTimeMillis() < timeDue) {
+            try {
+                TilePlacementPhase tilePhase = steve.generateTilePlay(state);
+                gameBoard.doTilePlacementPhase(tilePhase);
+                return tilePhase;
+            }
+            catch(Exception ex) {
+            }
+        } //on timeout get safe play
+        return null;
+    }
+
+    private TilePlacementPhase getSimpleMove(GameBoardState state) {
+        TilePlacementPhase simpleMove = steve.getSafeTilePhase(gameState);
+        try{
+            gameBoard.doTilePlacementPhase(simpleMove);
+        }
+        catch(Exception ex) {
+            //TODO: forfeit?
+        }
+        return simpleMove;
+    }
+
+    private BuildPhase generateBuildPhase(GameBoardState gameState, long timeDue) {
+        BuildPhase optimalMove = searchForOptimalBuild(gameState, timeDue);
+
+        if(optimalMove != null) {
+            return optimalMove;
+        }
+
+        return getSimpleBuild(gameState);
+    }
+
+    private BuildPhase searchForOptimalBuild(GameBoardState gameState, long timeDue) {
+        while(System.currentTimeMillis() < timeDue) {
+            try {
+                BuildPhase buildPhase = steve.generateBuildPlay(gameState);
+                gameBoard.doBuildPhase(buildPhase);
+                return buildPhase;
+            }
+            catch(Exception ex) {
+            }
+        } //on timeout get safe play
+        return null;
+    }
+
+    private BuildPhase getSimpleBuild(GameBoardState state) {
+        BuildPhase simpleBuild = steve.getSafeBuildPhase(gameState);
+        try{
+            gameBoard.doBuildPhase(simpleBuild);
+        }
+        catch(Exception ex) {
+            //TODO: forfeit?
+        }
+        return simpleBuild;
     }
 }

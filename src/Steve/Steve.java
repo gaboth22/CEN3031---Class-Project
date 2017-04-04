@@ -1,13 +1,10 @@
 package Steve;
 
-import Debug.*;
 import GameBoard.GameBoardState;
 import Play.BuildPhase.BuildPhase;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
 import Steve.PlayGeneration.PlayGenerator;
-
-import java.security.InvalidParameterException;
 
 public class Steve {
 
@@ -18,6 +15,8 @@ public class Steve {
     private GameBoardState currentGameBoardState;
     private StevePlayType requestedPlayType;
 
+    private TriHexTileStructure tileToPlace;
+
     private Object lastValidPlay;
 
     public Steve() {
@@ -27,7 +26,6 @@ public class Steve {
 
     }
 
-
     public void playAs(PlayerID player) {
         playingAs = player;
     }
@@ -36,23 +34,32 @@ public class Steve {
         this.playGenerator = generator;
     }
 
-    private void generatePlay() {
-        //TODO: generate A Play
-        sendPlayToGameBoard(lastValidPlay);
+    public void setTileToPlace(TriHexTileStructure tileToPlace) {
+        this.tileToPlace = tileToPlace;
     }
 
-    private void sendPlayToGameBoard(Object play) {
-        if(play instanceof BuildPhase) {
+    public TilePlacementPhase generateTilePlay(GameBoardState state) {
+        //TODO: generate A Tile Play
 
-        }
+        return null;
+    }
 
-        else if(play instanceof TilePlacementPhase) {
+    public TilePlacementPhase getSafeTilePhase(GameBoardState state) {
+        //TODO: generate A Safe Tile Play
 
-        }
-        else {
-            Debug.print("Invalid play object passed to Steve", DebugLevel.ERROR);
-            throw new InvalidParameterException("Invalid play object passed to Steve");
-        }
+        return null;
+    }
+
+    public BuildPhase generateBuildPlay(GameBoardState state) {
+        //TODO: generate A Build Play
+
+        return null;
+    }
+
+    public BuildPhase getSafeBuildPhase(GameBoardState state) {
+        //TODO: generate A Safe Build Play
+
+        return null;
     }
 
     public GameBoardState getCurrentGameBoardState() {
