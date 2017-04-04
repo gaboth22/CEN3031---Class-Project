@@ -16,7 +16,6 @@ import Location.*;
 import static org.junit.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
 import GameBoard.*;
-import org.junit.Ignore;
 
 public class BuildPhaseHelperTest {
     private PlayerID firstPlayer;
