@@ -4,12 +4,10 @@ import GameMaster.*;
 import GameMaster.ServerComm.ServerClient;
 import GameMaster.ServerComm.ServerMessages;
 import LocalTestServer.LocalTestServer;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.IOException;
+import Networking.*;
 
 public class GameMasterTest {
     private LocalTestServer testServer;
@@ -21,8 +19,8 @@ public class GameMasterTest {
     @Before
     public void initializeInstances() {
         try {
-            testServer = new LocalTestServer(8000);
-            serverClient = new ServerClient("127.0.0.1", 8000);
+            testServer = new LocalTestServer(PortNumber.FOR_TESTS);
+            serverClient = new ServerClient("127.0.0.1", PortNumber.FOR_TESTS);
             testServer.handleClient();
         }
         catch(IOException e) {
@@ -39,6 +37,7 @@ public class GameMasterTest {
     public void cleanUp() {
         testServer.close();
     }
+
 
     @Test
     public void gameMasterShouldMoveToWaitingForChallengeOnceTheWelcomeMessageIsReceived() {
