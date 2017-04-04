@@ -58,47 +58,12 @@ public class TotoroPlacement {
         Tile northernMostTile = tileBuilder.getTileWithLocations(northTileLoc1, northTileLoc2, northTileLoc3);
         tileMap.insertTile(northernMostTile);
 
-        GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
+        findSettlementAtSpecificLocation(originTileLoc2);
 
-        buildPhase = new BuildPhase(standardVillage, originTileLoc2);
-        buildPhase.setBuildType(BuildType.FOUND);
-        buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(originTileLoc2, standardVillage);
-        settlement.locationIsInSettlement(originTileLoc2);
-        settlement.markPieceInSettlement(originTileLoc2, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, originTileLoc3, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(originTileLoc3, standardVillage);
-        settlement.locationIsInSettlement(originTileLoc3);
-        settlement.markPieceInSettlement(originTileLoc3, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, adjTileLoc3, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(adjTileLoc3, standardVillage);
-        settlement.locationIsInSettlement(adjTileLoc3);
-        settlement.markPieceInSettlement(adjTileLoc3, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, adjTileLoc2, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(adjTileLoc2, standardVillage);
-        settlement.locationIsInSettlement(adjTileLoc2);
-        settlement.markPieceInSettlement(adjTileLoc2, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, northTileLoc3, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(northTileLoc3, standardVillage);
-        settlement.locationIsInSettlement(northTileLoc3);
-        settlement.markPieceInSettlement(northTileLoc3, standardVillage);
-        activePlayer.decrementVillagerCount(1);
+        expandVillagerAtSpecificLocation(originTileLoc3, settlement);
+        expandVillagerAtSpecificLocation(adjTileLoc3, settlement);
+        expandVillagerAtSpecificLocation(adjTileLoc2, settlement);
+        expandVillagerAtSpecificLocation(northTileLoc3, settlement);
     }
 
     @When("^a player places a totoro on an adjacent hex$")
@@ -155,15 +120,7 @@ public class TotoroPlacement {
         Tile initialTile = tileBuilder.getTileWithLocations(originTileLoc1, originTileLoc2, originTileLoc3);
         tileMap.insertTile(initialTile);
 
-        GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
-
-        buildPhase = new BuildPhase(standardVillage, originTileLoc2);
-        buildPhase.setBuildType(BuildType.FOUND);
-        buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(originTileLoc2, standardVillage);
-        settlement.locationIsInSettlement(originTileLoc2);
-        settlement.markPieceInSettlement(originTileLoc2, standardVillage);
-        activePlayer.decrementVillagerCount(1);
+        findSettlementAtSpecificLocation(originTileLoc2);
     }
 
     @When("^a player places a totoro adjacent to this settlement$")
@@ -229,37 +186,10 @@ public class TotoroPlacement {
         secondSettlement.markPieceInSettlement(settlement2tile13, standardVillage);
         activePlayer.decrementVillagerCount(1);
 
-        buildPhase = new BuildPhase(standardVillage, settlement2tile22, secondSettlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(settlement2tile22, standardVillage);
-        secondSettlement.locationIsInSettlement(settlement2tile22);
-        secondSettlement.markPieceInSettlement(settlement2tile22, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, settlement2tile23, secondSettlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(settlement2tile23, standardVillage);
-        secondSettlement.locationIsInSettlement(settlement2tile23);
-        secondSettlement.markPieceInSettlement(settlement2tile23, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, settlement2tile33, secondSettlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(settlement2tile33, standardVillage);
-        secondSettlement.locationIsInSettlement(settlement2tile33);
-        secondSettlement.markPieceInSettlement(settlement2tile33, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, settlement2tile32, secondSettlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(settlement2tile32, standardVillage);
-        secondSettlement.locationIsInSettlement(settlement2tile32);
-        secondSettlement.markPieceInSettlement(settlement2tile32, standardVillage);
-        activePlayer.decrementVillagerCount(1);
+        expandVillagerAtSpecificLocation(settlement2tile22, secondSettlement);
+        expandVillagerAtSpecificLocation(settlement2tile23, secondSettlement);
+        expandVillagerAtSpecificLocation(settlement2tile33, secondSettlement);
+        expandVillagerAtSpecificLocation(settlement2tile32, secondSettlement);
     }
 
     @When("^the player attempts to add a totoro adjacent to both settlements$")
@@ -335,39 +265,11 @@ public class TotoroPlacement {
         Tile level3Tile1 = tileBuilder.getTileWithLocations(level3Tile11, level3Tile12, level3Tile13);
         tileMap.insertTile(level3Tile1);
 
-        GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
+        findSettlementAtSpecificLocation(level1Tile13);
 
-        buildPhase = new BuildPhase(standardVillage, level1Tile13);
-        buildPhase.setBuildType(BuildType.FOUND);
-        buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(level1Tile13, standardVillage);
-        settlement.locationIsInSettlement(level1Tile13);
-        settlement.markPieceInSettlement(level1Tile13, standardVillage);
-        activePlayer.decrementVillagerCount(1);
-
-        buildPhase = new BuildPhase(standardVillage, level1Tile12, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(level1Tile12, standardVillage);
-        settlement.locationIsInSettlement(level1Tile12);
-        settlement.markPieceInSettlement(level1Tile12, standardVillage);
-        activePlayer.decrementVillagerCount(2);
-
-        buildPhase = new BuildPhase(standardVillage, level1Tile23, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(level1Tile23, standardVillage);
-        settlement.locationIsInSettlement(level1Tile23);
-        settlement.markPieceInSettlement(level1Tile23, standardVillage);
-        activePlayer.decrementVillagerCount(2);
-
-        buildPhase = new BuildPhase(standardVillage, level2Tile21, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(level2Tile21, standardVillage);
-        settlement.locationIsInSettlement(level2Tile21);
-        settlement.markPieceInSettlement(level2Tile21, standardVillage);
-        activePlayer.decrementVillagerCount(2);
+        expandVillagerAtSpecificLocation(level1Tile12, settlement);
+        expandVillagerAtSpecificLocation(level1Tile23, settlement);
+        expandVillagerAtSpecificLocation(level2Tile21, settlement);
 
         GamePiece tigerToPlace = new GamePiece(firstPlayer, TypeOfPiece.TIGER);
         Location tigerPlacementLocation = new Location(1, 2);
@@ -386,24 +288,16 @@ public class TotoroPlacement {
             activePlayer.decrementTigerCount();
         }
 
-        buildPhase = new BuildPhase(standardVillage, level2Tile12, settlement);
-        buildPhase.setBuildType(BuildType.EXPAND);
-        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
-        gamePieceMap.insertAPieceAt(level2Tile12, standardVillage);
-        settlement.locationIsInSettlement(level2Tile12);
-        settlement.markPieceInSettlement(level2Tile12, standardVillage);
-        activePlayer.decrementVillagerCount(3);
+        expandVillagerAtSpecificLocation(level2Tile12, settlement);
     }
 
     @When("^the player places a totoro adjacent to that settlement$")
-    public void when()
-            throws SettlementException, LocationNotEmptyException {
-
+    public void addingTotoroToTigerPlayGround() throws SettlementException, LocationNotEmptyException {
         placingATotoroAdjacentToSettlement();
     }
 
     @Then("^the totoro should become part of the settlement$")
-    public void then() {
+    public void settlementSizeShouldHaveTigerAndTotoro() {
         assertEquals(7, settlement.getNumberOfHexesInSettlement());
     }
 
@@ -418,12 +312,37 @@ public class TotoroPlacement {
         totoroBuildSucceeds = false;
     }
 
+    private void findSettlementAtSpecificLocation(Location location)
+            throws SettlementException, LocationNotEmptyException {
+
+        GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
+
+        buildPhase = new BuildPhase(standardVillage, location);
+        buildPhase.setBuildType(BuildType.FOUND);
+        buildPhaseHelper.attemptSettlementFoundation(buildPhase, tileMap, gamePieceMap, activePlayer);
+        gamePieceMap.insertAPieceAt(location, standardVillage);
+        settlement.locationIsInSettlement(location);
+        settlement.markPieceInSettlement(location, standardVillage);
+    }
+
+    private void expandVillagerAtSpecificLocation(Location location, Settlement settlement)
+            throws LocationNotEmptyException, SettlementException {
+
+        GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
+
+        buildPhase = new BuildPhase(standardVillage, location, settlement);
+        buildPhase.setBuildType(BuildType.EXPAND);
+        buildPhaseHelper.attemptSettlementExpansion(buildPhase, tileMap, gamePieceMap, activePlayer);
+        gamePieceMap.insertAPieceAt(location, standardVillage);
+        settlement.locationIsInSettlement(location);
+        settlement.markPieceInSettlement(location, standardVillage);
+    }
+
     private void insertTotoroInMaps(Location volcanoLocation, GamePiece totoroToPlaceOnVolcano)
             throws LocationNotEmptyException, SettlementException {
 
         gamePieceMap.insertAPieceAt(volcanoLocation, totoroToPlaceOnVolcano);
         settlement.locationIsInSettlement(volcanoLocation);
         settlement.markPieceInSettlement(volcanoLocation, totoroToPlaceOnVolcano);
-        activePlayer.decrementTotoroCount();
     }
 }
