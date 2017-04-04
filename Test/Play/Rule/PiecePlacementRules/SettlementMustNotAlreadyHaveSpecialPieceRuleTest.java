@@ -71,4 +71,26 @@ public class SettlementMustNotAlreadyHaveSpecialPieceRuleTest {
         givenIHaveASettlementOfSizeOne();
         whenICheckTheRuleWithPiece(TypeOfPiece.TOTORO);
     }
+
+    @Test
+    public void ruleShouldPassWhenThereIsAnAdjacentSettlementThatDoesNotHaveSpecialPiece() throws Exception {
+        givenIHaveASettlementWithATotoroSanctuary();
+        givenIHaveAnotherSettlementOnePositionAwayFromIt();
+        whenICheckTheRuleWithPieceAtLocation(TypeOfPiece.TOTORO, movement.upRight(origin));
+    }
+
+    private void givenIHaveAnotherSettlementOnePositionAwayFromIt() throws Exception {
+        GamePiece villager = new GamePiece(activePlayer, TypeOfPiece.VILLAGER);
+        Location locToSettleOn = movement.upRight(origin);
+        locToSettleOn = movement.downRight(locToSettleOn);
+
+        pieceMap.insertAPieceAt(locToSettleOn, villager);
+    }
+
+    private void whenICheckTheRuleWithPieceAtLocation(TypeOfPiece piece, Location loc) throws Exception {
+        SettlementMustNotAlreadyHaveSpecialPieceRule.applyRule(pieceMap,
+                loc,
+                activePlayer,
+                piece);
+    }
 }
