@@ -2,7 +2,6 @@ package GameMaster.Game;
 
 import GUI.GuiThread.GuiThread;
 import GameBoard.*;
-import GameBoard.Proxy.Proxy;
 import Player.PlayerID;
 import Receiver.Receiver;
 import Sender.Sender;
@@ -14,7 +13,6 @@ public class Game extends Thread {
     private PlayGenerator playGenerator;
     private GameBoard gameBoard;
     private GuiThread guiThread;
-    private Proxy gameBoardProxy;
     private PlayerID activePlayer;
     private Sender stevePlaySender;
 
@@ -47,7 +45,6 @@ public class Game extends Thread {
 
     private void initializeGameBoard() {
         gameBoard = new GameBoardImpl();
-        gameBoardProxy = new Proxy(gameBoard);
     }
 
     private void tieSteveAndGameBoardTogether() {
@@ -61,7 +58,6 @@ public class Game extends Thread {
     public void resetGameState() {
         steve = null;
         gameBoard = null;
-        gameBoardProxy = null;
 
         initializeSteve(playGenerator);
         initializeGameBoard();
