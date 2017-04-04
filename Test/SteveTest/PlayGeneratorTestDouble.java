@@ -4,7 +4,7 @@ import GameBoard.*;
 import Play.BuildPhase.BuildPhase;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
-import Steve.PlayGenerator;
+import Steve.PlayGeneration.PlayGenerator;
 import Steve.StevePlayType;
 import Steve.TriHexTileStructure;
 

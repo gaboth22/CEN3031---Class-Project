@@ -1,5 +1,6 @@
 package GameBoard;
 
+import GamePieceMap.GamePieceMap;
 import Location.Location;
 import TileMap.Hexagon;
 
@@ -12,6 +13,7 @@ public class GameBoardState {
     private Player playerTwo;
     private int turnNumber;
     private Map<Location, Hexagon> placedHexagons;
+    private GamePieceMap gamePieceMap;
     private List<Location> placeableLocations;
 
     public GameBoardState(
@@ -19,10 +21,14 @@ public class GameBoardState {
             Player playerTwo,
             int turnNumber,
             Map<Location, Hexagon> placedHexagons,
+            GamePieceMap gamePieceMap,
             List<Location> placeableLocations) {
 
+        this.playerOne = playerOne;
+        this.playerTwo = playerTwo;
         this.turnNumber = turnNumber;
         this.placedHexagons = placedHexagons;
+        this.gamePieceMap = gamePieceMap;
         this.placeableLocations = placeableLocations;
     }
 
@@ -30,11 +36,24 @@ public class GameBoardState {
         return turnNumber;
     }
 
-    public Map<Location, Hexagon> getListOfPlacedHexes() {
-        return placedHexagons;
-    }
-
     public List<Location> getGetPlaceableLocations() {
         return placeableLocations;
     }
+
+    public Player getPlayerOne() {
+        return playerOne;
+    }
+
+    public Player getPlayerTwo() {
+        return playerTwo;
+    }
+
+    public Map<Location, Hexagon> getPlacedHexagons() {
+        return placedHexagons;
+    }
+
+    public GamePieceMap getGamePieceMap() {
+        return gamePieceMap;
+    }
+
 }
