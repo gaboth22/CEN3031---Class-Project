@@ -23,3 +23,8 @@ Feature: Successful totoro placement
     Given a player has a settlement that is a tiger playground and is size 5 or greater
     When the player places a totoro adjacent to that settlement
     Then the totoro should become part of the settlement
+
+  Scenario: Placing a second totoro in the same settlement
+    Given a player has a settlement containing a totoro
+    When the player adds a second totoro to the same settlement
+    Then the totoro should not be added to the settlement

@@ -94,7 +94,6 @@ public class TotoroPlacement {
 
     @Given("^a player has two settlements, with one settlement having a totoro$")
     public void createTwoSettlementsWithOriginalHavingTotoro() throws Exception {
-
         initializeInstances();
 
         Location tile11 = new Location(-3,2);
@@ -156,7 +155,6 @@ public class TotoroPlacement {
 
     @Given("^a player has a settlement that is a tiger playground and is size 5 or greater$")
     public void createSettlementSize5WithTigerPlayGround() throws Exception {
-
         initializeInstances();
 
         Location tile11 = new Location(-1,2);
@@ -217,6 +215,47 @@ public class TotoroPlacement {
         assertFalse(totoroFailed);
     }
 
+    @Given("^a player has a settlement containing a totoro$")
+    public void createsSettlementContainingTotoro() throws Exception {
+        initializeInstances();
+
+        Location tile11 = new Location(-2, 3);
+        Location tile12 = new Location(-2, 2);
+        Location tile13 = new Location(-1, 2);
+        Location tile21 = new Location(1, 1);
+        Location tile22 = new Location(0, 2);
+        Location tile23 = new Location(0, 1);
+
+        createAndPlaceTileAt(tile11, tile12, tile13);
+        createAndPlaceTileAt(tile21, tile22, tile23);
+
+        Location settlement1 = new Location(1, -1);
+        Location settlement2 = new Location(1, 0);
+        Location settlement3 = new Location(0, 1);
+        Location settlement4 = new Location(0, 2);
+        Location settlement5 = new Location(-1, 2);
+
+        findSettlementAtSpecificLocation(settlement1);
+        findSettlementAtSpecificLocation(settlement2);
+        findSettlementAtSpecificLocation(settlement3);
+        findSettlementAtSpecificLocation(settlement4);
+        findSettlementAtSpecificLocation(settlement5);
+
+        Location totoroPlacementLocation = new Location(-2, 2);
+        attemptToPlaceTotoroAtLocation(totoroPlacementLocation);
+    }
+
+    @When("^the player adds a second totoro to the same settlement$")
+    public void attemptingToAddSecondTotoroToSameSettlement() throws Exception {
+        Location locationToPlaceSecondTotoro = new Location(-1, 1);
+        totoroFailed = attemptToPlaceTotoroAtLocation(locationToPlaceSecondTotoro);
+    }
+
+    @Then("^the totoro should not be added to the settlement$")
+    public void totoroPlacementShouldFail() {
+        assertTrue(totoroFailed);
+    }
+
     private void initializeInstances() {
         gameBoard = new GameBoardImpl();
         tileBuilder = new TileBuilder();
@@ -239,7 +278,6 @@ public class TotoroPlacement {
     }
 
     private void findSettlementAtSpecificLocation(Location location) throws Exception {
-
         GamePiece standardVillage = new GamePiece(firstPlayer, TypeOfPiece.VILLAGER);
 
         buildPhase = new BuildPhase(standardVillage, location);
