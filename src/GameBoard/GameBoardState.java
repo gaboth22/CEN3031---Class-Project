@@ -36,7 +36,7 @@ public class GameBoardState {
         return turnNumber;
     }
 
-    public List<Location> getGetPlaceableLocations() {
+    public List<Location> getPlaceableLocations() {
         return placeableLocations;
     }
 

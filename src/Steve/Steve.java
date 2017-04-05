@@ -15,7 +15,7 @@ public class Steve {
     private GameBoardState currentGameBoardState;
     private StevePlayType requestedPlayType;
 
-    private TriHexTileStructure tileToPlace;
+    private BiHexTileStructure tileToPlace;
 
     private Object lastValidPlay;
 
@@ -34,32 +34,26 @@ public class Steve {
         this.playGenerator = generator;
     }
 
-    public void setTileToPlace(TriHexTileStructure tileToPlace) {
+    public void setTileToPlace(BiHexTileStructure tileToPlace) {
         this.tileToPlace = tileToPlace;
     }
 
     public TilePlacementPhase generateTilePlay(GameBoardState state) {
-        //TODO: generate A Tile Play
-
+        //TODO: generate a tile play
         return null;
     }
 
     public TilePlacementPhase getSafeTilePhase(GameBoardState state) {
-        //TODO: generate A Safe Tile Play
-
-        return null;
+        return playGenerator.generateSafeTilePlay(state, playingAs, tileToPlace);
     }
 
     public BuildPhase generateBuildPlay(GameBoardState state) {
         //TODO: generate A Build Play
-
         return null;
     }
 
     public BuildPhase getSafeBuildPhase(GameBoardState state) {
-        //TODO: generate A Safe Build Play
-
-        return null;
+        return playGenerator.generateSafeBuildPlay(state, playingAs);
     }
 
     public GameBoardState getCurrentGameBoardState() {

@@ -1,5 +1,6 @@
 package GameMaster;
 
+import Debug.*;
 import GameMaster.Game.Game;
 import GameMaster.ServerComm.Parsers.*;
 import GameMaster.ServerComm.ServerClient;
@@ -154,13 +155,13 @@ public class GameMaster extends Thread {
                 if(isForfeit(messageFromServer))
                     forfeitCount++;
 
-                if (isPlayComingFromServer(messageFromServer)) {
-                    if(isNotOwnPlayBeingReportedBack(messageFromServer))
-                        performOtherPlayersPlay(messageFromServer);
+                if(isRequestForOurPlay(messageFromServer)) {
+                    performOwnPlay(messageFromServer);
                 }
 
-                else if(isRequestForOurPlay(messageFromServer)) {
-                    performOwnPlay(messageFromServer);
+                else if (isPlayComingFromServer(messageFromServer)) {
+                    if(isNotOwnPlayBeingReportedBack(messageFromServer))
+                        performOtherPlayersPlay(messageFromServer);
                 }
             }
         }
@@ -171,7 +172,7 @@ public class GameMaster extends Thread {
         String gameId = GameIdParser.getGameIdForOtherPlayersMove(messageFromServer);
         String play = OtherPlayersPlayParser.getPlay(messageFromServer);
 
-        if (gameId == "A")
+        if (gameId.equals("A"))
             gameOne.enforceOpponentPlay(play);
 
         else
@@ -180,11 +181,12 @@ public class GameMaster extends Thread {
     }
 
     private void performOwnPlay(String messageFromServer) {
+
         String gameId = GameIdParser.getGameIdForOwnMove(messageFromServer);
         String moveNumber = MoveNumberParser.getMoveNumber(messageFromServer);
         String tileInfo = TileInformationParser.getTile(messageFromServer);
 
-        if(gameId == "A") {
+        if(gameId.equals("A")) {
             gameOne.haveSteveDoPlay(gameId, moveNumber, tileInfo);
         }
         else {
@@ -209,6 +211,7 @@ public class GameMaster extends Thread {
     private void sendStringToServer(String toServer) {
         try {
             serverClient.sendDataToServer(toServer);
+            Debug.print("TO SERVER: " + toServer, DebugLevel.INFO);
         }
 
         catch(IOException e){

@@ -7,6 +7,15 @@ import Player.PlayerID;
 import Steve.*;
 
 public interface PlayGenerator {
-    TilePlacementPhase generateTilePlay(GameBoardState gameBoardState, PlayerID activePlayer, TriHexTileStructure tileToPlace);
+    TilePlacementPhase generateSafeTilePlay(GameBoardState gameBoardState,
+                                             PlayerID activePlayer,
+                                             BiHexTileStructure tileToPlace);
+
+    BuildPhase generateSafeBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer);
+
+    TilePlacementPhase generateTilePlay(GameBoardState gameBoardState,
+                                        PlayerID activePlayer,
+                                        BiHexTileStructure tileToPlace);
+
     BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer);
 }
