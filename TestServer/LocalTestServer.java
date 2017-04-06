@@ -10,7 +10,10 @@ public class LocalTestServer {
     }
 
     public void handleClient() throws Exception {
+        System.out.println("Waiting for client to connect...");
         thread = new ServerThread(serverSocket.accept());
+        System.out.println("Client connected");
+        System.out.println("Enter strings to send to client from here on:\n");
         thread.start();
     }
 
@@ -29,6 +32,5 @@ public class LocalTestServer {
         catch(IOException e) {
             e.printStackTrace();
         }
-
     }
 }
