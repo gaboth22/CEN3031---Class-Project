@@ -9,28 +9,26 @@ import java.net.Socket;
 public class ServerThread extends Thread {
 
     private Socket clientSocket;
-    private String messageFromClient = null;
-    private String emptyLine = "";
- 
+    private volatile String messageFromClient = null;
+
+    private PrintWriter outputToClient;
+
     public ServerThread(Socket clientSocket) throws Exception {
         super("ServerThread");
         this.clientSocket = clientSocket;
+        outputToClient = new PrintWriter(clientSocket.getOutputStream(), true);
     }
 
     @Override
     public void run() {
         try {
             BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
             String receivedMessage;
 
             while((receivedMessage = inputFromClient.readLine()) != null) {
-                if(!receivedMessage.equals(emptyLine))
-                    messageFromClient = receivedMessage;
-                if(receivedMessage.equals(emptyLine))
-                    break;
+                messageFromClient = receivedMessage;
             }
-
-            inputFromClient.close();
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -38,13 +36,7 @@ public class ServerThread extends Thread {
     }
 
     public void sendMessageToClient(String message) {
-        try {
-            PrintWriter outputToClient = new PrintWriter(clientSocket.getOutputStream(), true);
-            outputToClient.println(message);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+        outputToClient.println(message);
     }
 
     public String getMessageFromClient() throws Exception {
