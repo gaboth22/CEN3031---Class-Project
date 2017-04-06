@@ -4,7 +4,7 @@ import GUI.HexLayoutGui;
 import processing.core.PApplet;
 
 public class GuiThread extends Thread {
-    private HexLayoutGui hexLayoutGui;
+    private volatile HexLayoutGui hexLayoutGui;
     private Thread consoleThread;
 
     public GuiThread() {
@@ -21,7 +21,7 @@ public class GuiThread extends Thread {
         }
     }
 
-    public synchronized void updateGui(String update) {
+    public void updateGui(String update) {
         if(hexLayoutGui != null) {
             hexLayoutGui.updateGui(update);
         }

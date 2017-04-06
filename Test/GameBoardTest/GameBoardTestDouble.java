@@ -7,6 +7,7 @@ import Play.BuildPhase.BuildPhase;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
 import Play.TilePlacementPhase.TilePlacementPhase;
+import Player.*;
 import Settlements.Creation.Settlement;
 import TestExceptions.MethodCalledException;
 import TileMap.Hexagon;
@@ -86,6 +87,10 @@ public class GameBoardTestDouble implements GameBoard {
 
     public int getPlayerTwoScore() {
         return getP2Score();
+    }
+
+    public Player getPlayer(PlayerID player) {
+        return new Player(PlayerID.PLAYER_ONE);
     }
 
     public List<Settlement> getPlayerOneSettlements() {

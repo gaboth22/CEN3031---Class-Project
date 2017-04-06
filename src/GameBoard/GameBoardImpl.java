@@ -304,6 +304,7 @@ public class GameBoardImpl implements GameBoard {
         return tileMap.getAllHexagons();
     }
 
+    @Override
     public Player getPlayer(PlayerID playerID){
         if(playerID == PlayerID.PLAYER_ONE) {
             return new Player(playerOne);

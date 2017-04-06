@@ -1,26 +1,10 @@
 package SteveTest;
 
 import GameBoard.GameBoardState;
-import GameBoard.GameBoardStateSenderData;
-import GameBoard.PhasePublisherData.BuildPhaseSenderData;
-import GameBoard.PhasePublisherData.TilePlacementPhaseSenderData;
-import GameBoard.PlayAck.PlayAck;
-import GameBoard.PlayAck.PlayAckSenderData;
-import GamePieceMap.GamePiece;
-import GamePieceMap.TypeOfPiece;
-import Location.Location;
-import Play.BuildPhase.BuildPhase;
-import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
-import Sender.Sender;
-import Sender.SenderData.SenderData;
 import Steve.*;
-import Receiver.Receiver;
 import TileBuilder.TileBuilder;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
-import Tile.Tile.Tile;
 
 public class SteveTest {
 
@@ -29,23 +13,6 @@ public class SteveTest {
 
     private Steve steve;
     private PlayGeneratorTestDouble playGeneratorTestDouble;
-
-    private Receiver stevesGeneratePlayRequestReceiver;
-    private Receiver stevesGameBoardAckReceiver;
-    private Receiver stevesGameBoardStateReceiver;
-
-    private Sender stevesGetGameBoardStateRequestSender;
-    private Sender stevesDoBuildPhaseRequestSender;
-    private Sender stevesDoTilePlacementPhaseRequestSender;
-
-    private Receiver getGameBoardStateRequestReceiver;
-
-    private Sender generatePlayRequestSender;
-    private Sender gameBoardStateSender;
-    private Sender ackSender;
-
-    private Receiver doBuildPhaseRequestFromSteveReceiver;
-    private Receiver doTilePlacementPhaseRequestFromSteveReceiver;
 
     private Object phaseReceivedFromSteve;
 
@@ -56,10 +23,9 @@ public class SteveTest {
             Dummy GameBoard to just have an instance of it
          */
         gameBoardState = new GameBoardState(
-                0,
-                0,
-                0,
                 null,
+                null,
+                0,
                 null,
                 null,
                 null);
@@ -69,222 +35,10 @@ public class SteveTest {
         steve = new Steve();
         steve.playAs(PlayerID.PLAYER_ONE);
 
-        stevesGeneratePlayRequestReceiver = steve.getGeneratePlayRequestReceiver();
-        stevesGameBoardAckReceiver = steve.getGameBoardAckReceiver();
-        stevesGameBoardStateReceiver = steve.getGameBoardStateReceiver();
-
-        stevesGetGameBoardStateRequestSender = steve.getGetGameBoardStateRequestSender();
-        stevesDoBuildPhaseRequestSender = steve.getDoBuildPhaseRequestSender();
-        stevesDoTilePlacementPhaseRequestSender = steve.getDoTilePlacementPhaseRequestSender();
-
-        generatePlayRequestSender = new Sender();
-
         playGeneratorTestDouble = new PlayGeneratorTestDouble();
 
-        gameBoardStateSender = new Sender();
-        gameBoardStateSender.subscribe(stevesGameBoardStateReceiver);
-
-        ackSender = new Sender();
-        ackSender.subscribe(stevesGameBoardAckReceiver);
-
-        getGameBoardStateRequestReceiver = new Receiver() {
-            @Override
-            public void callback(SenderData data) {
-                GameBoardStateSenderData stateData = new GameBoardStateSenderData(gameBoardState);
-                gameBoardStateSender.publish(stateData);
-            }
-        };
-
-        stevesGetGameBoardStateRequestSender.subscribe(getGameBoardStateRequestReceiver);
-
-        doBuildPhaseRequestFromSteveReceiver = new Receiver() {
-            @Override
-            public void callback(SenderData data) {
-                phaseReceivedFromSteve = ((BuildPhaseSenderData) data).getData();
-            }
-        };
-
-        stevesDoBuildPhaseRequestSender.subscribe(doBuildPhaseRequestFromSteveReceiver);
-
-        doTilePlacementPhaseRequestFromSteveReceiver = new Receiver() {
-            @Override
-            public void callback(SenderData data) {
-                phaseReceivedFromSteve = ((TilePlacementPhaseSenderData) data).getData();
-            }
-        };
-
-        stevesDoTilePlacementPhaseRequestSender.subscribe(doTilePlacementPhaseRequestFromSteveReceiver);
     }
 
-    @Test
-    public void steveShouldReceiveAGeneratePlayRequest() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateATilePlacementPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve();
-        thenSteveShouldGetAPlayFromThePlayGenerator();
-    }
+    //TODO: write tests for Steve
 
-    private void givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender() {
-        generatePlayRequestSender.subscribe(stevesGeneratePlayRequestReceiver);
-    }
-
-    private void whenTheGeneratePlayRequestSenderSendsARequestToSteve() {
-        StevePlayTypeSenderData playData = new StevePlayTypeSenderData(StevePlayType.PIECE_PLAY);
-        generatePlayRequestSender.publish(playData);
-    }
-
-    private void givenTheGeneratorWillGenerateATilePlacementPhase() {
-        Tile tile = builder.getTileAtOrigin();
-        TilePlacementPhase play = new TilePlacementPhase(PlayerID.PLAYER_ONE, tile);
-        playGeneratorTestDouble.setPlayToReturn(play);
-    }
-
-    private void whenStevesPlayGeneratorIsSet() {
-        steve.setPlayGenerator(playGeneratorTestDouble);
-    }
-
-
-    private void thenSteveShouldGetAPlayFromThePlayGenerator() {
-        Assert.assertTrue(playGeneratorTestDouble.wasPlayRequested());
-    }
-
-    @Test
-    public void steveShouldReceiveGameBoardState() {
-        stevesGameBoardStateShouldBeNull();
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateATilePlacementPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve();
-        thenSteveShouldHaveReceivedGameBoardState();
-    }
-
-    private void stevesGameBoardStateShouldBeNull() {
-        Assert.assertEquals(null, steve.getCurrentGameBoardState());
-    }
-
-    private void thenSteveShouldHaveReceivedGameBoardState() {
-        Assert.assertFalse(steve.getCurrentGameBoardState() == null);
-    }
-
-    @Test
-    public void steveShouldNotAttemptToGenerateAnotherPlayBecauseAckIsSuccessful() {
-        givenTheGeneratorWillGenerateATilePlacementPhase();
-        whenStevesPlayGeneratorIsSet();
-        givenTheAckSenderSendsAckToSteve(PlayAck.VALID_PLAY);
-        thenSteveShouldNotEvenRequestAPlay();
-    }
-
-    private void thenSteveShouldNotEvenRequestAPlay() {
-        Assert.assertFalse(playGeneratorTestDouble.wasPlayRequested());
-    }
-
-    @Test
-    public void steveShouldAttemptToGenerateAnotherPlayAgainIfAckWasInvalid() {
-        givenTheGeneratorWillGenerateATilePlacementPhase();
-        whenStevesPlayGeneratorIsSet();
-        givenTheAckSenderSendsAckToSteve(PlayAck.INVALID_PLAY);
-        thenSteveShouldGetAPlayFromThePlayGenerator();
-    }
-
-    private void givenTheAckSenderSendsAckToSteve(PlayAck ack) {
-        PlayAckSenderData ackData = new PlayAckSenderData(ack);
-        ackSender.publish(ackData);
-    }
-
-    @Test
-    public void steveShouldSendATilePlacementPhase() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateATilePlacementPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve();
-        thenTheReceivedPlayShouldBeATilePlacementPhase();
-    }
-
-    private void thenTheReceivedPlayShouldBeATilePlacementPhase() {
-        Assert.assertTrue(phaseReceivedFromSteve instanceof TilePlacementPhase);
-    }
-
-    @Test
-    public void steveShouldSendABuildPhase() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateABuildPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve();
-        thenTheReceivedPlayShouldBeABuildPhase();
-    }
-
-    private void givenTheGeneratorWillGenerateABuildPhase() {
-
-        GamePiece piece = new GamePiece(PlayerID.PLAYER_ONE,
-                TypeOfPiece.VILLAGER);
-        BuildPhase play = new BuildPhase(piece, new Location(0, 0));
-        playGeneratorTestDouble.setPlayToReturn(play);
-    }
-
-    private void thenTheReceivedPlayShouldBeABuildPhase() {
-        Assert.assertTrue(phaseReceivedFromSteve instanceof BuildPhase);
-    }
-
-    @Test
-    public void steveShouldRequestAPiecePlayWhenItsToldToRequestIt() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateABuildPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve(StevePlayType.PIECE_PLAY);
-        thenSteveShouldHaveRequestedAThisPlayType(StevePlayType.PIECE_PLAY);
-    }
-
-    private void whenTheGeneratePlayRequestSenderSendsARequestToSteve(StevePlayType playType) {
-        StevePlayTypeSenderData playData = new StevePlayTypeSenderData(playType);
-        generatePlayRequestSender.publish(playData);
-    }
-
-    private void thenSteveShouldHaveRequestedAThisPlayType(StevePlayType playType) {
-        Assert.assertEquals(playType, playGeneratorTestDouble.getRequestedPlayType());
-    }
-
-    @Test
-    public void steveShouldRequestATilePlayWhenItsToldToRequestIt() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateABuildPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve(StevePlayType.TILE_PLAY);
-        thenSteveShouldHaveRequestedAThisPlayType(StevePlayType.TILE_PLAY);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void steveShouldNotRequestAWrongPlay() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateABuildPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve(StevePlayType.PIECE_PLAY);
-        thenSteveShouldHaveRequestedAThisPlayType(StevePlayType.TILE_PLAY);
-    }
-
-    @Test
-    public void stevesLastValidPlayShouldABuildPhase() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateABuildPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve();
-        thenStevesLastValidPlayShouldBeABuildPhase();
-    }
-
-    private void thenStevesLastValidPlayShouldBeABuildPhase() {
-        Assert.assertTrue(steve.getLastValidPlay() instanceof BuildPhase);
-    }
-
-    @Test
-    public void stevesLastValidPlayShouldBeATilePlacementPhase() {
-        givenStevesGeneratePlayRequestReceiverHasBeenSubscribedToTheSender();
-        givenTheGeneratorWillGenerateATilePlacementPhase();
-        whenStevesPlayGeneratorIsSet();
-        whenTheGeneratePlayRequestSenderSendsARequestToSteve();
-        thenStevesLastValidPlayShouldBeATilePlacementPhase();
-    }
-
-    private void thenStevesLastValidPlayShouldBeATilePlacementPhase() {
-        Assert.assertTrue(steve.getLastValidPlay() instanceof TilePlacementPhase);
-    }
 }

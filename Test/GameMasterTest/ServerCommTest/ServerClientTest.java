@@ -4,6 +4,7 @@ import LocalTestServer.LocalTestServer;
 import GameMaster.ServerComm.ServerClient;
 import org.junit.*;
 import java.io.IOException;
+import Networking.*;
 
 public class ServerClientTest {
     private LocalTestServer testServer;
@@ -12,8 +13,8 @@ public class ServerClientTest {
     @Before
     public void initializeInstances() {
         try {
-            testServer = new LocalTestServer(8000);
-            serverClient = new ServerClient("127.0.0.1", 8000);
+            testServer = new LocalTestServer(PortNumber.FOR_TESTS);
+            serverClient = new ServerClient("127.0.0.1", PortNumber.FOR_TESTS);
             testServer.handleClient();
         }
         catch(IOException e) {
