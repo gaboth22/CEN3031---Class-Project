@@ -1,9 +1,12 @@
 package SteveTest;
 
 import GameBoard.*;
+import Play.BuildPhase.BuildPhase;
+import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
-import Steve.PlayGenerator;
+import Steve.PlayGeneration.PlayGenerator;
 import Steve.StevePlayType;
+import Steve.BiHexTileStructure;
 
 public class PlayGeneratorTestDouble implements PlayGenerator {
 
@@ -27,9 +30,25 @@ public class PlayGeneratorTestDouble implements PlayGenerator {
         return requestedPlayType;
     }
 
-    public Object generateEducatedPlay(GameBoardState state, PlayerID playingAs, StevePlayType requestedPlayType) {
-        this.wasPlayRequested = true;
-        this.requestedPlayType = requestedPlayType;
-        return this.play;
+    @Override
+    public TilePlacementPhase generateTilePlay(GameBoardState gameBoardState, PlayerID activePlayer, BiHexTileStructure tileToPlace) {
+        return null;
+    }
+
+    @Override
+    public BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) {
+        return null;
+    }
+
+    @Override
+    public TilePlacementPhase generateSafeTilePlay(GameBoardState gameBoardState,
+                                            PlayerID activePlayer,
+                                            BiHexTileStructure tileToPlace) {
+        return null;
+    }
+
+    @Override
+    public BuildPhase generateSafeBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) {
+        return null;
     }
 }

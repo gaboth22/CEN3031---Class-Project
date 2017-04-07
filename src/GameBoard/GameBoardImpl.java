@@ -78,6 +78,24 @@ public class GameBoardImpl implements GameBoard {
     }
 
     @Override
+    public void serverDoTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception {
+        if(tilePlacementPhase.getTilePlacementType() == TilePlacementType.FIRST_PLACEMENT){
+
+            tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
+        }
+        else if(tilePlacementPhase.getTilePlacementType() == TilePlacementType.SIMPLE_PLACEMENT){
+
+            tilePlacementHelper.insertTile(tilePlacementPhase, tileMap);
+        }
+        else if(tilePlacementPhase.getTilePlacementType() == TilePlacementType.NUKE){
+
+            nukeTileHelper.updateTileMapWithNewlyInsertedTile(tilePlacementPhase, tileMap);
+            nukeTileHelper.removeNukedVillagersFromGamePieceMap(tilePlacementPhase, gamePieceMap);
+            settlementListUpdateForTilePhase(tilePlacementPhase);
+        }
+    }
+
+    @Override
     public void doTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception {
         if (tilePlacementPhase.getTilePlacementType() == TilePlacementType.FIRST_PLACEMENT) {
             if (tilePlacementHelper.attemptFirstTilePlacement(
@@ -108,6 +126,41 @@ public class GameBoardImpl implements GameBoard {
                 settlementListUpdateForTilePhase(tilePlacementPhase);
             }
             else throw new TilePlacementPhaseException("Nuking failed");
+        }
+    }
+
+    @Override
+    public void serverDoBuildPhase(BuildPhase buildPhase) throws Exception {
+        if(buildPhase.getBuildType() == BuildType.FOUND){
+
+            buildPhaseHelper.insertVillager(buildPhase, gamePieceMap, tileMap);
+            updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+            villagerPieceAmountDecrement(buildPhase.getPlayerID());
+            settlementListUpdateForBuildPhase(buildPhase);
+            incrementTurnNumber();
+        }
+        else if(buildPhase.getBuildType() == BuildType.EXPAND){
+
+            buildPhaseHelper.expandSettlement(buildPhase, tileMap, gamePieceMap);
+            updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+            settlementListUpdateForBuildPhase(buildPhase);
+            incrementTurnNumber();
+        }
+        else if(buildPhase.getBuildType() == BuildType.PLACE_TOTORO){
+
+            buildPhaseHelper.insertSpecialPiece(buildPhase, gamePieceMap);
+            updateScoreWhenTigerOrTotoroPlaced(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+            specialPieceAmountDecrement(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+            settlementListUpdateForBuildPhase(buildPhase);
+            incrementTurnNumber();
+        }
+        else if(buildPhase.getBuildType() == BuildType.PLACE_TIGER){
+
+            buildPhaseHelper.insertSpecialPiece(buildPhase, gamePieceMap);
+            updateScoreWhenTigerOrTotoroPlaced(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+            specialPieceAmountDecrement(buildPhase.getPlayerID(), buildPhase.getTypeOfPieceToPlace());
+            settlementListUpdateForBuildPhase(buildPhase);
+            incrementTurnNumber();
         }
     }
 
@@ -304,6 +357,7 @@ public class GameBoardImpl implements GameBoard {
         return tileMap.getAllHexagons();
     }
 
+    @Override
     public Player getPlayer(PlayerID playerID){
         if(playerID == PlayerID.PLAYER_ONE) {
             return new Player(playerOne);
@@ -349,6 +403,22 @@ public class GameBoardImpl implements GameBoard {
             }
         }
         return placeableLocations;
+    }
+
+    @Override
+    public List<Location> getNukeableVolcanoLocations() {
+        List<Location> nukeableLocations = new ArrayList<Location>();
+
+        Map<Location, Hexagon> placedHexes = tileMap.getAllHexagons();
+        Set<Location> locationsOfPlacedHexes =  placedHexes.keySet();
+
+        for(Location loc: locationsOfPlacedHexes){
+            if(tileMap.getHexagonAt(loc).getTerrain() == Terrain.VOLCANO){
+                nukeableLocations.add(loc);
+            }
+        }
+
+        return nukeableLocations;
     }
 
     @Override

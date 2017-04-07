@@ -1,4 +1,4 @@
-package GameMaster.Game;
+package GameMaster.ServerComm.Parsers;
 
 import Play.BuildPhase.BuildPhase;
 import Play.TilePlacementPhase.TilePlacementPhase;

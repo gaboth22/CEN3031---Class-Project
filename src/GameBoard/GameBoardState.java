@@ -1,63 +1,66 @@
 package GameBoard;
 
+import GamePieceMap.GamePieceMap;
 import Location.Location;
-import Settlements.Creation.Settlement;
 import TileMap.Hexagon;
 
+import java.util.Map;
 import java.util.List;
+import Player.*;
 
 public class GameBoardState {
-    private int p1Score;
-    private int p2Score;
+    private Player playerOne;
+    private Player playerTwo;
     private int turnNumber;
-    private List<Hexagon> placedHexagons;
-    private List<Settlement> p1Settlements;
-    private List<Settlement> p2Settlements;
+    private Map<Location, Hexagon> placedHexagons;
+    private GamePieceMap gamePieceMap;
     private List<Location> placeableLocations;
+    private List<Location> nukeableLocations;
 
     public GameBoardState(
-            int p1Score,
-            int p2Score,
+            Player playerOne,
+            Player playerTwo,
             int turnNumber,
-            List<Hexagon> placedHexagons,
-            List<Settlement> p1Settlements,
-            List<Settlement> p2Settlements,
-            List<Location> placeableLocations) {
+            Map<Location, Hexagon> placedHexagons,
+            GamePieceMap gamePieceMap,
+            List<Location> placeableLocations,
+            List<Location> nukeableLocations) {
 
-        this.p1Score = p1Score;
-        this.p2Score = p2Score;
+        this.playerOne = playerOne;
+        this.playerTwo = playerTwo;
         this.turnNumber = turnNumber;
         this.placedHexagons = placedHexagons;
-        this.p1Settlements = p1Settlements;
-        this.p2Settlements = p2Settlements;
+        this.gamePieceMap = gamePieceMap;
         this.placeableLocations = placeableLocations;
+        this.nukeableLocations = nukeableLocations;
     }
 
     public int getTurnNumber() {
         return turnNumber;
     }
 
-    public int getP1Score() {
-        return p1Score;
+    public List<Location> getPlaceableLocations() {
+        return placeableLocations;
     }
 
-    public int getP2Score() {
-        return p2Score;
+    public List<Location> getNukeableLocations(){
+        return nukeableLocations;
     }
 
-    public List<Hexagon> getListOfPlacedHexes() {
+    public Player getPlayerOne() {
+        return playerOne;
+    }
+
+    public Player getPlayerTwo() {
+        return playerTwo;
+    }
+
+    public Map<Location, Hexagon> getPlacedHexagons() {
         return placedHexagons;
     }
 
-    public List<Settlement> getP1Settlements() {
-        return p1Settlements;
+    public GamePieceMap getGamePieceMap() {
+        return gamePieceMap;
     }
 
-    public List<Settlement> getP2Settlements() {
-        return p2Settlements;
-    }
-
-    public List<Location> getGetPlaceableLocations() {
-        return placeableLocations;
-    }
 }

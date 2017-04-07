@@ -7,6 +7,7 @@ import Play.BuildPhase.BuildPhase;
 import Play.Rule.PlacementRuleException.InvalidPiecePlacementRuleException;
 import Play.Rule.PlacementRuleException.InvalidTilePlacementRuleException;
 import Play.TilePlacementPhase.TilePlacementPhase;
+import Player.*;
 import Settlements.Creation.Settlement;
 import TestExceptions.MethodCalledException;
 import TileMap.Hexagon;
@@ -34,9 +35,17 @@ public class GameBoardTestDouble implements GameBoard {
         failTilePlacementPhase = true;
     }
 
+    public void serverDoBuildPhase(BuildPhase buildPhase) throws Exception{
+
+    }
+
     public void doBuildPhase(BuildPhase phase) throws Exception {
         if(failBuildPhase)
             throw new InvalidPiecePlacementRuleException();
+    }
+
+    public void serverDoTilePlacementPhase(TilePlacementPhase tilePlacementPhase){
+
     }
 
     public void doTilePlacementPhase(TilePlacementPhase phase) throws Exception {
@@ -80,12 +89,20 @@ public class GameBoardTestDouble implements GameBoard {
         return new ArrayList<Location>();
     }
 
+    public List<Location> getNukeableVolcanoLocations(){
+        return null;
+    }
+
     public int getPlayerOneScore() {
         return getP1Score();
     }
 
     public int getPlayerTwoScore() {
         return getP2Score();
+    }
+
+    public Player getPlayer(PlayerID player) {
+        return new Player(PlayerID.PLAYER_ONE);
     }
 
     public List<Settlement> getPlayerOneSettlements() {

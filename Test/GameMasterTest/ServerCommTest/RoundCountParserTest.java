@@ -8,14 +8,14 @@ import java.security.InvalidParameterException;
 
 public class RoundCountParserTest {
     private String messageReceived;
-    private int parsedRoundCount;
+    private String parsedRoundCount;
 
     @Test
     public void roundCountShouldBeReturnedCorrectly() {
-        String message = "BEGIN ROUND 1 OF 20";
+        String message = "NEW CHALLENGE <cid> YOU WILL PLAY <rounds> MATCH";
         givenTheMessageReceivedIs(message);
         whenIParseTheMessage();
-        thenTheRoundCountShouldBe(20);
+        thenTheRoundCountShouldBe("<rounds>");
     }
 
     private void givenTheMessageReceivedIs(String message) {
@@ -26,19 +26,19 @@ public class RoundCountParserTest {
         parsedRoundCount = RoundCountParser.getRoundCount(messageReceived);
     }
 
-    private void thenTheRoundCountShouldBe(int expectedCount) {
+    private void thenTheRoundCountShouldBe(String expectedCount) {
         Assert.assertEquals(expectedCount, parsedRoundCount);
     }
 
     @Test
     public void theRoundCountShouldNotBeIncorrect() {
-        String message = "BEGIN ROUND 1 OF 10";
+        String message = "NEW CHALLENGE <cid> YOU WILL PLAY 10 MATCH";
         givenTheMessageReceivedIs(message);
         whenIParseTheMessage();
-        thenTheRoundCountShouldNotBe(20);
+        thenTheRoundCountShouldNotBe("15");
     }
 
-    private void thenTheRoundCountShouldNotBe(int notExpected) {
+    private void thenTheRoundCountShouldNotBe(String notExpected) {
         Assert.assertNotEquals(notExpected, parsedRoundCount);
     }
 

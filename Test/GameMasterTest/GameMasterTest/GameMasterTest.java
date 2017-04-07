@@ -4,13 +4,12 @@ import GameMaster.*;
 import GameMaster.ServerComm.ServerClient;
 import GameMaster.ServerComm.ServerMessages;
 import LocalTestServer.LocalTestServer;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.IOException;
+import Networking.*;
 
+@Ignore("Stalls")
 public class GameMasterTest {
     private LocalTestServer testServer;
     private ServerClient serverClient;
@@ -18,20 +17,30 @@ public class GameMasterTest {
     private GameTestDouble gameTwo;
     private GameMaster gameMaster;
 
+    private String username;
+    private String password;
+    private String tournamentPassword;
+
     @Before
     public void initializeInstances() {
+        username = "USER :D";
+        password = "PASS :D";
+        tournamentPassword = "TPASS :D";
+
         try {
-            testServer = new LocalTestServer(8000);
-            serverClient = new ServerClient("127.0.0.1", 8000);
+            testServer = new LocalTestServer(PortNumber.FOR_TESTS);
+            serverClient = new ServerClient("127.0.0.1", PortNumber.FOR_TESTS);
             testServer.handleClient();
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         gameOne = new GameTestDouble();
         gameTwo = new GameTestDouble();
         gameMaster = new GameMaster(serverClient, gameOne, gameTwo);
+        gameMaster.setPassword(password);
+        gameMaster.setUsername(username);
+        gameMaster.setTournamentPassword(tournamentPassword);
         gameMaster.start();
     }
 
@@ -40,66 +49,106 @@ public class GameMasterTest {
         testServer.close();
     }
 
+
     @Test
-    public void gameMasterShouldMoveToWaitingForChallengeOnceTheWelcomeMessageIsReceived() {
+    public void uponStartTheGameMasterShouldBeWaitingForTheWelcomeMessage() {
+        thenTheGameMasterPhaseStateShouldBe(GamePhaseState.WAITING_FOR_WELCOME);
+    }
+
+    private void thenTheGameMasterPhaseStateShouldBe(GamePhaseState expected) {
+        while (gameMaster.getCurrentGamePhaseState() != expected) {
+        }
+        Assert.assertEquals(expected, gameMaster.getCurrentGamePhaseState());
+    }
+
+    @Test
+    public void gameMasterShouldMoveToWaitingForTwoShallEnterAfterReceivingWelComeMessage() {
         givenTheServerHasSentTheWelcomeMessage();
-        thenTheGameMasterPhaseStateShouldBe(GamePhaseState.WAITING_FOR_CHALLENGE);
+        thenTheGameMasterPhaseStateShouldBe(GamePhaseState.WAITING_FOR_TWO_SHALL_ENTER);
     }
 
     private void givenTheServerHasSentTheWelcomeMessage() {
         testServer.sendMessageToClient(ServerMessages.WELCOME_MESSAGE);
     }
 
-    private void thenTheGameMasterPhaseStateShouldBe(GamePhaseState expected) {
-        while(gameMaster.getCurrentGamePhaseState() != expected) {}
-        Assert.assertEquals(expected, gameMaster.getCurrentGamePhaseState());
+    @Test
+    public void gameMasterShouldMoveToWaitingForTournamentToBegin() {
+        givenTheServerHasSentTheWelcomeMessage();
+        givenTheServerHasSentTheTwoShallEnterMessage();
+        thenTheGameMasterPhaseStateShouldBe(GamePhaseState.WAITING_FOR_TOURNAMENT_TO_BEGIN_WITH_PID);
+    }
+
+    private void givenTheServerHasSentTheTwoShallEnterMessage() {
+        testServer.sendMessageToClient(ServerMessages.TWO_SHALL_ENTER_MESSAGE);
     }
 
     @Test
-    public void gameMasterShouldMoveToWaitingForRoundCountOnceThePlayerIdMessageIsReceived() {
+    public void gameMasterShouldMoveToWaitingForChallenge() {
         givenTheServerHasSentTheWelcomeMessage();
-        givenTheServerSendsThePlayerIdMessage();
-        thenTheGameMasterPhaseStateShouldBe(GamePhaseState.WAITING_FOR_ROUND_COUNT);
+        givenTheServerHasSentTheTwoShallEnterMessage();
+        givenTheServerHasSentTheWaitForTournamentToBeginMessage();
+        thenTheGameMasterPhaseStateShouldBe(GamePhaseState.WAITING_FOR_CHALLENGE);
+        thenTheGameMasterOurPlayerIdShouldBe("Blah");
     }
 
-    private void givenTheServerSendsThePlayerIdMessage() {
-        testServer.sendMessageToClient(ServerMessages.PID_MESSAGE + " 23");
+    private void givenTheServerHasSentTheWaitForTournamentToBeginMessage() {
+        testServer.sendMessageToClient(ServerMessages.WAIT_FOR_TOURNAMENT_PID_MESSAGE + " Blah");
+    }
+
+    private void thenTheGameMasterOurPlayerIdShouldBe(String ourExpectedPid) {
+        String ourPid = null;
+
+        while(ourPid == null) {
+            ourPid = gameMaster.getOurPidFromServer();
+        }
+
+        Assert.assertEquals(ourExpectedPid, ourPid);
     }
 
     @Test
-    public void gameMasterShouldHaveRetrievedPlayerIdFromServer() {
+    public void gameMasterShouldMoveToWaitingForRoundToBeing() {
         givenTheServerHasSentTheWelcomeMessage();
-        givenTheServerSendsThePlayerIdMessage();
-        thenTheGameMasterPlayerIdShouldBe("23");
+        givenTheServerHasSentTheTwoShallEnterMessage();
+        givenTheServerHasSentTheWaitForTournamentToBeginMessage();
+        givenTheServerHasSentTheNewChallengeMessage();
+        thenTheGameMasterPhaseStateShouldBe(GamePhaseState.WAITING_FOR_ROUND_TO_BEGIN);
+        thenTheGameMasterCurrentChallengeIdShouldBe("<cid>");
+        thenTheGameMasterRoundsShouldBe("<rounds>");
     }
 
-    private void thenTheGameMasterPlayerIdShouldBe(String expectedPid) {
-        while(gameMaster.getOurPidFromServer() == null) {}
-        Assert.assertEquals(expectedPid, gameMaster.getOurPidFromServer());
+    private void givenTheServerHasSentTheNewChallengeMessage() {
+        testServer.sendMessageToClient(ServerMessages.NEW_CHALLENGE_MESSAGE + " <cid> YOU WILL PLAY <rounds> MATCH");
     }
 
-    @Test
-    public void gameMasterShouldGetRoundCount() {
-        givenTheServerHasSentTheWelcomeMessage();
-        givenTheServerSendsThePlayerIdMessage();
-        givenTheServerSendTheRoundCountMessage();
-        thenTheGameMasterRoundCountShouldBe(19);
+    private void thenTheGameMasterCurrentChallengeIdShouldBe(String expectedCid) {
+        String cid = null;
+        while(cid == null) {
+            cid = gameMaster.getCurrentChallengeId();
+        }
+
+        Assert.assertEquals(expectedCid, cid);
     }
 
-    private void givenTheServerSendTheRoundCountMessage() {
-        testServer.sendMessageToClient(ServerMessages.ROUND_COUNT_MESSAGE + " 1 OF 19");
-    }
+    private void thenTheGameMasterRoundsShouldBe(String expectedRounds) {
+        String rounds = null;
+        while(rounds == null) {
+            rounds = gameMaster.getCurrentRounds();
+        }
 
-    private void thenTheGameMasterRoundCountShouldBe(int expectedRoundCount) {
-        while(gameMaster.getRoundCount() == 0) {}
-        Assert.assertEquals(expectedRoundCount, gameMaster.getRoundCount());
+        Assert.assertEquals(expectedRounds, rounds);
     }
 
     @Test
     public void gameMasterShouldMoveToInRound() {
         givenTheServerHasSentTheWelcomeMessage();
-        givenTheServerSendsThePlayerIdMessage();
-        givenTheServerSendTheRoundCountMessage();
+        givenTheServerHasSentTheTwoShallEnterMessage();
+        givenTheServerHasSentTheWaitForTournamentToBeginMessage();
+        givenTheServerHasSentTheNewChallengeMessage();
+        givenTheServerHasSentTheBeginRoundMessage();
         thenTheGameMasterPhaseStateShouldBe(GamePhaseState.IN_ROUND);
+    }
+
+    private void givenTheServerHasSentTheBeginRoundMessage() {
+        testServer.sendMessageToClient(ServerMessages.BEGIN_ROUND_MESSAGE + " <rid> OF <rounds>");
     }
 }

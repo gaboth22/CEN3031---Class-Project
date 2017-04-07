@@ -1,20 +1,10 @@
 package Steve;
 
-import Debug.*;
 import GameBoard.GameBoardState;
-import GameBoard.GameBoardStateSenderData;
-import GameBoard.PhasePublisherData.BuildPhaseSenderData;
-import GameBoard.PhasePublisherData.TilePlacementPhaseSenderData;
-import GameBoard.PlayAck.PlayAck;
-import GameBoard.PlayAck.PlayAckSenderData;
 import Play.BuildPhase.BuildPhase;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
-import Sender.Sender;
-import Sender.SenderData.SenderData;
-import Receiver.Receiver;
-
-import java.security.InvalidParameterException;
+import Steve.PlayGeneration.PlayGenerator;
 
 public class Steve {
 
@@ -22,50 +12,19 @@ public class Steve {
 
     private PlayGenerator playGenerator;
 
-    private Receiver generatePlayRequestReceiver;
-    private Receiver gameBoardAckReceiver;
-    private Receiver gameBoardStateReceiver;
-
-    private Sender getGameBoardStateRequestSender;
-    private Sender doBuildPhaseRequestSender;
-    private Sender doTilePlacementPhaseRequestSender;
-
     private GameBoardState currentGameBoardState;
     private StevePlayType requestedPlayType;
+
+    private BiHexTileStructure tileToPlace;
 
     private Object lastValidPlay;
 
     public Steve() {
 
-        doBuildPhaseRequestSender = new Sender();
-        doTilePlacementPhaseRequestSender = new Sender();
-        getGameBoardStateRequestSender = new Sender();
         currentGameBoardState = null;
         lastValidPlay = null;
 
-        gameBoardAckReceiver = new Receiver() {
-            @Override
-            public void callback(SenderData data) {
-                evaluateAck(((PlayAckSenderData) data).getData());
-            }
-        };
-
-        generatePlayRequestReceiver = new Receiver() {
-            @Override
-            public void callback(SenderData data) {
-                requestedPlayType = ((StevePlayTypeSenderData) data).getData();
-                generatePlay();
-            }
-        };
-
-        gameBoardStateReceiver = new Receiver() {
-            @Override
-            public void callback(SenderData data) {
-                currentGameBoardState = ((GameBoardStateSenderData) data).getData();
-            }
-        };
     }
-
 
     public void playAs(PlayerID player) {
         playingAs = player;
@@ -75,73 +34,26 @@ public class Steve {
         this.playGenerator = generator;
     }
 
-    private void evaluateAck(PlayAck ack) {
-        if(ack == PlayAck.VALID_PLAY)
-            return;
-        else
-            generatePlay();
+    public void setTileToPlace(BiHexTileStructure tileToPlace) {
+        this.tileToPlace = tileToPlace;
     }
 
-    private void generatePlay() {
-        sendGetGameBoardStateRequest();
-        lastValidPlay = playGenerator.generateEducatedPlay(currentGameBoardState, playingAs, requestedPlayType);
-        sendPlayToGameBoard(lastValidPlay);
+    public TilePlacementPhase generateTilePlay(GameBoardState state) {
+        //TODO: generate a tile play
+        return null;
     }
 
-    private void sendPlayToGameBoard(Object play) {
-        if(play instanceof BuildPhase) {
-            sendBuildPlayToGameBoard((BuildPhase) play);
-        }
-
-        else if(play instanceof TilePlacementPhase) {
-            sendTilePlacementPlayToGameBoard((TilePlacementPhase) play);
-        }
-        else {
-            Debug.print("Invalid play object passed to Steve", DebugLevel.ERROR);
-            throw new InvalidParameterException("Invalid play object passed to Steve");
-        }
+    public TilePlacementPhase getSafeTilePhase(GameBoardState state) {
+        return playGenerator.generateSafeTilePlay(state, playingAs, tileToPlace);
     }
 
-    private void sendGetGameBoardStateRequest() {
-        /*
-            publishes null since the GameBoard doesn't care who
-            requests GameBoardState, it'll just publish it.
-        */
-        getGameBoardStateRequestSender.publish(null);
+    public BuildPhase generateBuildPlay(GameBoardState state) {
+        //TODO: generate A Build Play
+        return null;
     }
 
-    private void sendBuildPlayToGameBoard(BuildPhase play) {
-        BuildPhaseSenderData playData = new BuildPhaseSenderData(play);
-        doBuildPhaseRequestSender.publish(playData);
-    }
-
-    private void sendTilePlacementPlayToGameBoard(TilePlacementPhase play) {
-        TilePlacementPhaseSenderData playData = new TilePlacementPhaseSenderData(play);
-        doTilePlacementPhaseRequestSender.publish(playData);
-    }
-
-    public Receiver getGeneratePlayRequestReceiver() {
-        return generatePlayRequestReceiver;
-    }
-
-    public Receiver getGameBoardAckReceiver() {
-        return gameBoardAckReceiver;
-    }
-
-    public Receiver getGameBoardStateReceiver() {
-        return gameBoardStateReceiver;
-    }
-
-    public Sender getGetGameBoardStateRequestSender() {
-        return getGameBoardStateRequestSender;
-    }
-
-    public Sender getDoBuildPhaseRequestSender() {
-        return doBuildPhaseRequestSender;
-    }
-
-    public Sender getDoTilePlacementPhaseRequestSender() {
-        return doTilePlacementPhaseRequestSender;
+    public BuildPhase getSafeBuildPhase(GameBoardState state) {
+        return playGenerator.generateSafeBuildPlay(state, playingAs);
     }
 
     public GameBoardState getCurrentGameBoardState() {
