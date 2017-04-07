@@ -12,14 +12,20 @@ import java.util.List;
 
 public interface GameBoard {
 
-    //Methods to do actions
+    //Methods for AI to do actions
     void doBuildPhase(BuildPhase buildPhase) throws Exception;
     void doTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception;
+
+    //Methods for Server to do actions
+    //SERVER USE ONLY
+    void serverDoBuildPhase(BuildPhase buildPhase) throws Exception;
+    void serverDoTilePlacementPhase(TilePlacementPhase tilePlacementPhase) throws Exception;
 
     //Methods to retrieve the state of the game
     Map<Location, Hexagon> getPlacedHexagons();
     int getCurrentTurn();
     List<Location> getPlaceableLocations();
+    List<Location> getNukeableVolcanoLocations();
     GamePieceMap getGamePieceMap();
 
     //Methods to retrieve the state of a player

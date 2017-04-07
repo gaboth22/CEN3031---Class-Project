@@ -201,7 +201,7 @@ public class Game extends Thread {
     private void doOpponentPiecePlacementPhase() {
         BuildPhase build = ServerPlayParser.getServerPiecePlacement(opponentPlay);
         try{
-            gameBoard.doBuildPhase(build);
+            gameBoard.serverDoBuildPhase(build);
         }
         catch(Exception ex) {
             Debug.print(ex.getMessage(), DebugLevel.ERROR);
@@ -212,7 +212,7 @@ public class Game extends Thread {
     private void doOpponentTilePlacementPhase() {
         TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay);
         try{
-            gameBoard.doTilePlacementPhase(placement);
+            gameBoard.serverDoTilePlacementPhase(placement);
         }
         catch(Exception ex) {
             Debug.print(ex.getMessage(), DebugLevel.ERROR);

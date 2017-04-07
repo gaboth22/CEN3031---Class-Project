@@ -15,6 +15,7 @@ public class GameBoardState {
     private Map<Location, Hexagon> placedHexagons;
     private GamePieceMap gamePieceMap;
     private List<Location> placeableLocations;
+    private List<Location> nukeableLocations;
 
     public GameBoardState(
             Player playerOne,
@@ -22,7 +23,8 @@ public class GameBoardState {
             int turnNumber,
             Map<Location, Hexagon> placedHexagons,
             GamePieceMap gamePieceMap,
-            List<Location> placeableLocations) {
+            List<Location> placeableLocations,
+            List<Location> nukeableLocations) {
 
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
@@ -30,6 +32,7 @@ public class GameBoardState {
         this.placedHexagons = placedHexagons;
         this.gamePieceMap = gamePieceMap;
         this.placeableLocations = placeableLocations;
+        this.nukeableLocations = nukeableLocations;
     }
 
     public int getTurnNumber() {
@@ -38,6 +41,10 @@ public class GameBoardState {
 
     public List<Location> getPlaceableLocations() {
         return placeableLocations;
+    }
+
+    public List<Location> getNukeableLocations(){
+        return nukeableLocations;
     }
 
     public Player getPlayerOne() {

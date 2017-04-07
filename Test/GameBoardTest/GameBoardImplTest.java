@@ -511,4 +511,16 @@ public class GameBoardImplTest {
         assertTrue(placeableLocations.contains(new Location(-1,2)));
     }
 
+    @Test
+    public void getNukeableVocanoLocationsTest() throws Exception{
+        GameBoard gameBoard = new GameBoardImpl();
+        TilePlacementPhase tilePlacementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE,getSimpleTileToPlace());
+        tilePlacementPhase.setTilePlacementType(TilePlacementType.SIMPLE_PLACEMENT);
+        gameBoard.doTilePlacementPhase(tilePlacementPhase);
+
+        List<Location> nukeableLocations = gameBoard.getNukeableVolcanoLocations();
+        assertTrue(nukeableLocations.contains(new Location(0,0)));
+        assertTrue(nukeableLocations.contains(new Location(1,1)));
+        assertFalse(nukeableLocations.contains(new Location(-1,1)));
+    }
 }
