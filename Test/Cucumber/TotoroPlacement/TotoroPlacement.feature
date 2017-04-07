@@ -1,4 +1,4 @@
-Feature: Successful totoro placement
+Feature: Totoro placement
   Scenario: Adding a totoro
     Given an existing settlement of size 5 or more
     When a player places a totoro on an adjacent hex
