@@ -35,9 +35,17 @@ public class GameBoardTestDouble implements GameBoard {
         failTilePlacementPhase = true;
     }
 
+    public void serverDoBuildPhase(BuildPhase buildPhase) throws Exception{
+
+    }
+
     public void doBuildPhase(BuildPhase phase) throws Exception {
         if(failBuildPhase)
             throw new InvalidPiecePlacementRuleException();
+    }
+
+    public void serverDoTilePlacementPhase(TilePlacementPhase tilePlacementPhase){
+
     }
 
     public void doTilePlacementPhase(TilePlacementPhase phase) throws Exception {
@@ -79,6 +87,10 @@ public class GameBoardTestDouble implements GameBoard {
 
     public List<Location> getPlaceableLocations() {
         return new ArrayList<Location>();
+    }
+
+    public List<Location> getNukeableVolcanoLocations(){
+        return null;
     }
 
     public int getPlayerOneScore() {

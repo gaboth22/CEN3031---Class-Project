@@ -18,9 +18,11 @@ public class GameBoardStateBuilderImpl implements GameBoardStateBuilder {
         int turnNumber = board.getCurrentTurn();
         Map<Location, Hexagon> hexagonMap = board.getPlacedHexagons();
         List<Location> placeable = board.getPlaceableLocations();
+        List<Location> nukeable = board.getNukeableVolcanoLocations();
         GamePieceMap pieceMap = board.getGamePieceMap();
 
-        GameBoardState gameBoardState = new GameBoardState(playerOne, playerTwo, turnNumber, hexagonMap, pieceMap, placeable);
+        GameBoardState gameBoardState
+                = new GameBoardState(playerOne, playerTwo, turnNumber, hexagonMap, pieceMap, placeable, nukeable);
         return gameBoardState;
     }
 }
