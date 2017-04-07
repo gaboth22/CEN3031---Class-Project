@@ -216,7 +216,7 @@ public class Game extends Thread {
 
     private void doOpponentTilePlacementPhase() {
         PlayerID opponentID = getOpponentId();
-        TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay, opponentID);
+        TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay, getCurrentGameState(), opponentID);
         try{
             gameBoard.serverDoTilePlacementPhase(placement);
         }

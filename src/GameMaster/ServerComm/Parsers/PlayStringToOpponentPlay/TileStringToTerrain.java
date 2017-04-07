@@ -6,7 +6,11 @@ import java.security.InvalidParameterException;
 
 public class TileStringToTerrain {
 
-    static Terrain getTerrain(String string) {
+    public static Terrain getTerrain(String string) {
+
+        if(string == null) {
+            throw new InvalidParameterException("The parameter passed into the function is not set");
+        }
 
         Terrain terrainToReturn;
 

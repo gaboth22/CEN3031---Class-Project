@@ -1,5 +1,6 @@
 package Steve;
 
+import GameMaster.ServerComm.Parsers.Split;
 import Terrain.Terrain.Terrain;
 import java.security.InvalidParameterException;
 
@@ -7,8 +8,7 @@ public class BiHexTileStructureBuilderFromString {
 
     public static BiHexTileStructure getBiHexFromString(String terrainInfo) {
 
-        String BY_PLUS_SIGN = "\\+";
-        String[] terrainStrings = terrainInfo.split(BY_PLUS_SIGN);
+        String[] terrainStrings = Split.byPlus(terrainInfo);
         Terrain left = getTerrainFromString(terrainStrings[0]);
         Terrain right = getTerrainFromString(terrainStrings[1]);
 
