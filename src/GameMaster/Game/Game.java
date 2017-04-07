@@ -5,7 +5,7 @@ import GUI.GuiThread.GuiThread;
 import GUI.PhaseToGuiAdapter.PhaseToGuiAdapter;
 import GameBoard.*;
 import GameBoard.GameBoardStateBuilder.*;
-import GameMaster.ServerComm.Parsers.ServerPlayParser;
+import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.ServerPlayParser;
 import GameMaster.ServerComm.Parsers.StevePlayParser;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
@@ -128,12 +128,7 @@ public class Game extends Thread {
                         }
 
                         if (runningGui) {
-
-                            tilePlacementStr = adapter.adapt(tilePlacementPhase);
-                            buildPhaseStr = adapter.adapt(buildPhase);
-
-                            guiThread.updateGui(tilePlacementStr);
-                            guiThread.updateGui(buildPhaseStr);
+                            updateGui(tilePlacementPhase, buildPhase);
                         }
                     }
 
@@ -150,6 +145,14 @@ public class Game extends Thread {
                 }
             }
         }
+    }
+
+    private void updateGui(TilePlacementPhase tilePlacementPhase, BuildPhase buildPhase) {
+        tilePlacementStr = adapter.adapt(tilePlacementPhase);
+        buildPhaseStr = adapter.adapt(buildPhase);
+
+        guiThread.updateGui(tilePlacementStr);
+        guiThread.updateGui(buildPhaseStr);
     }
 
     private void sendStevePlayToGameMaster(BuildPhase steveBuildPhase,
@@ -199,7 +202,9 @@ public class Game extends Thread {
     }
 
     private void doOpponentPiecePlacementPhase() {
-        BuildPhase build = ServerPlayParser.getServerPiecePlacement(opponentPlay);
+        PlayerID opponentID = getOpponentId();
+        GameBoardState gameBoardState = getCurrentGameState();
+        BuildPhase build = ServerPlayParser.getServerPiecePlacement(opponentPlay, gameBoardState, opponentID);
         try{
             gameBoard.serverDoBuildPhase(build);
         }
@@ -210,12 +215,22 @@ public class Game extends Thread {
     }
 
     private void doOpponentTilePlacementPhase() {
-        TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay);
+        PlayerID opponentID = getOpponentId();
+        TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay, opponentID);
         try{
             gameBoard.serverDoTilePlacementPhase(placement);
         }
         catch(Exception ex) {
             Debug.print(ex.getMessage(), DebugLevel.ERROR);
+        }
+    }
+
+    private PlayerID getOpponentId() {
+        if(activePlayer == PlayerID.PLAYER_ONE) {
+            return PlayerID.PLAYER_TWO;
+        }
+        else {
+            return PlayerID.PLAYER_ONE;
         }
     }
 
