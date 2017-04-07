@@ -156,6 +156,9 @@ public class Game extends Thread {
                                            TilePlacementPhase steveTilePlacementPhase,
                                            String[] serverStuff) {
 
+        int GAME_ID_INDEX = 0;
+        int MOVE_NUMBER_INDEX = 1;
+
         String formattedMessageForServer;
 
         if(steveBuildPhase == null) {
@@ -191,9 +194,11 @@ public class Game extends Thread {
         }
 
         stevePlaySender.publish(new SenderData() {
+            String gameInfo = "GAME " + serverStuff[GAME_ID_INDEX] + " MOVE " + serverStuff[MOVE_NUMBER_INDEX] + " ";
+
             @Override
             public Object getData() {
-                return formattedMessageForServer;
+                return gameInfo + formattedMessageForServer;
             }
         });
     }
