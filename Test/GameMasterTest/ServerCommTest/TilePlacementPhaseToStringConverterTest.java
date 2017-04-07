@@ -31,7 +31,7 @@ public class TilePlacementPhaseToStringConverterTest {
             Volcano location: 0, 1
             Then string should be:
 
-            ROCK+LAKE AT 1 -1 0 3
+            ROCK+LAKE AT 1 -1 0 6
 
             This is because the server's x is our y, the server's z is our x
             and the server's y is -(our x + our y), and the tile configuration
@@ -40,7 +40,7 @@ public class TilePlacementPhaseToStringConverterTest {
 
         TilePlacementPhase phase = givenIHaveTheRightTilePlacementPhase();
         whenIGetConvertTheTilePlacementPhaseToString(phase);
-        thenTheConversionShouldBe("ROCK+LAKE AT 1 -1 0 3");
+        thenTheConversionShouldBe("ROCK+LAKE AT 1 -1 0 6");
     }
 
     private TilePlacementPhase givenIHaveTheRightTilePlacementPhase() {
@@ -77,7 +77,7 @@ public class TilePlacementPhaseToStringConverterTest {
             Volcano location: 0, -2
             Then string should be:
 
-            GRASS+JUNGLE AT -2 2 0 4
+            GRASS+JUNGLE AT -2 2 0 1
 
             This is because the server's x is our y, the server's z is our x
             and the server's y is -(our x + our y), and the tile configuration
@@ -86,7 +86,7 @@ public class TilePlacementPhaseToStringConverterTest {
 
         TilePlacementPhase phase = givenIHaveAnotherRightTilePlacementPhase();
         whenIGetConvertTheTilePlacementPhaseToString(phase);
-        thenTheConversionShouldBe("GRASS+JUNGLE AT -2 2 0 4");
+        thenTheConversionShouldBe("GRASS+JUNGLE AT -2 2 0 1");
     }
 
     private TilePlacementPhase givenIHaveAnotherRightTilePlacementPhase() {
