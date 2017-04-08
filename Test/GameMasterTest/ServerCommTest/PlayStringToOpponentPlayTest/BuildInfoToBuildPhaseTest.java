@@ -77,8 +77,8 @@ public class BuildInfoToBuildPhaseTest {
         pieceMap.insertAPieceAt(new Location(-1,1), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
         pieceMap.insertAPieceAt(new Location(-2,2), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
         pieceMap.insertAPieceAt(new Location(-3,2), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER));
-        pieceMap.insertAPieceAt(new Location(-4,4), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
-        pieceMap.insertAPieceAt(new Location(-5,4), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
+        pieceMap.insertAPieceAt(new Location(-4,3), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
+        pieceMap.insertAPieceAt(new Location(-5,3), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
 
         pieceMap.insertAPieceAt(new Location(-5, 2), new GamePiece(PlayerID.PLAYER_TWO, TypeOfPiece.VILLAGER));
 
