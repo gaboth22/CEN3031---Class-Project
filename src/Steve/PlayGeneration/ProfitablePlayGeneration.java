@@ -12,41 +12,33 @@ import java.util.*;
 
 public class ProfitablePlayGeneration {
 
-    private GameBoardState gameState = null;
-    private Player currentPlayer = null;
-    private Map<Location,Hexagon> hexes = null;
-    private GamePieceMap pieces = null;
-    private List<Settlement> playerSettlements = null;
-
-    public ProfitablePlayGeneration(GameBoardState gameBoardState, PlayerID playerNum) {
-        gameState = gameBoardState;
-        if (playerNum == PlayerID.PLAYER_ONE) {
+    static public BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) throws Exception{
+        GameBoardState gameState = gameBoardState;
+        Player currentPlayer;
+        if (activePlayer == PlayerID.PLAYER_ONE) {
             currentPlayer = gameState.getPlayerOne();
         }
         else {
             currentPlayer = gameState.getPlayerTwo();
         }
-        hexes = gameBoardState.getPlacedHexagons();
-        pieces = gameState.getGamePieceMap();
-        playerSettlements = currentPlayer.getListOfSettlements();
-    }
-
-    public BuildPhase chooseBuildAction(Player player) throws Exception{
+        Map <Location, Hexagon> hexes = gameBoardState.getPlacedHexagons();
+        GamePieceMap pieces = gameState.getGamePieceMap();
+        List<Settlement> playerSettlements = currentPlayer.getListOfSettlements();
         BuildPhase nextMove = null;
-        if (player.getTigerCount() > 0) {
+        if (currentPlayer.getTigerCount() > 0) {
             nextMove = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
             if (nextMove != null) {
                 return nextMove;
             }
         }
-        if (player.getTotoroCount() > 0) {
-            nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, currentPlayer.getID());
+        if (currentPlayer.getTotoroCount() > 0) {
+            nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
         }
         if (ExpansionHelper.canExpand(currentPlayer)) {
             //nextMove = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
         }
         if (currentPlayer.getVillagerCount() > 0) {
-            nextMove = FoundSettlementHelper.pickLocationForNewSettlement(gameState, currentPlayer.getID());
+            nextMove = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
             if (nextMove != null) {
                 return nextMove;
             }
