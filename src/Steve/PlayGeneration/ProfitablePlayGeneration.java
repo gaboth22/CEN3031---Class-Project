@@ -33,6 +33,9 @@ public class ProfitablePlayGeneration {
         }
         if (currentPlayer.getTotoroCount() > 0) {
             nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
+            if (nextMove != null) {
+                return nextMove;
+            }
         }
         if (ExpansionHelper.canExpand(currentPlayer)) {
             //nextMove = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
