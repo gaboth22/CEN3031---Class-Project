@@ -25,9 +25,9 @@ public class ProfitablePlayGeneration {
         playerSettlements = currentPlayer.getListOfSettlements();
     }
 
-    public void chooseBuildAction(Player player) {
+    public void chooseBuildAction(Player player) throws Exception {
         if (player.getTotoroCount() > 0) {
-            TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces);
+            TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, player.getID());
         }
         if (player.getTigerCount() > 0) {
             TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
@@ -39,5 +39,4 @@ public class ProfitablePlayGeneration {
             //strategic villager placement?
         }
     }
-
 }
