@@ -6,6 +6,7 @@ import Location.Location;
 import Settlements.Creation.Settlement;
 import TileMap.*;
 import GamePieceMap.GamePieceMap;
+import Play.BuildPhase.BuildPhase;
 
 import java.util.*;
 
@@ -17,27 +18,39 @@ public class ProfitablePlayGeneration {
     private GamePieceMap pieces = null;
     private List<Settlement> playerSettlements = null;
 
-    public ProfitablePlayGeneration(GameBoardState gameBoardState, Player player) {
+    public ProfitablePlayGeneration(GameBoardState gameBoardState, PlayerID playerNum) {
         gameState = gameBoardState;
-        currentPlayer = player;
+        if (playerNum == PlayerID.PLAYER_ONE) {
+            currentPlayer = gameState.getPlayerOne();
+        }
+        else {
+            currentPlayer = gameState.getPlayerTwo();
+        }
         hexes = gameBoardState.getPlacedHexagons();
         pieces = gameState.getGamePieceMap();
         playerSettlements = currentPlayer.getListOfSettlements();
     }
 
-    public void chooseBuildAction(Player player) {
-        if (player.getTotoroCount() > 0) {
-            TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces);
-        }
+    public BuildPhase chooseBuildAction(Player player) {
+        BuildPhase nextMove = null;
         if (player.getTigerCount() > 0) {
-            TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
+            nextMove = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
+            if (nextMove != null) {
+                return nextMove;
+            }
+        }
+        if (player.getTotoroCount() > 0) {
+            //nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces);
         }
         if (ExpansionHelper.canExpand(currentPlayer)) {
-            ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
+            //nextMove = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
         }
         if (currentPlayer.getVillagerCount() > 0) {
-            //strategic villager placement?
+            nextMove = FoundSettlementHelper.pickLocationForNewSettlement(gameState, currentPlayer.getID());
+            if (nextMove != null) {
+                return nextMove;
+            }
         }
+        return null;
     }
-
 }
