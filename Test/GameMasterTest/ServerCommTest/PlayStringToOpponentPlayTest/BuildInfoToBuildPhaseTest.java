@@ -11,10 +11,12 @@ import Location.Location;
 import Settlements.Creation.Settlement;
 import Settlements.Creation.SettlementCreator;
 import Settlements.LargeHexagonBoard;
+import Terrain.Terrain.Terrain;
 import TileMap.Hexagon;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +107,7 @@ public class BuildInfoToBuildPhaseTest {
     @Test
     public void expansionStringShouldReturnExpansionBuildPhase() throws Exception {
         givenThatIHaveAStringToParse("EXPANDED SETTLEMENT AT 2 <NOT_USED> -2 LAKE");
-        andIHaveAPlayerID(PlayerID.PLAYER_TWO);
+        andIHaveAPlayerID(PlayerID.PLAYER_ONE);
         andIHaveAGameBoardState();
         whenIGenerateAExpandBuildPhase();
         thenAValidExpandBuildPhaseShouldBeReturned();
@@ -119,11 +121,17 @@ public class BuildInfoToBuildPhaseTest {
         Assert.assertEquals(BuildType.EXPAND, generatedBuildPhase.getBuildType());
         Assert.assertEquals(TypeOfPiece.VILLAGER, generatedBuildPhase.getTypeOfPieceToPlace());
         Assert.assertEquals(playerMakingPlay, generatedBuildPhase.getPlayerID());
+
+        Terrain terrainInMap = gameBoardState.getPlacedHexagons().get(generatedBuildPhase.getLocationToPlacePieceOn()).getTerrain();
+        Assert.assertEquals(Terrain.LAKE, terrainInMap);
     }
 
-    @Test
-    public void invalidExpansionShouldThrowAnError() {
-        givenThatIHaveAStringToParse();
+    @Test(expected = InvalidParameterException.class)
+    public void invalidExpansionShouldThrowAnError() throws Exception {
+        givenThatIHaveAStringToParse("EXPANDED SETTLEMENT AT 2 <NOT_USED> -2 ROCK");
+        andIHaveAPlayerID(PlayerID.PLAYER_ONE);
+        andIHaveAGameBoardState();
+        whenIGenerateAExpandBuildPhase();
     }
 
     //e.g "BUILT TOTORO SANCTUARY AT 0 0 1"

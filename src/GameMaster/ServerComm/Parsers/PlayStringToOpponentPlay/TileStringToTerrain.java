@@ -21,7 +21,7 @@ public class TileStringToTerrain {
             terrainToReturn = Terrain.ROCKY;
         }
         else if(string.equals("LAKE")) {
-            terrainToReturn = Terrain.JUNGLE;
+            terrainToReturn = Terrain.LAKE;
         }
         else if(string.equals("JUNGLE")) {
             terrainToReturn = Terrain.JUNGLE;

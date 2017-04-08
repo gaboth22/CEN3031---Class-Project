@@ -10,7 +10,6 @@ import Settlements.Creation.SettlementCreator;
 public class StringPlayToBuildPhaseParser {
 
     public static BuildPhase getBuildPhase(String play, GameBoardState gameBoardState, PlayerID playerID) {
-        //TODO: do
 
         BuildType buildType = StringPlayToTypeOfBuildParser.getBuildType(play);
 
@@ -23,11 +22,10 @@ public class StringPlayToBuildPhaseParser {
             buildPhase = BuildInfoToBuildPhase.getExpandPhase(play, gameBoardState, playerID);
         }
         else if(buildType.equals(BuildType.PLACE_TOTORO)) {
-            buildPhase = BuildInfoToBuildPhase.getPlaceTotoroPhase(play, playerID);
+            buildPhase = BuildInfoToPlaceTotoro.getPlaceTotoroPhase(play, playerID);
         }
         else {
-            //e.g "BUILT TIGER PLAYGROUND AT 0 0 1"
-            buildPhase = BuildInfoToBuildPhase.getPlaceTigerPhase(play, playerID);
+            buildPhase = BuildInfoToPlaceTiger.getPlaceTigerPhase(play, playerID);
         }
 
         return buildPhase;
