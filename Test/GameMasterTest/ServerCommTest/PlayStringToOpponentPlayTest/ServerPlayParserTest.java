@@ -4,6 +4,8 @@ import GameBoard.GameBoardStateBuilder.GameBoardStateBuilder;
 import GameBoard.GameBoardStateBuilder.GameBoardStateBuilderImpl;
 import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.ServerPlayParser;
 import GameBoard.*;
+import GamePieceMap.GamePiece;
+import GamePieceMap.TypeOfPiece;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementType;
 import Play.BuildPhase.*;
@@ -23,8 +25,14 @@ public class ServerPlayParserTest {
     private String play;
 
     @Before
-    public void setUpGameBoard() {
+    public void setUpGameBoard() throws Exception {
         gameBoard = new GameBoardImpl();
+
+        GamePiece toPlace = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER);
+        BuildPhase buildPhase = new BuildPhase(toPlace, new Location(1,-1));
+        buildPhase.setBuildType(BuildType.FOUND);
+        gameBoard.doBuildPhase(buildPhase);
+
         gbsb = new GameBoardStateBuilderImpl();
         gameBoardState = gbsb.buildGameBoardState(gameBoard);
     }
@@ -83,7 +91,7 @@ public class ServerPlayParserTest {
 
     @Test
     public void theBuildPhaseShouldBeExpand() {
-        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 5 EXPANDED SETTLEMENT AT 0 0 1 GRASS");
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 5 EXPANDED SETTLEMENT AT -1 0 1 GRASS");
         PlayerID player = PlayerID.PLAYER_ONE;
         BuildPhase buildPhase = ServerPlayParser.getServerPiecePlacement(play, gameBoardState, player);
 
@@ -100,7 +108,7 @@ public class ServerPlayParserTest {
     }
 
     @Test
-    public void theBuildPhaseShouldBePlacedTigePlayground() {
+    public void theBuildPhaseShouldBePlacedTigerPlayground() {
         givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 5 BUILT TOTORO SANCTUARY AT 0 0 1");
         PlayerID player = PlayerID.PLAYER_ONE;
         BuildPhase buildPhase = ServerPlayParser.getServerPiecePlacement(play, gameBoardState, player);
