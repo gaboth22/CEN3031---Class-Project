@@ -27,4 +27,21 @@ public class SplitParserTest {
         String testString = null;
         String[] split = Split.byPlus(testString);
     }
+
+    @Test
+    public void splitBySpaceShouldNotSplitWhenNoSpacesPresent() {
+        String testString = "ThereIsNoWayThisStringWillSplit";
+        String[] split = Split.byWhiteSpace(testString);
+        Assert.assertEquals(testString, split[0]);
+    }
+
+    @Test
+    public void splitBySpaceShouldSplitCorrectly() {
+        String testString = "abcd abcd abcd abcd abcd abcd abcd abcd";
+        final int EXPECTED_NUMBER_OF_SPLITS = 8;
+        String[] split = Split.byWhiteSpace(testString);
+        for(int i = 0; i < EXPECTED_NUMBER_OF_SPLITS; i++) {
+            Assert.assertEquals("abcd", split[i]);
+        }
+    }
 }

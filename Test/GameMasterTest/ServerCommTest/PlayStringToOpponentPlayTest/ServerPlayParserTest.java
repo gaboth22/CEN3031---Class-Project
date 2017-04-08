@@ -6,6 +6,7 @@ import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.ServerPlayParser;
 import GameBoard.*;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementType;
+import Play.BuildPhase.*;
 import Player.PlayerID;
 import Terrain.Terrain.Terrain;
 import Tile.Tile.Tile;
@@ -19,6 +20,7 @@ public class ServerPlayParserTest {
     private GameBoard gameBoard;
     private GameBoardState gameBoardState;
     private GameBoardStateBuilder gbsb;
+    private String play;
 
     @Before
     public void setUpGameBoard() {
@@ -29,7 +31,7 @@ public class ServerPlayParserTest {
 
     @Test
     public void theTilePlacementShouldBeANukeIfTheTileIsPlacedAboveLevelOne() {
-        String play = "PLACED GRASS+ROCK AT 0 0 0 5 FOUNDED SETTLEMENT AT 1 0 1";
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 0 0 0 5 FOUNDED SETTLEMENT AT 1 0 1");
         PlayerID playerID = PlayerID.PLAYER_ONE;
         TilePlacementPhase tilePlacementPhase = ServerPlayParser.getServerTilePlacement(play, gameBoardState, playerID);
         Assert.assertEquals(TilePlacementType.NUKE, tilePlacementPhase.getTilePlacementType());
@@ -37,7 +39,7 @@ public class ServerPlayParserTest {
 
     @Test
     public void theTilePlacementShouldBeASimplePlacementIfTheTileIsPlacedAboveLevelOne() {
-        String play = "PLACED GRASS+ROCK AT 1 0 0 6 FOUNDED SETTLEMENT AT 1 0 1";
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 6 FOUNDED SETTLEMENT AT 1 0 1");
         PlayerID playerID = PlayerID.PLAYER_ONE;
         TilePlacementPhase tilePlacementPhase = ServerPlayParser.getServerTilePlacement(play, gameBoardState, playerID);
         Assert.assertEquals(TilePlacementType.SIMPLE_PLACEMENT, tilePlacementPhase.getTilePlacementType());
@@ -45,7 +47,7 @@ public class ServerPlayParserTest {
 
     @Test
     public void theTilePlacementShouldCreateTheCorrectTile() {
-        String play = "PLACED GRASS+ROCK AT 1 0 0 6 FOUNDED SETTLEMENT AT 1 0 1";
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 6 FOUNDED SETTLEMENT AT 1 0 1");
         PlayerID playerID = PlayerID.PLAYER_TWO;
         TilePlacementPhase tilePlacementPhase = ServerPlayParser.getServerTilePlacement(play, gameBoardState, playerID);
         Tile tileToPlace = tilePlacementPhase.getTileToPlace();
@@ -63,10 +65,50 @@ public class ServerPlayParserTest {
 
     @Test
     public void thePlayerShouldBeSetCorrectly() {
-        String play = "PLACED GRASS+ROCK AT 1 0 0 6 FOUNDED SETTLEMENT AT 1 0 1";
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 6 FOUNDED SETTLEMENT AT 1 0 1");
         PlayerID playerID = PlayerID.PLAYER_TWO;
         TilePlacementPhase tilePlacementPhase = ServerPlayParser.getServerTilePlacement(play, gameBoardState, playerID);
 
         Assert.assertEquals(playerID, tilePlacementPhase.getPlayerID());
+    }
+
+    @Test
+    public void theBuildPhaseShouldBeFound() {
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 5 FOUNDED SETTLEMENT AT 1 0 1");
+        PlayerID player = PlayerID.PLAYER_ONE;
+        BuildPhase buildPhase = ServerPlayParser.getServerPiecePlacement(play, gameBoardState, player);
+
+        Assert.assertEquals(BuildType.FOUND, buildPhase.getBuildType());
+    }
+
+    @Test
+    public void theBuildPhaseShouldBeExpand() {
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 5 EXPANDED SETTLEMENT AT 0 0 1 GRASS");
+        PlayerID player = PlayerID.PLAYER_ONE;
+        BuildPhase buildPhase = ServerPlayParser.getServerPiecePlacement(play, gameBoardState, player);
+
+        Assert.assertEquals(BuildType.EXPAND, buildPhase.getBuildType());
+    }
+
+    @Test
+    public void theBuildPhaseShouldBeBuildTotoroSanctuary() {
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 5 BUILT TOTORO SANCTUARY AT 0 0 1");
+        PlayerID player = PlayerID.PLAYER_ONE;
+        BuildPhase buildPhase = ServerPlayParser.getServerPiecePlacement(play, gameBoardState, player);
+
+        Assert.assertEquals(BuildType.PLACE_TOTORO, buildPhase.getBuildType());
+    }
+
+    @Test
+    public void theBuildPhaseShouldBePlacedTigePlayground() {
+        givenIHaveAPlay("PLACED GRASS+ROCK AT 1 0 0 5 BUILT TOTORO SANCTUARY AT 0 0 1");
+        PlayerID player = PlayerID.PLAYER_ONE;
+        BuildPhase buildPhase = ServerPlayParser.getServerPiecePlacement(play, gameBoardState, player);
+
+        Assert.assertEquals(BuildType.PLACE_TOTORO, buildPhase.getBuildType());
+    }
+
+    private void givenIHaveAPlay(String play) {
+        this.play = play;
     }
 }

@@ -21,8 +21,7 @@ public class BasicParser {
     }
 
     private static String getSubstringAtIndex(String str, int index) throws Exception {
-        String BY_WHITE_SPACE = " ";
-        String[] stringComponents = str.split(BY_WHITE_SPACE);
+        String[] stringComponents = Split.byWhiteSpace(str);
         return stringComponents[index];
     }
 
