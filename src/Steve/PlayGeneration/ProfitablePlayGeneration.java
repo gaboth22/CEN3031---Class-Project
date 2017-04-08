@@ -40,7 +40,7 @@ public class ProfitablePlayGeneration {
             }
         }
         if (player.getTotoroCount() > 0) {
-            //nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces);
+            //nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, currentPlayer.getID());
         }
         if (ExpansionHelper.canExpand(currentPlayer)) {
             //nextMove = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
