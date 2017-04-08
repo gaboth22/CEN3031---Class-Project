@@ -31,7 +31,7 @@ public class ProfitablePlayGeneration {
         playerSettlements = currentPlayer.getListOfSettlements();
     }
 
-    public BuildPhase chooseBuildAction(Player player) {
+    public BuildPhase chooseBuildAction(Player player) throws Exception{
         BuildPhase nextMove = null;
         if (player.getTigerCount() > 0) {
             nextMove = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
@@ -40,7 +40,7 @@ public class ProfitablePlayGeneration {
             }
         }
         if (player.getTotoroCount() > 0) {
-            //nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, currentPlayer.getID());
+            nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, currentPlayer.getID());
         }
         if (ExpansionHelper.canExpand(currentPlayer)) {
             //nextMove = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
