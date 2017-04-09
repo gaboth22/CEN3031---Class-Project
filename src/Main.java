@@ -7,12 +7,12 @@ import Steve.PlayGeneration.ProfitablePlayGeneration;
 import Steve.PlayGeneration.SimplePlayGenerator;
 
 public class Main {
-    private static final String SERVER_IP = "127.0.0.1";
-    private static final int SERVER_PORT = 8000;
+    private static final String SERVER_IP = "192.168.1.142";
+    private static final int SERVER_PORT = 6969;
 
-    private static final String TOURNAMENT_PASSWORD = "TPASS :D:D";
-    private static final String USERNAME = "PEPE";
-    private static final String PASSWORD = "UF_ROCKS";
+    private static final String TOURNAMENT_PASSWORD = "heygang";
+    private static final String USERNAME = "P";
+    private static final String PASSWORD = "P";
 
 
     public static void main(String[] args) throws Exception {

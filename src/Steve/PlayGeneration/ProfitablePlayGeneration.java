@@ -33,6 +33,8 @@ public class ProfitablePlayGeneration implements PlayGenerator {
     public BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) {
         hexes = gameBoardState.getPlacedHexagons();
 
+        gameState = gameBoardState;
+
         if(activePlayer == PlayerID.PLAYER_ONE)
             playerSettlements = gameBoardState.getPlayerOne().getListOfSettlements();
         else
@@ -47,6 +49,7 @@ public class ProfitablePlayGeneration implements PlayGenerator {
                 return buildPhase;
             }
         }
+
         if (currentPlayer.getTigerCount() > 0) {
             buildPhase = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
             if (buildPhase != null) {
@@ -60,12 +63,14 @@ public class ProfitablePlayGeneration implements PlayGenerator {
                 return buildPhase;
             }
         }
+
         if (currentPlayer.getVillagerCount() > 0) {
             buildPhase = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
             if (buildPhase != null) {
                 return buildPhase;
             }
         }
+
         return null;
     }
 

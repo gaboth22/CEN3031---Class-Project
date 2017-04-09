@@ -10,17 +10,11 @@ import Steve.PlayGeneration.ProfitablePlayGeneration;
 public class Steve {
 
     private PlayerID playingAs;
-
     private PlayGenerator playGenerator;
-
     private GameBoardState currentGameBoardState;
     private StevePlayType requestedPlayType;
-
     private BiHexTileStructure tileToPlace;
-
     private Object lastValidPlay;
-
-    private ProfitablePlayGeneration playGeneration;
 
     public Steve() {
 
@@ -34,14 +28,7 @@ public class Steve {
     }
 
     public void setPlayGenerator(PlayGenerator generator) {
-        if(playingAs == PlayerID.PLAYER_ONE){
-            playGeneration = new ProfitablePlayGeneration();
-        }
-        else{
-            playGeneration = new ProfitablePlayGeneration();
-        }
-
-        this.playGenerator = playGeneration;
+        playGenerator = generator;
     }
 
     public void setTileToPlace(BiHexTileStructure tileToPlace) {
@@ -49,10 +36,10 @@ public class Steve {
     }
 
     public TilePlacementPhase generateTilePlay(GameBoardState state) {
-        //TilePlacementPhase tilePlacementPhase = playGenerator.generateTilePlay(state,playingAs,tileToPlace);
-        //return tilePlacementPhase;
+        TilePlacementPhase tilePlacementPhase = playGenerator.generateTilePlay(state,playingAs,tileToPlace);
+        return tilePlacementPhase;
 
-        return getSafeTilePhase(state);
+        //return getSafeTilePhase(state);
     }
 
     public TilePlacementPhase getSafeTilePhase(GameBoardState state) {
@@ -60,9 +47,10 @@ public class Steve {
     }
 
     public BuildPhase generateBuildPlay(GameBoardState state) {
-//        BuildPhase buildPhase = playGenerator.generateBuildPlay(state, playingAs);
-//        return buildPhase;
-        return getSafeBuildPhase(state);
+        BuildPhase buildPhase = playGenerator.generateBuildPlay(state, playingAs);
+        return buildPhase;
+
+        //return getSafeBuildPhase(state);
     }
 
     public BuildPhase getSafeBuildPhase(GameBoardState state) {

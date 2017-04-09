@@ -17,9 +17,15 @@ public class FoundSettlementHelper {
     static public BuildPhase pickLocationForNewSettlement(GameBoardState gameState, PlayerID currentPlayer) {
         List<Settlement> allOpponentSettlements = null;
         if (currentPlayer == PlayerID.PLAYER_ONE) {
+            if(gameState.getPlayerTwo().getListOfSettlements().isEmpty())
+                return null;
+
             allOpponentSettlements = (gameState.getPlayerTwo()).getListOfSettlements();
         }
         else {
+            if(gameState.getPlayerOne().getListOfSettlements().isEmpty())
+                return null;
+
             allOpponentSettlements = (gameState.getPlayerOne()).getListOfSettlements();
         }
         Settlement opponentSettlement = null;

@@ -53,8 +53,8 @@ public class StrategicTilePlacement {
                             for(int k = 0; k < hex1.length; k++) {
                                 for(int m = 0; m < hex2.length; m++) {
                                     if(hex1[k].equals(hex2[m]) && !hexagonMap.containsKey(hex1[k])) {
-                                        leftHex = adjacentLocs[j-1];
-                                        rightHex = adjacentLocs[j];
+                                        leftHex = adjacentLocs[j];
+                                        rightHex = adjacentLocs[j-1];
                                         firstHex = hex1[k];
 
                                         foundHexLocations = true;
