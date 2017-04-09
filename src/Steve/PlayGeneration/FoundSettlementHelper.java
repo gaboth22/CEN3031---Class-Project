@@ -50,7 +50,7 @@ public class FoundSettlementHelper {
                 boolean isValidLocation = hexes.containsKey(currLocation) &&
                         !pieces.isThereAPieceAt(currLocation) &&
                         (hexes.get(currLocation)).getTerrain() != Terrain.VOLCANO &&
-                        (hexes.get(i)).getHeight() == 1;
+                        (hexes.get(currLocation)).getHeight() == 1;
 
                 if (isValidLocation) {
                     return currLocation;
