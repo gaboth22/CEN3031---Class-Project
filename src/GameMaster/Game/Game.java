@@ -115,8 +115,15 @@ public class Game extends Thread {
                     GameBoardState currentGameState = getCurrentGameState();
                     BiHexTileStructure tileForSteveToPlace = BiHexTileStructureBuilderFromString.getBiHexFromString(playInfoForSteve[2]);
                     steve.setTileToPlace(tileForSteveToPlace);
-                    TilePlacementPhase tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
-                    BuildPhase buildPhase = steve.getSafeBuildPhase(currentGameState);
+
+                    TilePlacementPhase tilePlacementPhase = steve.generateTilePlay(currentGameState);
+                    BuildPhase buildPhase = steve.generateBuildPlay(currentGameState);
+                    if(tilePlacementPhase == null){
+                        tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
+                    }
+                    if(buildPhase == null){
+                        buildPhase = steve.getSafeBuildPhase(currentGameState);
+                    }
 
                     if(buildPhase != null) {
 
