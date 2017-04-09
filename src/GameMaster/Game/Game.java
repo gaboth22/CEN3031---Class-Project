@@ -7,6 +7,7 @@ import GameBoard.*;
 import GameBoard.GameBoardStateBuilder.*;
 import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.ServerPlayParser;
 import GameMaster.ServerComm.Parsers.StevePlayParser;
+import GamePieceMap.*;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
@@ -15,12 +16,14 @@ import Player.PlayerID;
 import Receiver.Receiver;
 import Sender.Sender;
 import Sender.SenderData.SenderData;
+import Settlements.Creation.Settlement;
 import Steve.*;
 import Steve.PlayGeneration.PlayGenerator;
 import Terrain.Terrain.Terrain;
 import TileMap.Hexagon;
-
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Game extends Thread {
 
@@ -128,7 +131,8 @@ public class Game extends Thread {
                         }
 
                         if (runningGui) {
-                            updateGui(tilePlacementPhase, buildPhase);
+                            updateGuiWithTilePlacement(tilePlacementPhase);
+                            updateGuiWithBuildPhase(buildPhase);
                         }
                     }
 
@@ -147,12 +151,51 @@ public class Game extends Thread {
         }
     }
 
-    private void updateGui(TilePlacementPhase tilePlacementPhase, BuildPhase buildPhase) {
+    private void updateGuiWithTilePlacement(TilePlacementPhase tilePlacementPhase) {
         tilePlacementStr = adapter.adapt(tilePlacementPhase);
-        buildPhaseStr = adapter.adapt(buildPhase);
-
         guiThread.updateGui(tilePlacementStr);
+    }
+
+    private void updateGuiWithBuildPhase(BuildPhase bPhase) {
+        buildPhaseStr = adapter.adapt(bPhase);
         guiThread.updateGui(buildPhaseStr);
+
+        if(bPhase.getBuildType() == BuildType.EXPAND) {
+            List<Settlement> playerSettlements;
+            String playerAsString = null;
+
+            if(bPhase.getPlayerID() == PlayerID.PLAYER_ONE) {
+                playerAsString = "1";
+                playerSettlements = gameBoard.getPlayerOneSettlements();
+            }
+            else {
+                playerAsString = "2";
+                playerSettlements = gameBoard.getPlayerTwoSettlements();
+            }
+
+            Location expandedOn = bPhase.getLocationToPlacePieceOn();
+
+            Settlement set = null;
+
+            for(Settlement s : playerSettlements) {
+                if(s.locationIsInSettlement(expandedOn))
+                    set = s;
+            }
+
+            Set<Location> locationsInSettlement = set.getSetOfLocationsInSettlement();
+            GamePieceMap pieceMap = gameBoard.getGamePieceMap();
+
+            for(Location loc : locationsInSettlement) {
+                if(pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TOTORO &&
+                    pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TIGER) {
+
+                    String x = Integer.toString(loc.getX());
+                    String y = Integer.toString(loc.getY());
+
+                    guiThread.updateGui(playerAsString + " piece vi " + x + " " + y);
+                }
+            }
+        }
     }
 
     private void sendStevePlayToGameMaster(BuildPhase steveBuildPhase,
@@ -210,11 +253,16 @@ public class Game extends Thread {
         PlayerID opponentID = getOpponentId();
         GameBoardState gameBoardState = getCurrentGameState();
         BuildPhase build = ServerPlayParser.getServerPiecePlacement(opponentPlay, gameBoardState, opponentID);
-        try{
+        try {
+
+            ///
+             //  updateGuiWithBuildPhase(build);
+            ///
+
             gameBoard.serverDoBuildPhase(build);
         }
         catch(Exception ex) {
-            Debug.print(ex.getMessage(), DebugLevel.ERROR);
+           Debug.print(ex.getMessage(), DebugLevel.ERROR);
         }
         opponentPlay = null;
     }
@@ -223,6 +271,10 @@ public class Game extends Thread {
         PlayerID opponentID = getOpponentId();
         TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay, getCurrentGameState(), opponentID);
         try{
+            ///
+            //    updateGuiWithTilePlacement(placement);
+            ///
+
             gameBoard.serverDoTilePlacementPhase(placement);
         }
         catch(Exception ex) {
