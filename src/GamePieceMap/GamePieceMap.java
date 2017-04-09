@@ -27,7 +27,7 @@ public class GamePieceMap {
         if(!isThereAPieceAt(location))
             mapContainingPiecesAtLocations.put(location, gamePiece);
         else
-            throw new LocationNotEmptyException();
+            throw new LocationNotEmptyException(this.getClass() + ": Location: " + location + " already has piece");
     }
 
     public void removeAPieceAt(Location location){
