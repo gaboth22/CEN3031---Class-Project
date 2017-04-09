@@ -178,8 +178,10 @@ public class Game extends Thread {
             Settlement set = null;
 
             for(Settlement s : playerSettlements) {
-                if(s.locationIsInSettlement(expandedOn))
+                if(s.locationIsInSettlement(expandedOn)) {
                     set = s;
+                    break;
+                }
             }
 
             Set<Location> locationsInSettlement = set.getSetOfLocationsInSettlement();
@@ -189,10 +191,7 @@ public class Game extends Thread {
                 if(pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TOTORO &&
                     pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TIGER) {
 
-                    String x = Integer.toString(loc.getX());
-                    String y = Integer.toString(loc.getY());
-
-                    guiThread.updateGui(playerAsString + " piece vi " + x + " " + y);
+                    guiThread.updateGui(playerAsString + " piece vi " + loc.getX() + " " + loc.getX());
                 }
             }
         }
@@ -255,11 +254,10 @@ public class Game extends Thread {
         BuildPhase build = ServerPlayParser.getServerPiecePlacement(opponentPlay, gameBoardState, opponentID);
         try {
 
-            ///
-             //  updateGuiWithBuildPhase(build);
-            ///
-
             gameBoard.serverDoBuildPhase(build);
+            ///
+               updateGuiWithBuildPhase(build);
+            ///
         }
         catch(Exception ex) {
            Debug.print(ex.getMessage(), DebugLevel.ERROR);
@@ -271,11 +269,10 @@ public class Game extends Thread {
         PlayerID opponentID = getOpponentId();
         TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay, getCurrentGameState(), opponentID);
         try{
-            ///
-            //    updateGuiWithTilePlacement(placement);
-            ///
-
             gameBoard.serverDoTilePlacementPhase(placement);
+            ///
+                updateGuiWithTilePlacement(placement);
+            ///
         }
         catch(Exception ex) {
             Debug.print(ex.getMessage(), DebugLevel.ERROR);
