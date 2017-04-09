@@ -9,11 +9,16 @@ import Play.BuildPhase.BuildType;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementType;
 import Player.PlayerID;
+import Terrain.Terrain.Terrain;
 import Tile.Tile.Tile;
+import Tile.Tile.TileImpl;
 import TileBuilder.TileBuilder;
 import Location.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 
 
@@ -44,62 +49,96 @@ public class TigerLocationHelperTest {
     public void shouldPlaceTiger() throws Exception {
         placeLevelOneTiles();
         placeHigherLevelTiles();
-        foundSettlement(new Location (2,-1));
+        foundSettlement(new Location (1,-1));
 
         phase = TigerLocationHelper.pickTigerLocation(gameBoard.getPlacedHexagons(), gameBoard.getPlayerOneSettlements(), gameBoard.getGamePieceMap());
 
-        assertTrue(phase.getLocationToPlacePieceOn() == new Location(1,-1));
+        assertTrue(phase.getLocationToPlacePieceOn().equals(new Location(1,-2)));
     }
 
     private void placeLevelOneTiles() throws Exception{
-        Location l1 = new Location(0, -2);
-        Location l2 = new Location(0, -1);
-        Location l3 = new Location(-1, -1);
-        placeATileOnLevelOne(l1, l2, l3);
 
-        l1 = new Location(1, -2);
-        l2 = new Location(1,-1);
-        l3 = new Location(2,-2);
-        placeATileOnLevelOne(l1, l2, l3);
+        Terrain[] terrains = new Terrain[] {
+                Terrain.VOLCANO,
+                Terrain.GRASSLANDS,
+                Terrain.GRASSLANDS
+        };
+        Location[] locations1 = new Location[]{
+                new Location(0, -2),
+                new Location(-1, -1),
+                new Location(0, -1)
+        };
 
-        l1 = new Location(2,0);
-        l2 = new Location(2,-1);
-        l3 = new Location(3,-1);
-        placeATileOnLevelOne(l1, l2, l3);
+        placeATileOnLevelOne(new TileImpl(Arrays.asList(terrains), Arrays.asList(locations1)));
+
+        Location[] locations2 = new Location[]{
+                new Location(1, -2),
+                new Location(2,-3),
+                new Location(1,-3)
+        };
+
+        placeATileOnLevelOne(new TileImpl(Arrays.asList(terrains), Arrays.asList(locations2)));
+
+        Location[] locations3 = new Location[]{
+                new Location(2,0),
+                new Location(3,-1),
+                new Location(2,-1)
+        };
+
+        placeATileOnLevelOne(new TileImpl(Arrays.asList(terrains), Arrays.asList(locations3)));
+
     }
 
     private  void placeHigherLevelTiles() throws Exception {
-        Location l1 = new Location(0, 0);
-        Location l2 = new Location(-1, 0);
-        Location l3 = new Location(0, -1);
-        placeTileAboveLevelOne(l1, l2, l3);
+        Terrain[] terrains = new Terrain[] {
+                Terrain.VOLCANO,
+                Terrain.GRASSLANDS,
+                Terrain.GRASSLANDS
+        };
 
-        l1 = new Location(0, -2);
-        l2 = new Location(1,-1);
-        l3 = new Location(1,-2);
-        placeTileAboveLevelOne(l1, l2, l3);
+        Location[] locations1 = new Location[]{
+                new Location(0, 0),
+                new Location(0, -1),
+                new Location(-1, 0)
+        };
 
-        l1 = new Location(2,0);
-        l2 = new Location(1,-1);
-        l3 = new Location(1,0);
-        placeTileAboveLevelOne(l1, l2, l3);
+        placeTileAboveLevelOne(new TileImpl(Arrays.asList(terrains), Arrays.asList(locations1)));
 
-        l1 = new Location(0,-2);
-        l2 = new Location(1,-1);
-        l3 = new Location(1, -2);
-        placeTileAboveLevelOne(l1, l2, l3);
+        Location[] locations2 = new Location[]{
+                new Location(0, -2),
+                new Location(1,-2),
+                new Location(1,-3)
+        };
+
+        placeTileAboveLevelOne(new TileImpl(Arrays.asList(terrains), Arrays.asList(locations2)));
+
+        Location[] locations3 = new Location[]{
+                new Location(2,0),
+                new Location(2,-1),
+                new Location(1,0)
+        };
+
+        placeTileAboveLevelOne(new TileImpl(Arrays.asList(terrains), Arrays.asList(locations3)));
+
+        Location[] locations4 = new Location[]{
+                new Location(0,-2),
+                new Location(0,-1),
+                new Location(1, -2)
+
+        };
+
+        placeTileAboveLevelOne(new TileImpl(Arrays.asList(terrains), Arrays.asList(locations4)));
+
     }
 
-    private void placeATileOnLevelOne(Location l1, Location l2, Location l3) throws Exception {
-        Tile adjacentTile = tileBuilder.getTileWithLocations(l1, l2, l3);
-        TilePlacementPhase tilePlacementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, adjacentTile);
+    private void placeATileOnLevelOne(Tile tile) throws Exception {
+        TilePlacementPhase tilePlacementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, tile);
         tilePlacementPhase.setTilePlacementType(TilePlacementType.SIMPLE_PLACEMENT);
         gameBoard.doTilePlacementPhase(tilePlacementPhase);
     }
 
-    private void placeTileAboveLevelOne(Location l1, Location l2, Location l3) throws Exception {
-        Tile adjacentTile = tileBuilder.getTileWithLocations(l1, l2, l3);
-        TilePlacementPhase tilePlacementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, adjacentTile);
+    private void placeTileAboveLevelOne(Tile tile) throws Exception {
+        TilePlacementPhase tilePlacementPhase = new TilePlacementPhase(PlayerID.PLAYER_ONE, tile);
         tilePlacementPhase.setTilePlacementType(TilePlacementType.NUKE);
         gameBoard.doTilePlacementPhase(tilePlacementPhase);
     }

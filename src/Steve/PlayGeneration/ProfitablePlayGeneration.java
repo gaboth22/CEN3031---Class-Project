@@ -36,18 +36,19 @@ public class ProfitablePlayGeneration implements PlayGenerator {
     @Override
     public BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) {
 
-        if (currentPlayer.getTigerCount() > 0) {
-            buildPhase = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
-            if (buildPhase != null) {
-                return buildPhase;
-            }
-        }
         if (currentPlayer.getTotoroCount() > 0) {
             buildPhase = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
             if (buildPhase != null) {
                 return buildPhase;
             }
         }
+        if (currentPlayer.getTigerCount() > 0) {
+            buildPhase = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
+            if (buildPhase != null) {
+                return buildPhase;
+            }
+        }
+
         if (ExpansionHelper.canExpand(currentPlayer)) {
             buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
             if(buildPhase != null){
