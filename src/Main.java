@@ -3,6 +3,7 @@ import GameMaster.Game.Game;
 import GameMaster.GameMaster;
 import GameMaster.ServerComm.ServerClient;
 import Player.PlayerID;
+import Steve.PlayGeneration.ProfitablePlayGeneration;
 import Steve.PlayGeneration.SimplePlayGenerator;
 
 public class Main {
@@ -18,10 +19,12 @@ public class Main {
         Debug.enableAllDebugLevels();
         Debug.enableLogFile("log.log");
         ServerClient client = new ServerClient(SERVER_IP, SERVER_PORT);
-        Game gameOne = new Game(PlayerID.PLAYER_ONE, new SimplePlayGenerator());
+        Game gameOne = new Game(PlayerID.PLAYER_ONE, new ProfitablePlayGeneration());
         gameOne.runWithGui();
-        Game gameTwo = new Game(PlayerID.PLAYER_TWO, new SimplePlayGenerator());
+
+        Game gameTwo = new Game(PlayerID.PLAYER_TWO, new ProfitablePlayGeneration());
         gameTwo.runWithGui();
+
         GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
         gameMaster.setTournamentPassword(TOURNAMENT_PASSWORD);
         gameMaster.setUsername(USERNAME);

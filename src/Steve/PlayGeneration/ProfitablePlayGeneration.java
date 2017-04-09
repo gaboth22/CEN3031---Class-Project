@@ -24,17 +24,22 @@ public class ProfitablePlayGeneration implements PlayGenerator {
 
     private SimplePlayGenerator simplePlayGenerator;
 
-    public ProfitablePlayGeneration(GameBoardState gameBoardState, Player player) {
-        gameState = gameBoardState;
-        currentPlayer = player;
-        hexes = gameBoardState.getPlacedHexagons();
-        pieces = gameState.getGamePieceMap();
-        playerSettlements = currentPlayer.getListOfSettlements();
+    public ProfitablePlayGeneration() {
+
         simplePlayGenerator = new SimplePlayGenerator();
     }
 
     @Override
     public BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) {
+        hexes = gameBoardState.getPlacedHexagons();
+
+        if(activePlayer == PlayerID.PLAYER_ONE)
+            playerSettlements = gameBoardState.getPlayerOne().getListOfSettlements();
+        else
+            playerSettlements = gameBoardState.getPlayerTwo().getListOfSettlements();
+
+        pieces = gameBoardState.getGamePieceMap();
+
 
         if (currentPlayer.getTotoroCount() > 0) {
             buildPhase = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
