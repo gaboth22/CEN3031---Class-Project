@@ -170,7 +170,7 @@ public class GameMaster extends Thread {
     private void performOtherPlayersPlay(String messageFromServer) {
 
         String gameId = GameIdParser.getGameIdForOtherPlayersMove(messageFromServer);
-            String play = OtherPlayersPlayParser.getPlay(messageFromServer);
+        String play = OtherPlayersPlayParser.getPlay(messageFromServer);
 
         if (gameId.equals("A"))
             gameOne.enforceOpponentPlay(play);

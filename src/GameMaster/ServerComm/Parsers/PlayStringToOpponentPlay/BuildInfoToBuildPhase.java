@@ -76,8 +76,7 @@ public class BuildInfoToBuildPhase {
             }
         }
 
-        // Would this be the correct type of exception?
-        throw new InvalidParameterException("The Terrain " + terrain.name() + " is not adjacent to the given settlement");
+        throw new InvalidParameterException("There exists no terrain of type " + terrain.name() + " that is adjacent to the given settlement");
     }
 
     private static Player getPlayerFromGameState(GameBoardState gameBoardState, PlayerID playerID) {
