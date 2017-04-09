@@ -21,6 +21,7 @@ public class Main {
         Game gameOne = new Game(PlayerID.PLAYER_ONE, new SimplePlayGenerator());
         gameOne.runWithGui();
         Game gameTwo = new Game(PlayerID.PLAYER_TWO, new SimplePlayGenerator());
+        gameTwo.runWithGui();
         GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
         gameMaster.setTournamentPassword(TOURNAMENT_PASSWORD);
         gameMaster.setUsername(USERNAME);
