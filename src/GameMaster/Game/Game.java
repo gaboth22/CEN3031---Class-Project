@@ -189,9 +189,13 @@ public class Game extends Thread {
 
             for(Location loc : locationsInSettlement) {
                 if(pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TOTORO &&
-                    pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TIGER) {
+                    pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TIGER &&
+                    !loc.equals(expandedOn)) {
 
-                    guiThread.updateGui(playerAsString + " piece vi " + loc.getX() + " " + loc.getX());
+                    String toGui = playerAsString + " piece vi " + loc.getX() + " " + loc.getY();
+                    System.out.println(toGui);
+
+                    guiThread.updateGui(toGui);
                 }
             }
         }
@@ -255,9 +259,8 @@ public class Game extends Thread {
         try {
 
             gameBoard.serverDoBuildPhase(build);
-            ///
+            if(runningGui)
                updateGuiWithBuildPhase(build);
-            ///
         }
         catch(Exception ex) {
            Debug.print(ex.getMessage(), DebugLevel.ERROR);
@@ -270,9 +273,8 @@ public class Game extends Thread {
         TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay, getCurrentGameState(), opponentID);
         try{
             gameBoard.serverDoTilePlacementPhase(placement);
-            ///
+            if(runningGui)
                 updateGuiWithTilePlacement(placement);
-            ///
         }
         catch(Exception ex) {
             Debug.print(ex.getMessage(), DebugLevel.ERROR);
