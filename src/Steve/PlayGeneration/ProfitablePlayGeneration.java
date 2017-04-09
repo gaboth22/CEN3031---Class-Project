@@ -72,6 +72,11 @@ public class ProfitablePlayGeneration implements PlayGenerator {
 
         //TO-DO Gabriels Nuking Tile method will go here.
         //if(GabrielsNukingPhase == null) {
+            if(playerID == PlayerID.PLAYER_ONE)
+                currentPlayer = gameBoardState.getPlayerOne();
+            else
+                currentPlayer = gameBoardState.getPlayerTwo();
+
             tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, currentPlayer, tileToPlace);
         //}
 
