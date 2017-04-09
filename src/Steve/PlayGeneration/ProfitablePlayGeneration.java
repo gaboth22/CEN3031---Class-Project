@@ -1,51 +1,93 @@
 package Steve.PlayGeneration;
 
 import GameBoard.GameBoardState;
+import Play.BuildPhase.BuildPhase;
+import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.*;
 import Location.Location;
 import Settlements.Creation.Settlement;
+import Steve.BiHexTileStructure;
 import TileMap.*;
 import GamePieceMap.GamePieceMap;
 import Play.BuildPhase.BuildPhase;
 
 import java.util.*;
 
-public class ProfitablePlayGeneration {
+public class ProfitablePlayGeneration implements PlayGenerator {
 
-    static public BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) throws Exception{
-        GameBoardState gameState = gameBoardState;
-        Player currentPlayer;
-        if (activePlayer == PlayerID.PLAYER_ONE) {
-            currentPlayer = gameState.getPlayerOne();
-        }
-        else {
-            currentPlayer = gameState.getPlayerTwo();
-        }
-        Map <Location, Hexagon> hexes = gameBoardState.getPlacedHexagons();
-        GamePieceMap pieces = gameState.getGamePieceMap();
-        List<Settlement> playerSettlements = currentPlayer.getListOfSettlements();
-        BuildPhase nextMove = null;
+    private GameBoardState gameState = null;
+    private Player currentPlayer = null;
+    private Map<Location,Hexagon> hexes = null;
+    private GamePieceMap pieces = null;
+    private List<Settlement> playerSettlements = null;
+
+    private BuildPhase buildPhase = null;
+    private TilePlacementPhase tilePlacementPhase = null;
+
+    private SimplePlayGenerator simplePlayGenerator;
+
+    public ProfitablePlayGeneration(GameBoardState gameBoardState, Player player) {
+        gameState = gameBoardState;
+        currentPlayer = player;
+        hexes = gameBoardState.getPlacedHexagons();
+        pieces = gameState.getGamePieceMap();
+        playerSettlements = currentPlayer.getListOfSettlements();
+        simplePlayGenerator = new SimplePlayGenerator();
+    }
+
+    @Override
+    public BuildPhase generateBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer) {
+
         if (currentPlayer.getTigerCount() > 0) {
-            nextMove = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
-            if (nextMove != null) {
-                return nextMove;
+            buildPhase = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
+            if (buildPhase != null) {
+                return buildPhase;
             }
         }
         if (currentPlayer.getTotoroCount() > 0) {
-            nextMove = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
-            if (nextMove != null) {
-                return nextMove;
+            buildPhase = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
+            if (buildPhase != null) {
+                return buildPhase;
             }
         }
         if (ExpansionHelper.canExpand(currentPlayer)) {
-            //nextMove = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
+            buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
+            if(buildPhase != null){
+                return buildPhase;
+            }
         }
         if (currentPlayer.getVillagerCount() > 0) {
-            nextMove = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
-            if (nextMove != null) {
-                return nextMove;
+            buildPhase = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
+            if (buildPhase != null) {
+                return buildPhase;
             }
         }
         return null;
+    }
+
+    @Override
+    public TilePlacementPhase generateTilePlay(
+            GameBoardState gameBoardState,
+            PlayerID playerID,
+            BiHexTileStructure tileToPlace){
+
+        //TODO: generate multiple tile placement phases and return most profitable
+        return null;
+    }
+
+
+    @Override
+    public BuildPhase generateSafeBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer){
+
+        return simplePlayGenerator.generateSafeBuildPlay(gameBoardState, activePlayer);
+    }
+
+    @Override
+    public TilePlacementPhase generateSafeTilePlay(
+            GameBoardState gameBoardState,
+            PlayerID activePlayer,
+            BiHexTileStructure tileToPlace) {
+
+        return simplePlayGenerator.generateSafeTilePlay(gameBoardState, activePlayer, tileToPlace);
     }
 }

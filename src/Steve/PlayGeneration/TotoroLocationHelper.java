@@ -13,8 +13,7 @@ import java.util.*;
 
 public class TotoroLocationHelper {
 
-    static public BuildPhase pickTotoroLocation(Map<Location, Hexagon> hexes, List<Settlement> playerSettlements, GamePieceMap pieces, PlayerID playerID)
-            throws Exception {
+    static public BuildPhase pickTotoroLocation(Map<Location, Hexagon> hexes, List<Settlement> playerSettlements, GamePieceMap pieces, PlayerID playerID) {
         int TOTORO_SETTLEMENT_SIZE = 5;
 
         BuildPhase buildPhase;
