@@ -238,6 +238,9 @@ public class GameMaster extends Thread {
 
             String messageFromServer = getStringFromServer();
 
+            if(isGameOver(messageFromServer))
+                continue;
+
             if(isEndOfRound(messageFromServer))
                 isEndOfRound = true;
 
@@ -349,5 +352,9 @@ public class GameMaster extends Thread {
     private boolean isNotOwnPlayBeingReportedBack(String messageFromServer) {
         String pidFromMove = PlayerIdParserFromServerMove.getPlayerId(messageFromServer);
         return !pidFromMove.equals(ourPidFromServer);
+    }
+
+    private boolean isGameOver(String message) {
+        return message.contains(GAME_OVER_MESSAGE);
     }
 }

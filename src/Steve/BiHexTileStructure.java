@@ -5,7 +5,7 @@ import Terrain.Terrain.*;
 public class BiHexTileStructure {
 
     Terrain leftTerrain; // Terrain A in networking protocol v1.1
-    Terrain rightTerrain; // Terrain B in networking protocol v2.2
+    Terrain rightTerrain; // Terrain B in networking protocol v1.1
 
     //Left is the counterclockwise-most terrain.
     public BiHexTileStructure(Terrain[] terrains) {
