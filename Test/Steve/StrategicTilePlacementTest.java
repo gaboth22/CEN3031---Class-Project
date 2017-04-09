@@ -48,7 +48,7 @@ public class StrategicTilePlacementTest {
         TilePlacementPhase tilePlacementPhase;
         tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, gameBoard.getPlayer(PlayerID.PLAYER_ONE), terrains);
 
-        Location[] locationsTileShouldBePlaced = new Location[]{new Location(2, 1), new Location(1,1), new Location(2,0)};
+        Location[] locationsTileShouldBePlaced = new Location[]{new Location(2, 1),  new Location(2,0), new Location(1,1)};
         assert tilePlacementPhase != null;
         assertEquals(locationsTileShouldBePlaced, tilePlacementPhase.getTileToPlace().getArrayOfTerrainLocations());
     }
