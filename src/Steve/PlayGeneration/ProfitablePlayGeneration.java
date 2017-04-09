@@ -9,8 +9,6 @@ import Settlements.Creation.Settlement;
 import Steve.BiHexTileStructure;
 import TileMap.*;
 import GamePieceMap.GamePieceMap;
-import Play.BuildPhase.BuildPhase;
-
 import java.util.*;
 
 public class ProfitablePlayGeneration implements PlayGenerator {
@@ -77,10 +75,13 @@ public class ProfitablePlayGeneration implements PlayGenerator {
             PlayerID playerID,
             BiHexTileStructure tileToPlace){
 
-        //TODO: generate multiple tile placement phases and return most profitable
-        return null;
-    }
+        //TO-DO Gabriels Nuking Tile method will go here.
+        //if(GabrielsNukingPhase == null) {
+            tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, currentPlayer, tileToPlace);
+        //}
 
+        return tilePlacementPhase;
+    }
 
     @Override
     public BuildPhase generateSafeBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer){

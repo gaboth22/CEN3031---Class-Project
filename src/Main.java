@@ -21,7 +21,10 @@ public class Main {
         ServerClient client = new ServerClient(SERVER_IP, SERVER_PORT);
         Game gameOne = new Game(PlayerID.PLAYER_ONE, new ProfitablePlayGeneration());
         gameOne.runWithGui();
+
         Game gameTwo = new Game(PlayerID.PLAYER_TWO, new ProfitablePlayGeneration());
+        gameTwo.runWithGui();
+
         GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
         gameMaster.setTournamentPassword(TOURNAMENT_PASSWORD);
         gameMaster.setUsername(USERNAME);
