@@ -5,6 +5,7 @@ import Play.BuildPhase.BuildPhase;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Player.PlayerID;
 import Steve.PlayGeneration.PlayGenerator;
+import Steve.PlayGeneration.ProfitablePlayGeneration;
 
 public class Steve {
 
@@ -19,6 +20,8 @@ public class Steve {
 
     private Object lastValidPlay;
 
+    private ProfitablePlayGeneration playGeneration;
+
     public Steve() {
 
         currentGameBoardState = null;
@@ -31,7 +34,14 @@ public class Steve {
     }
 
     public void setPlayGenerator(PlayGenerator generator) {
-        this.playGenerator = generator;
+        if(playingAs == PlayerID.PLAYER_ONE){
+            playGeneration = new ProfitablePlayGeneration();
+        }
+        else{
+            playGeneration = new ProfitablePlayGeneration();
+        }
+
+        this.playGenerator = playGeneration;
     }
 
     public void setTileToPlace(BiHexTileStructure tileToPlace) {
@@ -39,8 +49,8 @@ public class Steve {
     }
 
     public TilePlacementPhase generateTilePlay(GameBoardState state) {
-        //TODO: generate a tile play
-        return null;
+        TilePlacementPhase tilePlacementPhase = playGenerator.generateTilePlay(currentGameBoardState,playingAs,tileToPlace);
+        return tilePlacementPhase;
     }
 
     public TilePlacementPhase getSafeTilePhase(GameBoardState state) {
@@ -48,8 +58,8 @@ public class Steve {
     }
 
     public BuildPhase generateBuildPlay(GameBoardState state) {
-        //TODO: generate A Build Play
-        return null;
+        BuildPhase buildPhase = playGenerator.generateBuildPlay(currentGameBoardState, playingAs);
+        return buildPhase;
     }
 
     public BuildPhase getSafeBuildPhase(GameBoardState state) {
