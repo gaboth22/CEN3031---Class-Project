@@ -54,6 +54,33 @@ public class SettlementTest {
     }
 
     @Test
+    public void testThatTheSettlementToStringIsCorrect() throws Exception {
+        addFivePiecesToTheSettlement();
+        Assert.assertEquals("PLAYER_ONE's Settlement: [VILLAGER, (0, 0)][TIGER, (1, 0)][TOTORO, (2, 0)][VILLAGER, (0, 2)][VILLAGER, (0, 1)]", settlement.toString());
+    }
+
+    private void addFivePiecesToTheSettlement() throws Exception {
+        GamePiece villager = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER);
+        GamePiece totoro = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TOTORO);
+        GamePiece tiger = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.TIGER);
+
+        locationToAdd = new Location(0,0);
+        settlement.markPieceInSettlement(locationToAdd, villager);
+
+        locationToAdd = new Location(0,1);
+        settlement.markPieceInSettlement(locationToAdd, villager);
+
+        locationToAdd = new Location(0,2);
+        settlement.markPieceInSettlement(locationToAdd, villager);
+
+        locationToAdd = new Location(1,0);
+        settlement.markPieceInSettlement(locationToAdd, tiger);
+
+        locationToAdd = new Location(2,0);
+        settlement.markPieceInSettlement(locationToAdd, totoro);
+    }
+
+    @Test
     public void anEmptySettlementHasNoTotoroOrTigerSanctuary() throws Exception {
         Assert.assertFalse(settlement.hasTigerPlayground());
         Assert.assertFalse(settlement.hasTotoroSanctuary());

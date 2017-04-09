@@ -3,3 +3,9 @@
 /.idea/workspace.xml
 /.idea/kotlinc.xml
 /src/Log/log.log
+
+*.class
+!spec/*.class
+
+*.jar
+!spec/*.jar

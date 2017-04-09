@@ -189,9 +189,10 @@ public class Game extends Thread {
 
             for(Location loc : locationsInSettlement) {
                 if(pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TOTORO &&
-                    pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TIGER) {
+                    pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TIGER &&
+                        !loc.equals(expandedOn)) {
 
-                    guiThread.updateGui(playerAsString + " piece vi " + loc.getX() + " " + loc.getX());
+                    guiThread.updateGui(playerAsString + " piece vi " + loc.getX() + " " + loc.getY());
                 }
             }
         }
