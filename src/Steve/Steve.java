@@ -49,8 +49,10 @@ public class Steve {
     }
 
     public TilePlacementPhase generateTilePlay(GameBoardState state) {
-        TilePlacementPhase tilePlacementPhase = playGenerator.generateTilePlay(currentGameBoardState,playingAs,tileToPlace);
-        return tilePlacementPhase;
+        //TilePlacementPhase tilePlacementPhase = playGenerator.generateTilePlay(state,playingAs,tileToPlace);
+        //return tilePlacementPhase;
+
+        return getSafeTilePhase(state);
     }
 
     public TilePlacementPhase getSafeTilePhase(GameBoardState state) {
@@ -58,8 +60,9 @@ public class Steve {
     }
 
     public BuildPhase generateBuildPlay(GameBoardState state) {
-        BuildPhase buildPhase = playGenerator.generateBuildPlay(currentGameBoardState, playingAs);
-        return buildPhase;
+//        BuildPhase buildPhase = playGenerator.generateBuildPlay(state, playingAs);
+//        return buildPhase;
+        return getSafeBuildPhase(state);
     }
 
     public BuildPhase getSafeBuildPhase(GameBoardState state) {
