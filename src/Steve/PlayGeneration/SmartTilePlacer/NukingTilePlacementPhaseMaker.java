@@ -3,6 +3,7 @@ package Steve.PlayGeneration.SmartTilePlacer;
 import GameBoard.GameBoardState;
 import Location.Location;
 import Play.TilePlacementPhase.TilePlacementPhase;
+import Play.TilePlacementPhase.TilePlacementType;
 import Player.Player;
 import Player.PlayerID;
 import Settlements.Creation.Settlement;
@@ -13,7 +14,7 @@ import java.util.*;
 
 public class NukingTilePlacementPhaseMaker {
     private OppositePlayerGetter oppositePlayerGetter;
-    private SizeFourSettlementListGetter sizeFourSettlementListGetter;
+    private SizeFourOrGreaterSettlementListGetter sizeFourOrGreaterSettlementListGetter;
     private NukeableVolcanoAroundSettlementListGetter nukeableVolcanoAroundSettlementListGetter;
     private NukingTileMaker nukingTileMaker;
     private Map<Location, Hexagon> hexMap;
@@ -23,11 +24,10 @@ public class NukingTilePlacementPhaseMaker {
 
     public NukingTilePlacementPhaseMaker() {
         oppositePlayerGetter = new OppositePlayerGetter();
-        sizeFourSettlementListGetter = new SizeFourSettlementListGetter();
+        sizeFourOrGreaterSettlementListGetter = new SizeFourOrGreaterSettlementListGetter();
         nukeableVolcanoAroundSettlementListGetter = new NukeableVolcanoAroundSettlementListGetter();
         nukingTileMaker = new NukingTileMaker();
     }
-
 
     public TilePlacementPhase getTilePlacement(
             GameBoardState gameBoardState,
@@ -40,12 +40,13 @@ public class NukingTilePlacementPhaseMaker {
         this.terrains = tileToPlace;
         Player otherPlayer = oppositePlayerGetter.getOtherPlayerFromGameBoardState(activePlayer, gameBoardState);
         List<Settlement> otherPlayerSettlements = otherPlayer.getListOfSettlements();
-        List<Settlement> ofSizeFour = sizeFourSettlementListGetter.getSettlementsOfSizeFourOnly(otherPlayerSettlements);
+        List<Settlement> ofSizeFour = sizeFourOrGreaterSettlementListGetter.getSettlementsOfSizeFourAndGreaterOnly(otherPlayerSettlements);
 
         if(ofSizeFour.size() == 0)
             return null;
 
         TilePlacementPhase nukingTilePlacement = getNukingTilePlacement(ofSizeFour);
+        nukingTilePlacement.setTilePlacementType(TilePlacementType.NUKE);
 
         return nukingTilePlacement;
     }

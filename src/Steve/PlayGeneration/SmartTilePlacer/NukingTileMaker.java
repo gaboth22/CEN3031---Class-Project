@@ -57,6 +57,6 @@ public class NukingTileMaker {
     }
 
     private boolean areOnSameLevel(Location l1, Location l2, Location l3) {
-        return AllLocationsOnSameLevel.check(l1, l2, l3, hexMap);
+        return AllLocationsOnLevelOne.check(l1, l2, l3, hexMap);
     }
 }

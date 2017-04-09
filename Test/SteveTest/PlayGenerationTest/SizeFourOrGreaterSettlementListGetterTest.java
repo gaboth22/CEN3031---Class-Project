@@ -6,16 +6,16 @@ import Location.Location;
 import Movement.*;
 import Player.PlayerID;
 import Settlements.Creation.Settlement;
-import Steve.PlayGeneration.SmartTilePlacer.SizeFourSettlementListGetter;
+import Steve.PlayGeneration.SmartTilePlacer.SizeFourOrGreaterSettlementListGetter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SizeFourSettlementListGetterTest {
+public class SizeFourOrGreaterSettlementListGetterTest {
 
-    private SizeFourSettlementListGetter setGetter;
+    private SizeFourOrGreaterSettlementListGetter setGetter;
     private List<Settlement> allSettlements;
     private Movement mov;
     private int allSettlementCount;
@@ -23,7 +23,7 @@ public class SizeFourSettlementListGetterTest {
 
     @Before
     public void initializeInstances() throws Exception {
-        setGetter = new SizeFourSettlementListGetter();
+        setGetter = new SizeFourOrGreaterSettlementListGetter();
         mov = new AxialMovement();
     }
 
@@ -83,7 +83,7 @@ public class SizeFourSettlementListGetterTest {
     }
 
     private void thenTheSizeFourSettlementListGetterShouldFind(int expectedSizeFourCount) {
-        List<Settlement> sizeFourSets = setGetter.getSettlementsOfSizeFourOnly(allSettlements);
+        List<Settlement> sizeFourSets = setGetter.getSettlementsOfSizeFourAndGreaterOnly(allSettlements);
         Assert.assertEquals(expectedSizeFourCount, sizeFourSets.size());
     }
 
