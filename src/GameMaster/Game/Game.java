@@ -193,8 +193,6 @@ public class Game extends Thread {
                     !loc.equals(expandedOn)) {
 
                     String toGui = playerAsString + " piece vi " + loc.getX() + " " + loc.getY();
-                    System.out.println(toGui);
-
                     guiThread.updateGui(toGui);
                 }
             }
