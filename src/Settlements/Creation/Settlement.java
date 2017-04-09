@@ -114,6 +114,18 @@ public class Settlement {
     }
 
     @Override
+    public String toString() {
+        String toString = playerID.name() + "'s Settlement: ";
+        for(Location location : settlementLocations.keySet()) {
+            toString += "[";
+            toString += settlementLocations.get(location).getPieceType().name() + ", ";
+            toString += location;
+            toString += "]";
+        }
+        return toString;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

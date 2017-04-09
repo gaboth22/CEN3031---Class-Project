@@ -3,7 +3,7 @@ package GameMaster.ServerComm;
 import java.io.*;
 import java.net.Socket;
 
-public class ServerClient {
+public class ServerClient implements GameClient {
     private Socket clientSocket;
     private InputStream inputStream;
     private InputStreamReader inputStreamReader;

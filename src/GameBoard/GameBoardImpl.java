@@ -324,8 +324,7 @@ public class GameBoardImpl implements GameBoard {
     }
 
     private void settlementListUpdateForBuildPhase(BuildPhase buildPhase){
-        Map<Location, Hexagon> placedHexes = tileMap.getAllHexagons();
-        Set<Location> locationsOfPlacedHexes =  placedHexes.keySet();
+        Set<Location> locationsOfPlacedHexes =  gamePieceMap.getSetOfOccupiedLocations();
 
         List<Settlement> activePlayerSettlements = new ArrayList<>();
 

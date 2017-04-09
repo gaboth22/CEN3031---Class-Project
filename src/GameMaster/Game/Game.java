@@ -73,9 +73,9 @@ public class Game extends Thread {
         stateBuilder = new GameBoardStateBuilderImpl();
     }
 
-    private void initializeGuiThread() {
+    private void initializeGuiThread(boolean enableInput) {
         runningGui = true;
-        guiThread = new GuiThread();
+        guiThread = new GuiThread(enableInput);
     }
 
     public void resetGameState() {
@@ -91,8 +91,8 @@ public class Game extends Thread {
         stevePlaySender.subscribe(playReceiver);
     }
 
-    public void runWithGui() {
-        initializeGuiThread();
+    public void runWithGui(boolean enableInput) {
+        initializeGuiThread(enableInput);
         guiThread.start();
         String firstTile = "1 tile v l g r j 0 0 -1 1 1 0 1 -1 -1 0";
         guiThread.updateGui(firstTile);

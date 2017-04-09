@@ -2,8 +2,8 @@ package GameMaster;
 
 import Debug.*;
 import GameMaster.Game.Game;
+import GameMaster.ServerComm.GameClient;
 import GameMaster.ServerComm.Parsers.*;
-import GameMaster.ServerComm.ServerClient;
 import Receiver.Receiver;
 import Sender.SenderData.SenderData;
 
@@ -21,7 +21,7 @@ public class GameMaster extends Thread {
     private String gameTwoStevePlay;
     private Game gameOne;
     private Game gameTwo;
-    private ServerClient serverClient;
+    private GameClient gameClient;
     private GamePhaseState gamePhaseState;
 
     private String currentChallengeId;
@@ -41,7 +41,7 @@ public class GameMaster extends Thread {
     private static final int GAME_ONE = 0;
     private static final int GAME_TWO = 1;
 
-    public GameMaster(ServerClient serverClient, Game gameOne, Game gameTwo) {
+    public GameMaster(GameClient gameClient, Game gameOne, Game gameTwo) {
         currentChallengeId = null;
         ourPidFromServer = null;
         currentRounds = null;
@@ -69,7 +69,7 @@ public class GameMaster extends Thread {
         gameOneStevePlay = null;
         gameTwoStevePlay = null;
 
-        this.serverClient = serverClient;
+        this.gameClient = gameClient;
         this.gameOne = gameOne;
         this.gameTwo = gameTwo;
 
@@ -307,7 +307,7 @@ public class GameMaster extends Thread {
         String messageFromServer = null;
 
         try {
-            messageFromServer = serverClient.receiveData();
+            messageFromServer = gameClient.receiveData();
         }
 
         catch(IOException e){
@@ -320,7 +320,7 @@ public class GameMaster extends Thread {
 
     private void sendStringToServer(String toServer) {
         try {
-            serverClient.sendDataToServer(toServer);
+            gameClient.sendDataToServer(toServer);
             Debug.print("TO SERVER: " + toServer, DebugLevel.INFO);
         }
 

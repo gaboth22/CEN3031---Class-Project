@@ -76,7 +76,7 @@ public class BuildInfoToBuildPhase {
             }
         }
 
-        throw new InvalidParameterException("There exists no terrain of type " + terrain.name() + " that is adjacent to the given settlement");
+            throw new InvalidParameterException("There exists no terrain of type " + terrain.name() + " that is adjacent to the given settlement");
     }
 
     private static Player getPlayerFromGameState(GameBoardState gameBoardState, PlayerID playerID) {
