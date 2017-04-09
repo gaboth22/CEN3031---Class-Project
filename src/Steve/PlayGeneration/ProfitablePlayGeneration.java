@@ -7,6 +7,7 @@ import Player.*;
 import Location.Location;
 import Settlements.Creation.Settlement;
 import Steve.BiHexTileStructure;
+import Steve.PlayGeneration.SmartTilePlacer.NukingTilePlacementPhaseMaker;
 import TileMap.*;
 import GamePieceMap.GamePieceMap;
 import java.util.*;
@@ -24,9 +25,12 @@ public class ProfitablePlayGeneration implements PlayGenerator {
 
     private SimplePlayGenerator simplePlayGenerator;
 
+    private NukingTilePlacementPhaseMaker nukeMaker;
+
     public ProfitablePlayGeneration() {
 
         simplePlayGenerator = new SimplePlayGenerator();
+        nukeMaker = new NukingTilePlacementPhaseMaker();
     }
 
     @Override
@@ -80,15 +84,15 @@ public class ProfitablePlayGeneration implements PlayGenerator {
             PlayerID playerID,
             BiHexTileStructure tileToPlace){
 
-        //TO-DO Gabriels Nuking Tile method will go here.
-        //if(GabrielsNukingPhase == null) {
             if(playerID == PlayerID.PLAYER_ONE)
                 currentPlayer = gameBoardState.getPlayerOne();
             else
                 currentPlayer = gameBoardState.getPlayerTwo();
 
-            tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, currentPlayer, tileToPlace);
-        //}
+            tilePlacementPhase = nukeMaker.getTilePlacement(gameBoardState, playerID, tileToPlace);
+
+            if(tilePlacementPhase == null)
+                tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, currentPlayer, tileToPlace);
 
         return tilePlacementPhase;
     }
