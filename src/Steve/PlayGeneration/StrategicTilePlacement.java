@@ -24,7 +24,10 @@ public class StrategicTilePlacement {
                                                                  BiHexTileStructure terrains) {
 
         Map<Location, Hexagon> hexagonMap = gameBoardState.getPlacedHexagons();
-        Settlement[] currentPlayerSettlements = convertListToSettlementAndSortSettlementArray(currentPlayer.getListOfSettlements());
+        List<Settlement> listOfSettlements = currentPlayer.getListOfSettlements();
+
+        Settlement[] currentPlayerSettlements;
+        currentPlayerSettlements = SortSettlementArrayHelper.convertListToSettlementAndSort(listOfSettlements);
 
         if(currentPlayerSettlements.length == 0) {
             return null;
@@ -84,25 +87,6 @@ public class StrategicTilePlacement {
         }
 
         return null;
-    }
-
-    private static Settlement[] convertListToSettlementAndSortSettlementArray(List<Settlement> settlements) {
-        Settlement[] settlementArray = settlements.toArray(new Settlement[settlements.size()]);
-        return sortSettlementArray(settlementArray);
-    }
-
-    private static Settlement[] sortSettlementArray(Settlement[] settlementArray) {
-        for(int i = 1; i < settlementArray.length; i++) {
-            for(int j = i; j >= 1; j--) {
-                if(settlementArray[j].getNumberOfHexesInSettlement() > settlementArray[j-1].getNumberOfHexesInSettlement()) {
-                    Settlement temp = settlementArray[j];
-                    settlementArray[j] = settlementArray[j-1];
-                    settlementArray[j-1] = temp;
-                }
-            }
-        }
-
-        return settlementArray;
     }
 
     private static Terrain[] getTerrainsOfTileBeingPlaced(BiHexTileStructure terrains) {
