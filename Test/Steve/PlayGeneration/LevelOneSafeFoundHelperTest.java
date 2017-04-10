@@ -46,6 +46,10 @@ public class LevelOneSafeFoundHelperTest {
         setUpGameBoardState();
         phase = LevelOneSafeFoundHelper.LevelOneSafeFound(gameState.getPlacedHexagons(), gameState.getPlayerTwo(), gameState.getGamePieceMap());
         assertEquals(phase.getLocationToPlacePieceOn(), new Location(-1,0));
+        gameBoard.doBuildPhase(phase);
+        setUpGameBoardState();
+        phase = LevelOneSafeFoundHelper.LevelOneSafeFound(gameState.getPlacedHexagons(), gameState.getPlayerTwo(), gameState.getGamePieceMap());
+        assertEquals(phase.getLocationToPlacePieceOn(), new Location(2,0));
 
     }
 
