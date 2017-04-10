@@ -35,7 +35,7 @@ public class ViewableTestMain {
         gameTwo.runWithGui(false);
 
 
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
         gameMaster.setTournamentPassword(TOURNAMENT_PASSWORD);
         gameMaster.setUsername(USERNAME);

@@ -50,6 +50,7 @@ public class TestClient implements GameClient {
 
     private String getData() throws IOException {
         String returnString = "";
+        sleep(200);
         while(returnString.trim().equals("")) {
             returnString = inputReader.readLine();
 
@@ -64,6 +65,14 @@ public class TestClient implements GameClient {
         }
 
         return returnString;
+    }
+
+    private void sleep(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (Exception ex) {
+
+        }
     }
 
     public void promptEnterKey(){
