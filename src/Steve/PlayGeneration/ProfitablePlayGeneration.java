@@ -7,6 +7,7 @@ import Player.*;
 import Location.Location;
 import Settlements.Creation.Settlement;
 import Steve.BiHexTileStructure;
+import Steve.PlayGeneration.SmartTilePlacer.LevelOneSafeFoundHelper;
 import Steve.PlayGeneration.SmartTilePlacer.NukingTilePlacementPhaseMaker;
 import TileMap.*;
 import GamePieceMap.GamePieceMap;
@@ -100,7 +101,7 @@ public class ProfitablePlayGeneration implements PlayGenerator {
     @Override
     public BuildPhase generateSafeBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer){
 
-        return simplePlayGenerator.generateSafeBuildPlay(gameBoardState, activePlayer);
+        return LevelOneSafeFoundHelper.LevelOneSafeFound(hexes, currentPlayer, pieces);
     }
 
     @Override
