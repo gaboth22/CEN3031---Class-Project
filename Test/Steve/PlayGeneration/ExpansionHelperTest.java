@@ -11,6 +11,7 @@ import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementType;
 import Player.Player;
 import Player.PlayerID;
+import Settlements.LargeHexagonBoard;
 import Terrain.Terrain.Terrain;
 import Tile.Tile.Tile;
 import Tile.Tile.TileImpl;
@@ -43,6 +44,8 @@ public class ExpansionHelperTest {
         assertEquals(phase.getLocationToPlacePieceOn(), new Location(2,0));
 
     }
+
+
 
 
     private void setUpGameBoardState() {

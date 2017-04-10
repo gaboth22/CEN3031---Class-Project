@@ -26,7 +26,7 @@ public class ViewableTestMain {
 
 
         TestClient testClient = new TestClient(filePathTestLog, filePathToWriteServer);
-        testClient.setConsoleInterrupt(false);
+        testClient.setConsoleInterrupt(true);
         GameClient client = testClient;
 
         Game gameOne = new Game(PlayerID.PLAYER_ONE, new ProfitablePlayGeneration());
@@ -36,7 +36,7 @@ public class ViewableTestMain {
         gameTwo.runWithGui(false);
 
 
-        Thread.sleep(10000);
+        Thread.sleep(5000);
         GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
         gameMaster.setTournamentPassword(TOURNAMENT_PASSWORD);
         gameMaster.setUsername(USERNAME);

@@ -21,18 +21,21 @@ public class ExpansionHelper {
         List<Settlement> playerSettlements = currentPlayer.getListOfSettlements();
         for (int i = 0; i < playerSettlements.size(); i ++) {
             expansionCandidate = playerSettlements.get(i);
-            for (int j = 0; j < terrainTypes.length; j++) {
-                locationsForExpansion = SettlementExpansion.findLocationsToExpandInto(hexes, expansionCandidate, pieces, terrainTypes[i]);
-                if (locationsForExpansion.size() <= 0) {
-                    continue;
-                }
-                if (SettlementExpansion.numVillagersRequiredToExpansion(hexes, locationsForExpansion) <= currentPlayer.getVillagerCount()) {
-                    //create BuildPhase
 
-                    BuildPhase buildPhase
-                            = new BuildPhase(new GamePiece(currentPlayer.getID(), TypeOfPiece.VILLAGER), locationsForExpansion.get(0), expansionCandidate);
-                    buildPhase.setBuildType(BuildType.EXPAND);
-                    return buildPhase;
+            if(!expansionCandidate.hasTotoroSanctuary()) {
+                for (int j = 0; j < terrainTypes.length; j++) {
+                    locationsForExpansion = SettlementExpansion.findLocationsToExpandInto(hexes, expansionCandidate, pieces, terrainTypes[i]);
+                    if (locationsForExpansion.size() <= 0) {
+                        continue;
+                    }
+                    if (SettlementExpansion.numVillagersRequiredToExpansion(hexes, locationsForExpansion) <= currentPlayer.getVillagerCount()) {
+                        //create BuildPhase
+
+                        BuildPhase buildPhase
+                                = new BuildPhase(new GamePiece(currentPlayer.getID(), TypeOfPiece.VILLAGER), locationsForExpansion.get(0), expansionCandidate);
+                        buildPhase.setBuildType(BuildType.EXPAND);
+                        return buildPhase;
+                    }
                 }
             }
         }
