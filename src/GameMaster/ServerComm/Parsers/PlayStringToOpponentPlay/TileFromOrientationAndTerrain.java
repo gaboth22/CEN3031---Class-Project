@@ -26,28 +26,28 @@ public class TileFromOrientationAndTerrain implements TileInformationGenerator {
 
         switch(orientation) {
             case 1:
-                leftLocation = coordinateSystem.upRight(volcanoLocation);
-                rightLocation = coordinateSystem.downRight(volcanoLocation);
-                break;
-            case 2:
-                leftLocation = coordinateSystem.downRight(volcanoLocation);
-                rightLocation = coordinateSystem.down(volcanoLocation);
-                break;
-            case 3:
-                leftLocation = coordinateSystem.down(volcanoLocation);
-                rightLocation = coordinateSystem.downLeft(volcanoLocation);
-                break;
-            case 4:
                 leftLocation = coordinateSystem.downLeft(volcanoLocation);
                 rightLocation = coordinateSystem.upLeft(volcanoLocation);
                 break;
-            case 5:
+            case 2:
                 leftLocation = coordinateSystem.upLeft(volcanoLocation);
                 rightLocation = coordinateSystem.up(volcanoLocation);
                 break;
-            case 6:
+            case 3:
                 leftLocation = coordinateSystem.up(volcanoLocation);
                 rightLocation = coordinateSystem.upRight(volcanoLocation);
+                break;
+            case 4:
+                leftLocation = coordinateSystem.upRight(volcanoLocation);
+                rightLocation = coordinateSystem.downRight(volcanoLocation);
+                break;
+            case 5:
+                leftLocation = coordinateSystem.downRight(volcanoLocation);
+                rightLocation = coordinateSystem.down(volcanoLocation);
+                break;
+            case 6:
+                leftLocation = coordinateSystem.down(volcanoLocation);
+                rightLocation = coordinateSystem.downLeft(volcanoLocation);
                 break;
             default:
                 throw new InvalidParameterException(orientation +
