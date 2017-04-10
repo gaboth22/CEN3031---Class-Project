@@ -24,7 +24,27 @@ public class RunnableTestMain {
 
         Debug.enableLogFile("testLog.log");
 
-        String testOneFilePath = fileDirectoryToReadTestsFrom + "test.log";
+        String testOneFilePath = fileDirectoryToReadTestsFrom + "test1.log";
+        GameClient client = new TestClient(testOneFilePath, filePathToWriteTestResultsTo);
+
+        Game gameOne = new Game(PlayerID.PLAYER_ONE, new SimplePlayGenerator());
+
+        Game gameTwo = new Game(PlayerID.PLAYER_TWO, new SimplePlayGenerator());
+
+        GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
+        gameMaster.setTournamentPassword(TOURNAMENT_PASSWORD);
+        gameMaster.setUsername(USERNAME);
+        gameMaster.setPassword(PASSWORD);
+        gameMaster.start();
+    }
+
+    @Test
+    public void runTestTwo() throws Exception {
+        Debug.enableAllDebugLevels();
+
+        Debug.enableLogFile("testLog.log");
+
+        String testOneFilePath = fileDirectoryToReadTestsFrom + "test2.log";
         GameClient client = new TestClient(testOneFilePath, filePathToWriteTestResultsTo);
 
         Game gameOne = new Game(PlayerID.PLAYER_ONE, new SimplePlayGenerator());
