@@ -8,10 +8,10 @@ import Steve.PlayGeneration.ProfitablePlayGeneration;
 import Steve.PlayGeneration.SimplePlayGenerator;
 
 public class Main {
-    private static final String SERVER_IP = "10.136.31.59";
-    private static final int SERVER_PORT = 6969;
+    private static final String SERVER_IP = "10.228.1.171";
+    private static final int SERVER_PORT = 1708;
 
-    private static final String TOURNAMENT_PASSWORD = "heygang";
+    private static final String TOURNAMENT_PASSWORD = "goodluck";
     private static final String USERNAME = "P";
     private static final String PASSWORD = "P";
 
