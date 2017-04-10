@@ -87,6 +87,10 @@ public class SettingNukeTileForNextTurnTileMaker {
 
         for(Location l : adjacents) {
 
+            if(hexMap.containsKey(l)) {
+                continue;
+            }
+
             Tile tileCreated = findTileFromLocation(l);
 
             if(tileCreated != null) {
