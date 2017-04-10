@@ -13,6 +13,7 @@ import TileMap.Hexagon;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class StrategicSettlementExpansion {
 
@@ -51,7 +52,11 @@ public class StrategicSettlementExpansion {
 
     private static BuildPhase returnStrategicBuildPhase(Location[] placeableLocations, Player player) {
         GamePiece piece = new GamePiece(player.getID(), TypeOfPiece.VILLAGER);
-        BuildPhase strategicBuildPhase = new BuildPhase(piece, placeableLocations[0]);
+
+        Random randomNumber = new Random();
+        int randomPlacementLocation = randomNumber.nextInt(placeableLocations.length);
+
+        BuildPhase strategicBuildPhase = new BuildPhase(piece, placeableLocations[randomPlacementLocation]);
         strategicBuildPhase.setBuildType(BuildType.FOUND);
         return strategicBuildPhase;
     }
