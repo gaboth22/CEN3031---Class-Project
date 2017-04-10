@@ -6,6 +6,7 @@ import GUI.PhaseToGuiAdapter.PhaseToGuiAdapter;
 import GameBoard.*;
 import GameBoard.GameBoardStateBuilder.*;
 import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.ServerPlayParser;
+import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.StringPlayToTypeOfBuildParser;
 import GameMaster.ServerComm.Parsers.StevePlayParser;
 import GamePieceMap.*;
 import Location.Location;
@@ -42,6 +43,7 @@ public class Game extends Thread {
     private volatile String tilePlacementStr;
     private volatile String buildPhaseStr;
     private volatile ConcurrentLinkedQueue<String[]> receivedMessages;
+    private String gameID;
 
     public Game() {
     }
@@ -82,16 +84,22 @@ public class Game extends Thread {
         guiThread = new GuiThread(enableInput);
     }
 
-    public void resetGameState() {
+    public synchronized void resetGameState(String gameID) {
+        Debug.print("RESETING GAME " + gameID, DebugLevel.INFO);
+
         steve = null;
         gameBoard = null;
+        this.gameID = gameID;
 
         initializeSteve(playGenerator);
         initializeGameBoard();
         initializeStateBuilder();
 
         if(runningGui) {
+            Debug.print("RESETING GUI IN GAME " + gameID, DebugLevel.INFO);
             guiThread.clearGui();
+            String firstTile = "1 tile v l g r j 0 0 -1 1 1 0 1 -1 -1 0";
+            guiThread.updateGui(firstTile);
         }
     }
 
@@ -107,12 +115,12 @@ public class Game extends Thread {
         adapter = new PhaseToGuiAdapter();
     }
 
-    public void haveSteveDoPlay(String gameId, String moveNumber, String tileFromServer) {
+    public synchronized void haveSteveDoPlay(String gameId, String moveNumber, String tileFromServer) {
 
         receivedMessages.add(new String[]{gameId, moveNumber, tileFromServer});
     }
 
-    public void enforceOpponentPlay(String playFromServer) {
+    public synchronized void enforceOpponentPlay(String playFromServer) {
         receivedMessages.add(new String[]{playFromServer});
     }
 

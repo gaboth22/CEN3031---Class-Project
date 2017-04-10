@@ -76,6 +76,7 @@ public final class Debug
     }
 
     public static void print(String message, DebugLevel level) {
+        System.out.print(System.nanoTime());
         if(level == DebugLevel.ERROR) {
             if(Debug_Error)
                 System.out.println(level + ": " + message);

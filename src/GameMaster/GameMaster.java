@@ -147,8 +147,8 @@ public class GameMaster extends Thread {
             }
 
             else if (gamePhaseState == GamePhaseState.IN_ROUND) {
-                gameOne.resetGameState();
-                gameTwo.resetGameState();
+                gameOne.resetGameState("" + GAME_ONE);
+                gameTwo.resetGameState("" + GAME_TWO);
 
                 playRounds();
 
