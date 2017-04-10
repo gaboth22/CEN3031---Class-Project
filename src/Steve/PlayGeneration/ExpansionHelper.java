@@ -24,7 +24,7 @@ public class ExpansionHelper {
 
             if(!expansionCandidate.hasTotoroSanctuary()) {
                 for (int j = 0; j < terrainTypes.length; j++) {
-                    locationsForExpansion = SettlementExpansion.findLocationsToExpandInto(hexes, expansionCandidate, pieces, terrainTypes[i]);
+                    locationsForExpansion = SettlementExpansion.findLocationsToExpandInto(hexes, expansionCandidate, pieces, terrainTypes[j]);
                     if (locationsForExpansion.size() <= 0) {
                         continue;
                     }
