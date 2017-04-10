@@ -15,6 +15,7 @@ import java.util.List;
 import processing.core.PFont;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HexLayoutGui extends PApplet {
 
@@ -27,7 +28,7 @@ public class HexLayoutGui extends PApplet {
     private PFont font;
     private List<Tile> tilesOnDisplay;
     private List<GamePiece> piecesOnDisplay;
-    private List<Hexagon> hexesOnDisplay;
+    private volatile List<Hexagon> hexesOnDisplay;
     private HexMap hexMap;
     private boolean showTiles;
     private volatile ConcurrentLinkedQueue<String> updates2;
@@ -50,7 +51,7 @@ public class HexLayoutGui extends PApplet {
 
     public void setup() {
         showTiles = false;
-        hexesOnDisplay = new ArrayList<>();
+        hexesOnDisplay = new CopyOnWriteArrayList<>();
         tilesOnDisplay = new ArrayList<Tile>();
         piecesOnDisplay = new ArrayList<GamePiece>();
         hexMap = new HexMap();
