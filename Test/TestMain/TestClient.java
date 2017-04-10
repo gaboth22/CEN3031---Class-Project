@@ -44,7 +44,7 @@ public class TestClient implements GameClient {
     }
 
     @Override
-    public synchronized String receiveData() throws IOException {
+    public String receiveData() throws IOException {
         return recieveData();
     }
 
