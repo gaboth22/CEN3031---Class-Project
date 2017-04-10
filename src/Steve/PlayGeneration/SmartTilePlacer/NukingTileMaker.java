@@ -50,7 +50,11 @@ public class NukingTileMaker {
         Location left = null;
         Location right = null;
 
-        for(int i = 0; i < buildingIndices.size(); i += 2) {
+        for(int i = 0; i < buildingIndices.size(); i += 1) {
+
+            if(i+1 == buildingIndices.size())
+                return null;
+
             Location l1 = adjacentLocationsToVolcano[buildingIndices.get(i)];
             Location l2 = adjacentLocationsToVolcano[buildingIndices.get(i + 1)];
 

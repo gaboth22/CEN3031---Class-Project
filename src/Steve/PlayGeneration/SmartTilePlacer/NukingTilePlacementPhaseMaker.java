@@ -86,6 +86,9 @@ public class NukingTilePlacementPhaseMaker {
                 terrains,
                 activePlayer);
 
+        if(nukingTile == null)
+            return null;
+
         return new TilePlacementPhase(activePlayer, nukingTile);
     }
 }
