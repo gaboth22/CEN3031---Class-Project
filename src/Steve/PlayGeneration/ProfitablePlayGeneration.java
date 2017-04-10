@@ -61,14 +61,16 @@ public class ProfitablePlayGeneration implements PlayGenerator {
                 return buildPhase;
             }
         }
-
+        buildPhase = StrategicSettlementExpansion.buildAdjacentToLargestSettlement(gameState,currentPlayer);
+        if(buildPhase != null){
+            return buildPhase;
+        }
         if (ExpansionHelper.canExpand(currentPlayer)) {
             buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
             if(buildPhase != null){
                 return buildPhase;
             }
         }
-
         if (currentPlayer.getVillagerCount() > 0) {
             buildPhase = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
             if (buildPhase != null) {
