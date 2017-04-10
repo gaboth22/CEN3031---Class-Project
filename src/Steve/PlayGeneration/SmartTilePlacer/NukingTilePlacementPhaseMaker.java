@@ -1,6 +1,7 @@
 package Steve.PlayGeneration.SmartTilePlacer;
 
 import GameBoard.GameBoardState;
+import GamePieceMap.GamePieceMap;
 import Location.Location;
 import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementType;
@@ -21,6 +22,7 @@ public class NukingTilePlacementPhaseMaker {
     private GameBoardState gameBoardState;
     private BiHexTileStructure terrains;
     private PlayerID activePlayer;
+    private GamePieceMap pieceMap;
 
     public NukingTilePlacementPhaseMaker() {
         oppositePlayerGetter = new OppositePlayerGetter();
@@ -34,7 +36,9 @@ public class NukingTilePlacementPhaseMaker {
             PlayerID activePlayer,
             BiHexTileStructure tileToPlace) {
 
+
         hexMap = gameBoardState.getPlacedHexagons();
+        pieceMap = gameBoardState.getGamePieceMap();
         this.activePlayer = activePlayer;
         this.gameBoardState = gameBoardState;
         this.terrains = tileToPlace;
@@ -73,7 +77,17 @@ public class NukingTilePlacementPhaseMaker {
         if(nukeableSettlement == null)
             return null;
 
-        Tile nukingTile = nukingTileMaker.makeTile(hexMap, nukeableSettlement, ofVolcano, terrains);
+        Tile nukingTile = nukingTileMaker.makeTile(
+                gameBoardState,
+                hexMap,
+                pieceMap,
+                nukeableSettlement,
+                ofVolcano,
+                terrains,
+                activePlayer);
+
+        if(nukingTile == null)
+            return null;
 
         return new TilePlacementPhase(activePlayer, nukingTile);
     }

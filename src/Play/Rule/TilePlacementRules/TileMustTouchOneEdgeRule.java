@@ -20,7 +20,7 @@ public class TileMustTouchOneEdgeRule {
                 return;
         }
 
-        throw new InvalidTilePlacementRuleException();
+        throw new InvalidTilePlacementRuleException("The tile must touch at least one edge.");
     }
 
     private static boolean foundAdjacentEdge(TileMap tileMap, Location location) {

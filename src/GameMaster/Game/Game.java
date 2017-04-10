@@ -136,11 +136,27 @@ public class Game extends Thread {
                 steve.setTileToPlace(tileForSteveToPlace);
 
                 TilePlacementPhase tilePlacementPhase = steve.generateTilePlay(currentGameState);
-                BuildPhase buildPhase = steve.generateBuildPlay(currentGameState);
 
                 if(tilePlacementPhase == null) {
                     tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
                 }
+
+                try {
+                    gameBoard.doTilePlacementPhase(tilePlacementPhase);
+                } catch (Exception e) {
+                   e.printStackTrace();
+                    try {
+                        tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
+                        gameBoard.doTilePlacementPhase(tilePlacementPhase);
+                    }
+                    catch (Exception ex) {
+                        e.printStackTrace();
+                    }
+                }
+
+                currentGameState = getCurrentGameState();
+
+                BuildPhase buildPhase = steve.generateBuildPlay(currentGameState);
 
                 if(buildPhase == null) {
                     buildPhase = steve.getSafeBuildPhase(currentGameState);
@@ -149,9 +165,20 @@ public class Game extends Thread {
                 if(buildPhase != null) {
 
                     try {
-                        gameBoard.doTilePlacementPhase(tilePlacementPhase);
                         gameBoard.doBuildPhase(buildPhase);
                     } catch (Exception e) {
+                        try {
+                            buildPhase = steve.getSafeBuildPhase(currentGameState);
+                            gameBoard.doBuildPhase(buildPhase);
+                        }
+                        catch (Exception ex) {
+                            ex.printStackTrace();
+                            sendStevePlayToGameMaster(null, tilePlacementPhase, playInfoForSteve);
+
+                            updateGuiWithTilePlacement(tilePlacementPhase);
+                            playInfoForSteve = null;
+                            continue;
+                        }
                         e.printStackTrace();
                     }
 
