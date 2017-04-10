@@ -4,9 +4,9 @@ import Settlements.Creation.Settlement;
 
 import java.util.List;
 
-class SortSettlementArrayHelper {
+public class SortSettlementArrayHelper {
 
-    static Settlement[] convertListToSettlementAndSort(List<Settlement> settlements) {
+    public static Settlement[] convertListToSettlementAndSort(List<Settlement> settlements) {
         Settlement[] settlementArray = settlements.toArray(new Settlement[settlements.size()]);
         return sortSettlementArray(settlementArray);
     }
