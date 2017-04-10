@@ -89,6 +89,10 @@ public class Game extends Thread {
         initializeSteve(playGenerator);
         initializeGameBoard();
         initializeStateBuilder();
+
+        if(runningGui) {
+            guiThread.clearGui();
+        }
     }
 
     public void setPlayReceiver(Receiver playReceiver) {

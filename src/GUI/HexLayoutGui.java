@@ -36,6 +36,10 @@ public class HexLayoutGui extends PApplet {
         updates2.add(update);
     }
 
+    public void clearGui() {
+        hexesOnDisplay.clear();
+    }
+
     public void settings() {
         setSizeOfScreen();
     }

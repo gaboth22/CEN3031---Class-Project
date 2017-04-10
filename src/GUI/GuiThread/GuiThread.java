@@ -35,4 +35,10 @@ public class GuiThread extends Thread {
             hexLayoutGui.updateGui(update);
         }
     }
+
+    public void clearGui() {
+        if(hexLayoutGui != null) {
+            hexLayoutGui.clearGui();
+        }
+    }
 }
