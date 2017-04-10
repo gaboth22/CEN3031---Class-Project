@@ -24,6 +24,7 @@ import TileMap.Hexagon;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Game extends Thread {
 
@@ -40,6 +41,7 @@ public class Game extends Thread {
     private PhaseToGuiAdapter adapter;
     private volatile String tilePlacementStr;
     private volatile String buildPhaseStr;
+    private volatile ConcurrentLinkedQueue<String[]> receivedMessages;
 
     public Game() {
     }
@@ -57,6 +59,8 @@ public class Game extends Thread {
 
         stevePlaySender = new Sender();
         runningGui = false;
+
+        receivedMessages = new ConcurrentLinkedQueue<>();
     }
 
     private void initializeSteve(PlayGenerator playGenerator) {
@@ -101,59 +105,59 @@ public class Game extends Thread {
 
     public void haveSteveDoPlay(String gameId, String moveNumber, String tileFromServer) {
 
-        playInfoForSteve = new String[]{gameId, moveNumber, tileFromServer};
+        receivedMessages.add(new String[]{gameId, moveNumber, tileFromServer});
     }
 
     public void enforceOpponentPlay(String playFromServer) {
-        opponentPlay = playFromServer;
+        receivedMessages.add(new String[]{playFromServer});
     }
 
     @Override
     public void run() {
         while(true) {
 
-            if(playInfoForSteve != null) {
+            if(!receivedMessages.isEmpty() && receivedMessages.peek().length == 3) {
+                playInfoForSteve = receivedMessages.remove();
 
-                synchronized (this) {
-                    GameBoardState currentGameState = getCurrentGameState();
-                    BiHexTileStructure tileForSteveToPlace = BiHexTileStructureBuilderFromString.getBiHexFromString(playInfoForSteve[2]);
-                    steve.setTileToPlace(tileForSteveToPlace);
+                GameBoardState currentGameState = getCurrentGameState();
+                BiHexTileStructure tileForSteveToPlace = BiHexTileStructureBuilderFromString.getBiHexFromString(playInfoForSteve[2]);
+                steve.setTileToPlace(tileForSteveToPlace);
 
-                    TilePlacementPhase tilePlacementPhase = steve.generateTilePlay(currentGameState);
-                    BuildPhase buildPhase = steve.generateBuildPlay(currentGameState);
-                    if(tilePlacementPhase == null){
-                        tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
-                    }
-                    if(buildPhase == null){
-                        buildPhase = steve.getSafeBuildPhase(currentGameState);
-                    }
+                TilePlacementPhase tilePlacementPhase = steve.generateTilePlay(currentGameState);
+                BuildPhase buildPhase = steve.generateBuildPlay(currentGameState);
 
-                    if(buildPhase != null) {
-
-                        try {
-                            gameBoard.doTilePlacementPhase(tilePlacementPhase);
-                            gameBoard.doBuildPhase(buildPhase);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        if (runningGui) {
-                            updateGuiWithTilePlacement(tilePlacementPhase);
-                            updateGuiWithBuildPhase(buildPhase);
-                        }
-                    }
-
-                    sendStevePlayToGameMaster(buildPhase, tilePlacementPhase, playInfoForSteve);
-                    playInfoForSteve = null;
+                if(tilePlacementPhase == null) {
+                    tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
                 }
+
+                if(buildPhase == null) {
+                    buildPhase = steve.getSafeBuildPhase(currentGameState);
+                }
+
+                if(buildPhase != null) {
+
+                    try {
+                        gameBoard.doTilePlacementPhase(tilePlacementPhase);
+                        gameBoard.doBuildPhase(buildPhase);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (runningGui) {
+                        updateGuiWithTilePlacement(tilePlacementPhase);
+                        updateGuiWithBuildPhase(buildPhase);
+                    }
+                }
+
+                sendStevePlayToGameMaster(buildPhase, tilePlacementPhase, playInfoForSteve);
+                playInfoForSteve = null;
             }
 
-            if(opponentPlay != null) {
-                synchronized (this) {
-                    doOpponentTilePlacementPhase();
-                    doOpponentPiecePlacementPhase();
-                    opponentPlay = null;
-                }
+            else if(!receivedMessages.isEmpty() && receivedMessages.peek().length == 1) {
+                opponentPlay = receivedMessages.remove()[0];
+                doOpponentTilePlacementPhase();
+                doOpponentPiecePlacementPhase();
+                opponentPlay = null;
             }
         }
     }
