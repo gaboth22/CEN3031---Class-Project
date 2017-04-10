@@ -238,7 +238,7 @@ public class GameMaster extends Thread {
 
             String messageFromServer = getStringFromServer();
 
-            if(isGameOver(messageFromServer))
+            if(isGameOver(messageFromServer) || isLostMessage(messageFromServer))
                 continue;
 
             if(isEndOfRound(messageFromServer))
@@ -357,5 +357,9 @@ public class GameMaster extends Thread {
 
     private boolean isGameOver(String message) {
         return message.contains(GAME_OVER_MESSAGE);
+    }
+
+    private boolean isLostMessage(String message) {
+        return message.contains(LOST_MESSAGE);
     }
 }

@@ -46,6 +46,9 @@ public class NukingTilePlacementPhaseMaker {
             return null;
 
         TilePlacementPhase nukingTilePlacement = getNukingTilePlacement(ofSizeFour);
+        if(nukingTilePlacement == null)
+            return null;
+
         nukingTilePlacement.setTilePlacementType(TilePlacementType.NUKE);
 
         return nukingTilePlacement;

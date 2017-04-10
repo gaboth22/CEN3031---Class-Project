@@ -22,10 +22,10 @@ public class Main {
         Debug.enableLogFile("log.log");
         GameClient client = new ServerClient(SERVER_IP, SERVER_PORT);
 
-        Game gameOne = new Game(PlayerID.PLAYER_ONE, new SimplePlayGenerator());
+        Game gameOne = new Game(PlayerID.PLAYER_ONE, new ProfitablePlayGeneration());
         gameOne.runWithGui(CONSOLE_INPUT_IS_DISABLED);
 
-        Game gameTwo = new Game(PlayerID.PLAYER_TWO, new SimplePlayGenerator());
+        Game gameTwo = new Game(PlayerID.PLAYER_TWO, new ProfitablePlayGeneration());
         gameTwo.runWithGui(CONSOLE_INPUT_IS_DISABLED);
 
         GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
