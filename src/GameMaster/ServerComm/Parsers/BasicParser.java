@@ -14,7 +14,10 @@ public class BasicParser {
             parsedInt = Integer.parseInt(subStr);
         }
         catch(Exception e) {
-            throw new InvalidParameterException("From server string parser: " + e.getMessage());
+            throw new InvalidParameterException("From server string parser: " +
+                                                "\nException: " + e.getClass() +
+                                                "\n Message: "+ e.getMessage() +
+                                                "\nPassed string: " + string);
         }
 
         return parsedInt;
@@ -35,7 +38,10 @@ public class BasicParser {
             subStr = getSubstringAtIndex(string, stringIndex);
         }
         catch(Exception e) {
-            throw new InvalidParameterException("From server string parser: " + e.getMessage());
+            throw new InvalidParameterException("From server string parser: " +
+                                                "\nException: " + e.getClass() +
+                                                "\n Message: "+ e.getMessage() +
+                                                "\nPassed string: " + string);
         }
 
         return subStr;
