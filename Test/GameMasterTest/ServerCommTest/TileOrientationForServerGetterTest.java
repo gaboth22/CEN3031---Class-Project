@@ -25,7 +25,7 @@ public class TileOrientationForServerGetterTest {
     public void orientationShouldBeCorrect() {
         Tile tile = givenIHaveATileWith();
         whenIGetItsOrientation(tile);
-        thenTheOrientationShouldBe(4);
+        thenTheOrientationShouldBe(1);
     }
 
     private Tile givenIHaveATileWith() {
@@ -51,7 +51,7 @@ public class TileOrientationForServerGetterTest {
     public void orientationShouldBeCorrectAgain() {
         Tile tile = givenIHaveAnotherTile();
         whenIGetItsOrientation(tile);
-        thenTheOrientationShouldBe(1);
+        thenTheOrientationShouldBe(4);
     }
 
     private Tile givenIHaveAnotherTile() {

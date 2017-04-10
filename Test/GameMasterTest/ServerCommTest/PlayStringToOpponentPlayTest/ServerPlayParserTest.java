@@ -67,8 +67,8 @@ public class ServerPlayParserTest {
 
         Location[] locations = tileToPlace.getArrayOfTerrainLocations();
         Assert.assertEquals(new Location(0,1), locations[0]);
-        Assert.assertEquals(new Location(0,2), locations[1]);
-        Assert.assertEquals(new Location(1,1), locations[2]);
+        Assert.assertEquals(new Location(0,0), locations[1]);
+        Assert.assertEquals(new Location(-1,1), locations[2]);
     }
 
     @Test
