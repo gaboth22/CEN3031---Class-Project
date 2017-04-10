@@ -25,7 +25,7 @@ public class StrategicSettlementExpansion {
         Settlement[] currentPlayerSettlements;
         currentPlayerSettlements = SortSettlementArrayHelper.convertListToSettlementAndSort(settlementList);
 
-        if(currentPlayerSettlements.length == 0) {
+        if(currentPlayerSettlements.length == 0 || player.getVillagerCount() <= 0) {
             return null;
         }
 
