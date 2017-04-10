@@ -2,4 +2,8 @@
 /out
 /.idea/workspace.xml
 /.idea/kotlinc.xml
-/src/Log/log.loga
+/src/Log/log.log
+/src/Log/log.log
+/src/Log/testLog.log
+/TestServer/*.class
+/TestServer/*.jar

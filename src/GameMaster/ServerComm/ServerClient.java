@@ -2,6 +2,7 @@ package GameMaster.ServerComm;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerClient implements GameClient {
     private Socket clientSocket;
@@ -37,7 +38,11 @@ public class ServerClient implements GameClient {
     }
 
     public String receiveData() throws IOException {
-        return inputReader.readLine();
+        String returnString = null;
+        while(returnString == null || returnString.trim().equals("")) {
+            returnString = inputReader.readLine();
+        }
+        return returnString;
     }
 
     public void close() {

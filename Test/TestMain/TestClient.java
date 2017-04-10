@@ -45,14 +45,24 @@ public class TestClient implements GameClient {
 
     @Override
     public String receiveData() throws IOException {
-        return recieveData();
+        return getData();
     }
 
-    private String recieveData() throws IOException {
-        String returnString = inputReader.readLine();
+    private String getData() throws IOException {
+        String returnString = "";
+        while(returnString.trim().equals("")) {
+            returnString = inputReader.readLine();
+
+            if(returnString == null){
+                promptEnterKey();
+                System.exit(0);
+            }
+        }
+
         if(consoleInput == true) {
             promptEnterKey();
         }
+
         return returnString;
     }
 
