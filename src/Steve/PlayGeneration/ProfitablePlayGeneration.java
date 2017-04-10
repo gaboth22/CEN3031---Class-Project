@@ -7,6 +7,7 @@ import Player.*;
 import Location.Location;
 import Settlements.Creation.Settlement;
 import Steve.BiHexTileStructure;
+import Steve.PlayGeneration.SmartTilePlacer.LevelOneSafeFoundHelper;
 import Steve.PlayGeneration.SmartTilePlacer.NukingTilePlacementPhaseMaker;
 import TileMap.*;
 import GamePieceMap.GamePieceMap;
@@ -60,14 +61,16 @@ public class ProfitablePlayGeneration implements PlayGenerator {
                 return buildPhase;
             }
         }
-
+        buildPhase = StrategicSettlementExpansion.buildAdjacentToLargestSettlement(gameState,currentPlayer);
+        if(buildPhase != null){
+            return buildPhase;
+        }
         if (ExpansionHelper.canExpand(currentPlayer)) {
             buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
             if(buildPhase != null){
                 return buildPhase;
             }
         }
-
         if (currentPlayer.getVillagerCount() > 0) {
             buildPhase = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
             if (buildPhase != null) {
@@ -100,7 +103,7 @@ public class ProfitablePlayGeneration implements PlayGenerator {
     @Override
     public BuildPhase generateSafeBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer){
 
-        return simplePlayGenerator.generateSafeBuildPlay(gameBoardState, activePlayer);
+        return LevelOneSafeFoundHelper.LevelOneSafeFound(hexes, currentPlayer, pieces);
     }
 
     @Override
