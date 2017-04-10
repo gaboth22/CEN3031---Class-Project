@@ -28,7 +28,7 @@ public class Player {
         this.id = playerToCopy.getID();
         this.villagerCount = playerToCopy.getVillagerCount();
         this.tigerCount = playerToCopy.getTigerCount();
-        this.villagerCount = playerToCopy.getVillagerCount();
+        this.totoroCount = playerToCopy.getTotoroCount();
         this.score = playerToCopy.getScore();
         this.settlements = playerToCopy.getListOfSettlements();
     }
