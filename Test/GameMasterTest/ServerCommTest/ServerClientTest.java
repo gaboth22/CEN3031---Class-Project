@@ -1,5 +1,6 @@
 package GameMasterTest.ServerCommTest;
 
+import GameMaster.ServerComm.GameClient;
 import LocalTestServer.LocalTestServer;
 import GameMaster.ServerComm.ServerClient;
 import org.junit.*;
@@ -8,7 +9,7 @@ import Networking.*;
 @Ignore("Stalls for some people (not Gabe)")
 public class ServerClientTest {
     private LocalTestServer testServer;
-    private ServerClient serverClient;
+    private GameClient serverClient;
 
     @Before
     public void initializeInstances() {

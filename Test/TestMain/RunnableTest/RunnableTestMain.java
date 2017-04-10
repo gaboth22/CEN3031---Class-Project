@@ -1,31 +1,35 @@
+package TestMain.RunnableTest;
+
 import Debug.Debug;
 import GameMaster.Game.Game;
 import GameMaster.GameMaster;
 import GameMaster.ServerComm.GameClient;
-import GameMaster.ServerComm.ServerClient;
 import Player.PlayerID;
 import Steve.PlayGeneration.SimplePlayGenerator;
+import TestMain.TestClient;
+import org.junit.Test;
 
-public class Main {
-    private static final String SERVER_IP = "127.0.0.1";
-    private static final int SERVER_PORT = 8000;
+public class RunnableTestMain {
 
     private static final String TOURNAMENT_PASSWORD = "TPASS :D:D";
     private static final String USERNAME = "PEPE";
     private static final String PASSWORD = "UF_ROCKS";
 
-    private static final boolean CONSOLE_INPUT_IS_DISABLED = false;
+    private static final String fileDirectoryToReadTestsFrom = "./Test/TestMain/RunnableTest/testLogs/testLogs/";
+    private static final String filePathToWriteTestResultsTo = fileDirectoryToReadTestsFrom + "testServerLog.log";
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void runTestOne() throws Exception {
         Debug.enableAllDebugLevels();
-        Debug.enableLogFile("./log.log");
-        GameClient client = new ServerClient(SERVER_IP, SERVER_PORT);
+
+        Debug.enableLogFile("testLog.log");
+
+        String testOneFilePath = fileDirectoryToReadTestsFrom + "test.log";
+        GameClient client = new TestClient(testOneFilePath, filePathToWriteTestResultsTo);
 
         Game gameOne = new Game(PlayerID.PLAYER_ONE, new SimplePlayGenerator());
-        gameOne.runWithGui(CONSOLE_INPUT_IS_DISABLED);
 
         Game gameTwo = new Game(PlayerID.PLAYER_TWO, new SimplePlayGenerator());
-        gameTwo.runWithGui(CONSOLE_INPUT_IS_DISABLED);
 
         GameMaster gameMaster = new GameMaster(client, gameOne, gameTwo);
         gameMaster.setTournamentPassword(TOURNAMENT_PASSWORD);
