@@ -5,6 +5,7 @@ import GameMaster.Game.Game;
 import GameMaster.GameMaster;
 import GameMaster.ServerComm.GameClient;
 import Player.PlayerID;
+import Steve.PlayGeneration.ProfitablePlayGeneration;
 import Steve.PlayGeneration.SimplePlayGenerator;
 import TestMain.TestClient;
 
@@ -28,10 +29,10 @@ public class ViewableTestMain {
         testClient.setConsoleInterrupt(false);
         GameClient client = testClient;
 
-        Game gameOne = new Game(PlayerID.PLAYER_ONE, new SimplePlayGenerator());
+        Game gameOne = new Game(PlayerID.PLAYER_ONE, new ProfitablePlayGeneration());
         gameOne.runWithGui(false);
 
-        Game gameTwo = new Game(PlayerID.PLAYER_TWO, new SimplePlayGenerator());
+        Game gameTwo = new Game(PlayerID.PLAYER_TWO, new ProfitablePlayGeneration());
         gameTwo.runWithGui(false);
 
 

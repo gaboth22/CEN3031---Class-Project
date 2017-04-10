@@ -40,16 +40,22 @@ public class ProfitablePlayGeneration implements PlayGenerator {
 
         gameState = gameBoardState;
 
-        if(activePlayer == PlayerID.PLAYER_ONE)
+        if(activePlayer == PlayerID.PLAYER_ONE) {
+            currentPlayer = gameBoardState.getPlayerOne();
             playerSettlements = gameBoardState.getPlayerOne().getListOfSettlements();
-        else
+        }
+
+        else {
+            currentPlayer = gameBoardState.getPlayerTwo();
             playerSettlements = gameBoardState.getPlayerTwo().getListOfSettlements();
+        }
 
         pieces = gameBoardState.getGamePieceMap();
 
 
         if (currentPlayer.getTotoroCount() > 0) {
             buildPhase = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
+
             if (buildPhase != null) {
                 return buildPhase;
             }
@@ -61,16 +67,19 @@ public class ProfitablePlayGeneration implements PlayGenerator {
                 return buildPhase;
             }
         }
-        buildPhase = StrategicSettlementExpansion.buildAdjacentToLargestSettlement(gameState,currentPlayer);
+
+        buildPhase = StrategicSettlementExpansion.buildAdjacentToLargestSettlement(gameState, currentPlayer);
         if(buildPhase != null){
             return buildPhase;
         }
+
         if (ExpansionHelper.canExpand(currentPlayer)) {
             buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
             if(buildPhase != null){
                 return buildPhase;
             }
         }
+
         if (currentPlayer.getVillagerCount() > 0) {
             buildPhase = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
             if (buildPhase != null) {
@@ -102,6 +111,10 @@ public class ProfitablePlayGeneration implements PlayGenerator {
 
     @Override
     public BuildPhase generateSafeBuildPlay(GameBoardState gameBoardState, PlayerID activePlayer){
+        if(activePlayer == PlayerID.PLAYER_ONE)
+            currentPlayer = gameBoardState.getPlayerOne();
+        else
+            currentPlayer = gameBoardState.getPlayerTwo();
 
         return LevelOneSafeFoundHelper.LevelOneSafeFound(hexes, currentPlayer, pieces);
     }
@@ -111,6 +124,11 @@ public class ProfitablePlayGeneration implements PlayGenerator {
             GameBoardState gameBoardState,
             PlayerID activePlayer,
             BiHexTileStructure tileToPlace) {
+
+        if(activePlayer == PlayerID.PLAYER_ONE)
+            currentPlayer = gameBoardState.getPlayerOne();
+        else
+            currentPlayer = gameBoardState.getPlayerTwo();
 
         return simplePlayGenerator.generateSafeTilePlay(gameBoardState, activePlayer, tileToPlace);
     }

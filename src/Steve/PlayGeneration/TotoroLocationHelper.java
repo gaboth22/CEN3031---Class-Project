@@ -44,6 +44,7 @@ public class TotoroLocationHelper {
     }
 
     static public Location findTotoroLocation(Map<Location, Hexagon> hexes, Settlement settlement, GamePieceMap pieces) {
+
         Set<Location> locationsInSettlement = settlement.getSetOfLocationsInSettlement();
         Queue<Location> locationsToCheck = new LinkedList<>(locationsInSettlement);
 
