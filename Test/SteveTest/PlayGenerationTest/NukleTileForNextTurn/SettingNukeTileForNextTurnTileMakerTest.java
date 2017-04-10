@@ -104,8 +104,8 @@ public class SettingNukeTileForNextTurnTileMakerTest {
             System.out.println(locationsIntile[i]);
         }
 
-        Assert.assertTrue(locationsIntile[0].equals(new Location(4,-3)));
-        Assert.assertTrue(locationsIntile[0].equals(new Location(4,-2)));
-        Assert.assertTrue(locationsIntile[0].equals(new Location(5,-3)));
+        Assert.assertEquals(new Location(6,-5), locationsIntile[0]);
+        Assert.assertEquals(new Location(6,-4), locationsIntile[1]);
+        Assert.assertEquals(new Location(7,-5), locationsIntile[2]);
     }
 }
