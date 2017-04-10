@@ -28,54 +28,7 @@ public class SettingNukeTileForNextTurnTileMakerTest {
         List<Settlement> playerOneSettlements = new ArrayList<>();
         List<Settlement> playerTwoSettlements = new ArrayList<>();
 
-        Map<Location, Hexagon> hexMap = new HashMap<Location, Hexagon>();
-
-        Hexagon[] hexesOnBoard = new Hexagon[] {
-                new Hexagon(1,
-                        new Location(0, 0),
-                        1,
-                        Terrain.VOLCANO),
-                new Hexagon(1,
-                        new Location(-1, 1),
-                        1,
-                        Terrain.LAKE),
-                new Hexagon(1,
-                        new Location(-1, 0),
-                        1,
-                        Terrain.JUNGLE),
-
-
-                new Hexagon(2,
-                        new Location(-1, 2),
-                        1,
-                        Terrain.VOLCANO),
-                new Hexagon(2,
-                        new Location(0, 2),
-                        1,
-                        Terrain.GRASSLANDS),
-                new Hexagon(2,
-                        new Location(0, 1),
-                        1,
-                        Terrain.LAKE),
-
-
-                new Hexagon(3,
-                        new Location(-3, 2),
-                        1,
-                        Terrain.VOLCANO),
-                new Hexagon(3,
-                        new Location(-2, 2),
-                        1,
-                        Terrain.GRASSLANDS),
-                new Hexagon(3,
-                        new Location(-2, 1),
-                        1,
-                        Terrain.JUNGLE)
-        };
-
-        for(Hexagon hex : hexesOnBoard) {
-            hexMap.put(hex.getTerrainLocation(), hex);
-        }
+       //TODO: write this test
     }
 
 }

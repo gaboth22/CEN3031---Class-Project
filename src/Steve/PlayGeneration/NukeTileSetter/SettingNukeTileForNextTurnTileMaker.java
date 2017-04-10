@@ -32,7 +32,7 @@ public class SettingNukeTileForNextTurnTileMaker {
         adjacentLocationsToSettlementGetter = new AdjacentLocationsToSettlementGetter();
     }
 
-    public Tile getTilePlacement(
+    public Tile getTile(
             GameBoardState gameBoardState,
             PlayerID activePlayer,
             BiHexTileStructure tileToPlace) {

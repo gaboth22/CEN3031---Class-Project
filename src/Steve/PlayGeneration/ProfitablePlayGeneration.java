@@ -7,6 +7,7 @@ import Player.*;
 import Location.Location;
 import Settlements.Creation.Settlement;
 import Steve.BiHexTileStructure;
+import Steve.PlayGeneration.NukeTileSetter.SettingTileForNextTurnTilePlacementPhaseMaker;
 import Steve.PlayGeneration.SmartTilePlacer.LevelOneSafeFoundHelper;
 import Steve.PlayGeneration.SmartTilePlacer.NukingTilePlacementPhaseMaker;
 import TileMap.*;
@@ -27,11 +28,13 @@ public class ProfitablePlayGeneration implements PlayGenerator {
     private SimplePlayGenerator simplePlayGenerator;
 
     private NukingTilePlacementPhaseMaker nukeMaker;
+    private SettingTileForNextTurnTilePlacementPhaseMaker setupForNukeMaker;
 
     public ProfitablePlayGeneration() {
 
         simplePlayGenerator = new SimplePlayGenerator();
         nukeMaker = new NukingTilePlacementPhaseMaker();
+        setupForNukeMaker = new SettingTileForNextTurnTilePlacementPhaseMaker();
     }
 
     @Override
@@ -102,11 +105,18 @@ public class ProfitablePlayGeneration implements PlayGenerator {
                 currentPlayer = gameBoardState.getPlayerTwo();
 
             tilePlacementPhase = nukeMaker.getTilePlacement(gameBoardState, playerID, tileToPlace);
+            if(tilePlacementPhase != null)
+                return tilePlacementPhase;
 
-            if(tilePlacementPhase == null)
-                tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, currentPlayer, tileToPlace);
+            tilePlacementPhase = setupForNukeMaker.getTilePlacement(gameBoardState, playerID, tileToPlace);
+            if(tilePlacementPhase != null)
+                return tilePlacementPhase;
 
-        return tilePlacementPhase;
+            tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, currentPlayer, tileToPlace);
+            if(tilePlacementPhase != null)
+                return tilePlacementPhase;
+
+            return null;
     }
 
     @Override
