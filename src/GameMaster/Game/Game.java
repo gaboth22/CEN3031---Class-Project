@@ -125,10 +125,12 @@ public class Game extends Thread {
 
                 TilePlacementPhase tilePlacementPhase = steve.generateTilePlay(currentGameState);
                 BuildPhase buildPhase = steve.generateBuildPlay(currentGameState);
-                if(tilePlacementPhase == null){
+
+                if(tilePlacementPhase == null) {
                     tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
                 }
-                if(buildPhase == null){
+
+                if(buildPhase == null) {
                     buildPhase = steve.getSafeBuildPhase(currentGameState);
                 }
 
