@@ -244,8 +244,10 @@ public class GameMaster extends Thread {
             if(isEndOfRound(messageFromServer))
                 isEndOfRound = true;
 
-            if(isOtherPlayerForfeit(messageFromServer))
+            if(isForfeit(messageFromServer)) {
                 forfeitCount++;
+                continue;
+            }
 
             if(isRequestForOurPlay(messageFromServer)) {
                 performOwnPlay(messageFromServer);
@@ -337,9 +339,8 @@ public class GameMaster extends Thread {
         return messageFromServer.contains(REQUEST_FOR_OUR_PLAY_MESSAGE);
     }
 
-    private boolean isOtherPlayerForfeit(String messageFromServer) {
-        if(!PlayerIdParserFromServerMove.getPlayerId(messageFromServer).equals(ourPidFromServer) &&
-            messageFromServer.contains(FORFEIT_MESSAGE))
+    private boolean isForfeit(String messageFromServer) {
+        if(messageFromServer.contains(FORFEIT_MESSAGE))
             return true;
         else
             return false;
