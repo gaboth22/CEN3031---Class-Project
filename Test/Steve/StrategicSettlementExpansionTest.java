@@ -2,7 +2,6 @@ package Steve;
 
 import GameBoard.GameBoardImpl;
 import GameBoard.GameBoardState;
-import GamePieceMap.GamePieceMap;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
@@ -11,9 +10,11 @@ import Play.TilePlacementPhase.TilePlacementPhase;
 import Play.TilePlacementPhase.TilePlacementType;
 import Player.PlayerID;
 import Settlements.Creation.Settlement;
+import Settlements.Helper.AdjacentLocationsToSettlement;
+import Steve.PlayGeneration.SortSettlementArrayHelper;
 import Steve.PlayGeneration.StrategicSettlementExpansion;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 import Tile.Tile.Tile;
 import TileBuilder.TileBuilder;
 import TileMap.Hexagon;
@@ -21,8 +22,8 @@ import TileMap.TileMap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import java.util.List;
-import java.util.Map;
 
 @Ignore("Needs to be fixed since random index is selected now")
 public class StrategicSettlementExpansionTest {
@@ -73,11 +74,12 @@ public class StrategicSettlementExpansionTest {
         gameBoard.doTilePlacementPhase(tilePlacementPhase);
 
         setUpGameBoard();
-
         buildPhase = StrategicSettlementExpansion.buildAdjacentToLargestSettlement(gameBoardState, gameBoardState.getPlayerOne());
 
-        Location locationAdjacentToLargestSettlement = new Location(-1, 2);
-        assertEquals(locationAdjacentToLargestSettlement, buildPhase.getLocationToPlacePieceOn());
+        List<Settlement> playerSettlements = gameBoardState.getPlayerOne().getListOfSettlements();
+        Location[] adjLocationsToSettlement = getsLargestSettlementAndReturnsAdjacentLocations(playerSettlements);
+
+        assertTrue(checkIfBuildPhaseLocIsAdjToLargestSettlement(adjLocationsToSettlement, buildPhase.getLocationToPlacePieceOn()));
     }
 
     private void setUpGameBoard() {
@@ -100,5 +102,18 @@ public class StrategicSettlementExpansionTest {
         gameBoard.doBuildPhase(buildPhase);
 
         return buildPhase;
+    }
+
+    private Location[] getsLargestSettlementAndReturnsAdjacentLocations(List<Settlement> list) {
+        Settlement[] settlements = SortSettlementArrayHelper.convertListToSettlementAndSort(list);
+        return AdjacentLocationsToSettlement.getLocationsAdjacentToSettlement(settlements[0]);
+    }
+
+    private boolean checkIfBuildPhaseLocIsAdjToLargestSettlement(Location[] locations, Location buildLocation) {
+        for(int i = 0; i < locations.length; i++) {
+            if(locations[i].equals(buildLocation))
+                return true;
+        }
+        return false;
     }
 }
