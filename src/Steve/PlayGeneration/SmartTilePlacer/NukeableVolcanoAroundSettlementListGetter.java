@@ -10,13 +10,8 @@ import java.util.*;
 
 public class NukeableVolcanoAroundSettlementListGetter {
 
-    private NukeableVolcanoValidator validator;
     private Map<Location, Hexagon> hexMap;
     private Settlement settlement;
-
-    public NukeableVolcanoAroundSettlementListGetter() {
-        validator = new NukeableVolcanoValidator();
-    }
 
     public List<Location> getList(Settlement s, Map<Location, Hexagon> hexMap) {
 
@@ -30,9 +25,9 @@ public class NukeableVolcanoAroundSettlementListGetter {
             Location[] adjacentToLocationInSettlement = AdjacentLocationArrayGetter.getArrayOfAdjacentLocationsTo(l);
 
             for(Location adj : adjacentToLocationInSettlement) {
-                if (    notInSettlement(adj) &&
-                        isVolcano(adj) &&
-                        validator.isNukeableVolcano(adj, s, hexMap)
+                if (    isAPlacedHex(adj) &&
+                        notInSettlement(adj) &&
+                        isVolcano(adj)
                         )
                     setOfNukeableVolcanoesAroundSettlement.add(adj);
             }
@@ -41,11 +36,12 @@ public class NukeableVolcanoAroundSettlementListGetter {
         return new ArrayList<Location>(setOfNukeableVolcanoesAroundSettlement);
     }
 
+    private boolean isAPlacedHex(Location l) {
+        return hexMap.containsKey(l);
+    }
+
     private boolean isVolcano(Location l) {
-        if(hexMap.containsKey(l))
-            return hexMap.get(l).getTerrain() == Terrain.VOLCANO;
-        else
-            return false;
+        return hexMap.get(l).getTerrain() == Terrain.VOLCANO;
     }
 
     private boolean notInSettlement(Location l) {

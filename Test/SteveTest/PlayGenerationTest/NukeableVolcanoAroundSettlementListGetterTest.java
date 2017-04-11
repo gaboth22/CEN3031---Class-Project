@@ -53,6 +53,34 @@ public class NukeableVolcanoAroundSettlementListGetterTest {
                 new Hexagon(2,
                         new Location(0, 1),
                         1,
+                        Terrain.LAKE),
+
+
+                new Hexagon(3,
+                        new Location(-2, 2),
+                        1,
+                        Terrain.VOLCANO),
+                new Hexagon(3,
+                        new Location(-3, 2),
+                        1,
+                        Terrain.GRASSLANDS),
+                new Hexagon(3,
+                        new Location(-2, 1),
+                        1,
+                        Terrain.LAKE),
+
+
+                new Hexagon(4,
+                        new Location(1, 1),
+                        1,
+                        Terrain.VOLCANO),
+                new Hexagon(4,
+                        new Location(2, 1),
+                        1,
+                        Terrain.GRASSLANDS),
+                new Hexagon(4,
+                        new Location(2, 0),
+                        1,
                         Terrain.LAKE)
         };
 
@@ -68,6 +96,16 @@ public class NukeableVolcanoAroundSettlementListGetterTest {
     @Test
     public void listGetterShouldGetTheRightList() {
         List<Location> nukeableVolcanoList = getter.getList(validSettlement, validHexMap);
-        Assert.assertEquals(2, nukeableVolcanoList.size());
+        Assert.assertEquals(4, nukeableVolcanoList.size());
+
+        Location[] locationsThatHaveVolcanoesAroundSettlement  = new Location[] {
+                new Location(0,0),
+                new Location(-1, 2),
+                new Location(1, 1),
+                new Location(-2, 2)
+        };
+
+        for(Location loc : locationsThatHaveVolcanoesAroundSettlement)
+            Assert.assertTrue(nukeableVolcanoList.contains(loc));
     }
 }
