@@ -27,6 +27,14 @@ public class HexagonMap implements TileMap {
         mapOfTiles = new HashMap();
     }
 
+    public HexagonMap(HexagonMap mapToCopy) {
+        this.numberOfTilesInMap = mapToCopy.numberOfTilesInMap;
+        this.currentTileID = mapToCopy.currentTileID;
+        this.mapOfHeights = new HashMap<Location, Integer>(mapToCopy.mapOfHeights);
+        this.mapOfTerrains = new HashMap<Position, Terrain>(mapToCopy.mapOfTerrains);
+        this.mapOfTiles = new HashMap<Position, Integer>(mapToCopy.mapOfTiles);
+    }
+
     /*
      * Get the hexagon at the top of a location; returns null if there is no hexagon at that location
      */
