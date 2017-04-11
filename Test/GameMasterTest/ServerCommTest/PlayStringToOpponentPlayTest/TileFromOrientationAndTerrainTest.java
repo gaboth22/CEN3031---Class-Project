@@ -70,28 +70,28 @@ public class TileFromOrientationAndTerrainTest {
 
         switch(orientation) {
             case 1:
-                left = new Location(1,0);
-                right = new Location(1,-1);
-                break;
-            case 2:
-                left = new Location(1,-1);
-                right = new Location(0,-1);
-                break;
-            case 3:
-                left = new Location(0,-1);
-                right = new Location(-1,0);
-                break;
-            case 4:
                 left = new Location(-1,0);
                 right = new Location(-1,1);
                 break;
-            case 5:
+            case 2:
                 left = new Location(-1,1);
                 right = new Location(0,1);
                 break;
-            case 6:
+            case 3:
                 left = new Location(0,1);
                 right = new Location(1,0);
+                break;
+            case 4:
+                left = new Location(1,0);
+                right = new Location(1,-1);
+                break;
+            case 5:
+                left = new Location(1,-1);
+                right = new Location(0,-1);
+                break;
+            case 6:
+                left = new Location(0,-1);
+                right = new Location(-1,0);
                 break;
             default:
 

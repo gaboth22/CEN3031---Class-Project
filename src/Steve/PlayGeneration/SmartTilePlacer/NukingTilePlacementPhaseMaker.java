@@ -1,8 +1,10 @@
 package Steve.PlayGeneration.SmartTilePlacer;
 
 import GameBoard.GameBoardState;
+import GamePieceMap.GamePieceMap;
 import Location.Location;
 import Play.TilePlacementPhase.TilePlacementPhase;
+import Play.TilePlacementPhase.TilePlacementType;
 import Player.Player;
 import Player.PlayerID;
 import Settlements.Creation.Settlement;
@@ -13,39 +15,45 @@ import java.util.*;
 
 public class NukingTilePlacementPhaseMaker {
     private OppositePlayerGetter oppositePlayerGetter;
-    private SizeFourSettlementListGetter sizeFourSettlementListGetter;
+    private SizeFourOrGreaterSettlementListGetter sizeFourOrGreaterSettlementListGetter;
     private NukeableVolcanoAroundSettlementListGetter nukeableVolcanoAroundSettlementListGetter;
     private NukingTileMaker nukingTileMaker;
     private Map<Location, Hexagon> hexMap;
     private GameBoardState gameBoardState;
     private BiHexTileStructure terrains;
     private PlayerID activePlayer;
+    private GamePieceMap pieceMap;
 
     public NukingTilePlacementPhaseMaker() {
         oppositePlayerGetter = new OppositePlayerGetter();
-        sizeFourSettlementListGetter = new SizeFourSettlementListGetter();
+        sizeFourOrGreaterSettlementListGetter = new SizeFourOrGreaterSettlementListGetter();
         nukeableVolcanoAroundSettlementListGetter = new NukeableVolcanoAroundSettlementListGetter();
         nukingTileMaker = new NukingTileMaker();
     }
-
 
     public TilePlacementPhase getTilePlacement(
             GameBoardState gameBoardState,
             PlayerID activePlayer,
             BiHexTileStructure tileToPlace) {
 
+
         hexMap = gameBoardState.getPlacedHexagons();
+        pieceMap = gameBoardState.getGamePieceMap();
         this.activePlayer = activePlayer;
         this.gameBoardState = gameBoardState;
         this.terrains = tileToPlace;
         Player otherPlayer = oppositePlayerGetter.getOtherPlayerFromGameBoardState(activePlayer, gameBoardState);
         List<Settlement> otherPlayerSettlements = otherPlayer.getListOfSettlements();
-        List<Settlement> ofSizeFour = sizeFourSettlementListGetter.getSettlementsOfSizeFourOnly(otherPlayerSettlements);
+        List<Settlement> ofSizeFour = sizeFourOrGreaterSettlementListGetter.getSettlementsOfSizeFourAndGreaterOnly(otherPlayerSettlements);
 
         if(ofSizeFour.size() == 0)
             return null;
 
         TilePlacementPhase nukingTilePlacement = getNukingTilePlacement(ofSizeFour);
+        if(nukingTilePlacement == null)
+            return null;
+
+        nukingTilePlacement.setTilePlacementType(TilePlacementType.NUKE);
 
         return nukingTilePlacement;
     }
@@ -69,7 +77,17 @@ public class NukingTilePlacementPhaseMaker {
         if(nukeableSettlement == null)
             return null;
 
-        Tile nukingTile = nukingTileMaker.makeTile(hexMap, nukeableSettlement, ofVolcano, terrains);
+        Tile nukingTile = nukingTileMaker.makeTile(
+                gameBoardState,
+                hexMap,
+                pieceMap,
+                nukeableSettlement,
+                ofVolcano,
+                terrains,
+                activePlayer);
+
+        if(nukingTile == null)
+            return null;
 
         return new TilePlacementPhase(activePlayer, nukingTile);
     }

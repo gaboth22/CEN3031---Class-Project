@@ -2,8 +2,8 @@ package GameMaster;
 
 import Debug.*;
 import GameMaster.Game.Game;
+import GameMaster.ServerComm.GameClient;
 import GameMaster.ServerComm.Parsers.*;
-import GameMaster.ServerComm.ServerClient;
 import Receiver.Receiver;
 import Sender.SenderData.SenderData;
 
@@ -21,7 +21,7 @@ public class GameMaster extends Thread {
     private String gameTwoStevePlay;
     private Game gameOne;
     private Game gameTwo;
-    private ServerClient serverClient;
+    private GameClient gameClient;
     private GamePhaseState gamePhaseState;
 
     private String currentChallengeId;
@@ -41,7 +41,7 @@ public class GameMaster extends Thread {
     private static final int GAME_ONE = 0;
     private static final int GAME_TWO = 1;
 
-    public GameMaster(ServerClient serverClient, Game gameOne, Game gameTwo) {
+    public GameMaster(GameClient gameClient, Game gameOne, Game gameTwo) {
         currentChallengeId = null;
         ourPidFromServer = null;
         currentRounds = null;
@@ -69,7 +69,7 @@ public class GameMaster extends Thread {
         gameOneStevePlay = null;
         gameTwoStevePlay = null;
 
-        this.serverClient = serverClient;
+        this.gameClient = gameClient;
         this.gameOne = gameOne;
         this.gameTwo = gameTwo;
 
@@ -147,8 +147,8 @@ public class GameMaster extends Thread {
             }
 
             else if (gamePhaseState == GamePhaseState.IN_ROUND) {
-                gameOne.resetGameState();
-                gameTwo.resetGameState();
+                gameOne.resetGameState("" + GAME_ONE);
+                gameTwo.resetGameState("" + GAME_TWO);
 
                 playRounds();
 
@@ -238,11 +238,16 @@ public class GameMaster extends Thread {
 
             String messageFromServer = getStringFromServer();
 
+            if(isGameOver(messageFromServer) || isLostMessage(messageFromServer))
+                continue;
+
             if(isEndOfRound(messageFromServer))
                 isEndOfRound = true;
 
-            if(isOtherPlayerForfeit(messageFromServer))
+            if(isForfeit(messageFromServer)) {
                 forfeitCount++;
+                continue;
+            }
 
             if(isRequestForOurPlay(messageFromServer)) {
                 performOwnPlay(messageFromServer);
@@ -304,7 +309,7 @@ public class GameMaster extends Thread {
         String messageFromServer = null;
 
         try {
-            messageFromServer = serverClient.receiveData();
+            messageFromServer = gameClient.receiveData();
         }
 
         catch(IOException e){
@@ -317,7 +322,7 @@ public class GameMaster extends Thread {
 
     private void sendStringToServer(String toServer) {
         try {
-            serverClient.sendDataToServer(toServer);
+            gameClient.sendDataToServer(toServer);
             Debug.print("TO SERVER: " + toServer, DebugLevel.INFO);
         }
 
@@ -334,9 +339,8 @@ public class GameMaster extends Thread {
         return messageFromServer.contains(REQUEST_FOR_OUR_PLAY_MESSAGE);
     }
 
-    private boolean isOtherPlayerForfeit(String messageFromServer) {
-        if(!PlayerIdParserFromServerMove.getPlayerId(messageFromServer).equals(ourPidFromServer) &&
-            messageFromServer.contains(FORFEIT_MESSAGE))
+    private boolean isForfeit(String messageFromServer) {
+        if(messageFromServer.contains(FORFEIT_MESSAGE))
             return true;
         else
             return false;
@@ -349,5 +353,13 @@ public class GameMaster extends Thread {
     private boolean isNotOwnPlayBeingReportedBack(String messageFromServer) {
         String pidFromMove = PlayerIdParserFromServerMove.getPlayerId(messageFromServer);
         return !pidFromMove.equals(ourPidFromServer);
+    }
+
+    private boolean isGameOver(String message) {
+        return message.contains(GAME_OVER_MESSAGE);
+    }
+
+    private boolean isLostMessage(String message) {
+        return message.contains(LOST_MESSAGE);
     }
 }

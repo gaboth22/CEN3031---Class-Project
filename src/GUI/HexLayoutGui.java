@@ -13,12 +13,14 @@ import processing.core.PImage;
 import java.util.ArrayList;
 import java.util.List;
 import processing.core.PFont;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HexLayoutGui extends PApplet {
 
     public HexLayoutGui() {
-        updates = new CopyOnWriteArrayList<>();
+        updates2 = new ConcurrentLinkedQueue<>();
     }
 
     private ArrayList<Coordinate> coordinates;
@@ -26,13 +28,17 @@ public class HexLayoutGui extends PApplet {
     private PFont font;
     private List<Tile> tilesOnDisplay;
     private List<GamePiece> piecesOnDisplay;
-    private List<Hexagon> hexesOnDisplay;
+    private volatile List<Hexagon> hexesOnDisplay;
     private HexMap hexMap;
     private boolean showTiles;
-    private volatile List<String> updates;
+    private volatile ConcurrentLinkedQueue<String> updates2;
 
     public void updateGui(String update) {
-        updates.add(update);
+        updates2.add(update);
+    }
+
+    public void clearGui() {
+        hexesOnDisplay.clear();
     }
 
     public void settings() {
@@ -45,7 +51,7 @@ public class HexLayoutGui extends PApplet {
 
     public void setup() {
         showTiles = false;
-        hexesOnDisplay = new ArrayList<>();
+        hexesOnDisplay = new CopyOnWriteArrayList<>();
         tilesOnDisplay = new ArrayList<Tile>();
         piecesOnDisplay = new ArrayList<GamePiece>();
         hexMap = new HexMap();
@@ -91,11 +97,10 @@ public class HexLayoutGui extends PApplet {
 
     private void getUserPlay() {
 
-        if(updates.size() > 0) {
+        if(updates2.size() > 0) {
+            while(!updates2.isEmpty()) {
 
-            for (int p = 0; p < updates.size(); p++) {
-
-                GameDataParser parser = new GameDataParser(new String(updates.get(p)));
+                GameDataParser parser = new GameDataParser(new String(updates2.remove()));
                 BuildPhase buildPhase;
                 TilePlacementPhase tilePlacementPhase;
 
@@ -165,8 +170,6 @@ public class HexLayoutGui extends PApplet {
                 }
 
             }
-
-            updates.clear();
         }
     }
 

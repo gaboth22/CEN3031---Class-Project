@@ -41,7 +41,7 @@ public class GameTestDouble extends Game {
     }
 
     @Override
-    public void resetGameState() {
+    public void resetGameState(String gameID) {
     wasResetGameStateCalled = true;
     }
 

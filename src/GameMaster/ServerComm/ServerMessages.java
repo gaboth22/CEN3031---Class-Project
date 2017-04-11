@@ -11,6 +11,8 @@ public class ServerMessages {
     public static final String OTHER_PLAYERS_PLAY_MESSAGE = "GAME";
     public static final String FORFEIT_MESSAGE = "FORFEIT";
     public static final String END_OF_ROUND_MESSAGE = "END OF ROUND";
+    public static final String GAME_OVER_MESSAGE = "OVER";
+    public static final String LOST_MESSAGE = "LOST";
 
     /*outgoing*/
     public static final String ENTER_MESSAGE = "ENTER THUNDERDOME";

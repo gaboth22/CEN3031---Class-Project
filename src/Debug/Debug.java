@@ -3,6 +3,10 @@ package Debug;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public final class Debug
 {
@@ -76,6 +80,12 @@ public final class Debug
     }
 
     public static void print(String message, DebugLevel level) {
+
+        Date date = new Date(System.currentTimeMillis());
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateFormatted = formatter.format(date);
+
+        System.out.print(dateFormatted + " ");
         if(level == DebugLevel.ERROR) {
             if(Debug_Error)
                 System.out.println(level + ": " + message);

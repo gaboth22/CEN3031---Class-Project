@@ -66,6 +66,6 @@ public class NukeableVolcanoValidator {
             Location l3,
             Map<Location, Hexagon> hexMap) {
 
-        return AllLocationsOnSameLevel.check(l1, l2, l3, hexMap);
+        return AllLocationsOnLevelOne.check(l1, l2, l3, hexMap);
     }
 }

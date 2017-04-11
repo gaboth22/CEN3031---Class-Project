@@ -12,8 +12,17 @@ public class GuiThread extends Thread {
         consoleThread = new GetInputFromConsoleThread(this);
     }
 
+    public GuiThread(boolean consoleThreadEnabled) {
+        hexLayoutGui = new HexLayoutGui();
+        if(consoleThreadEnabled) {
+            consoleThread = new GetInputFromConsoleThread(this);
+        }
+    }
+
     public void run() {
-        consoleThread.start();
+        if(consoleThread != null) {
+            consoleThread.start();
+        }
         String[] args = new String[]{"GUI.HexLayoutGui"};
         PApplet.runSketch(args, hexLayoutGui);
 
@@ -24,6 +33,12 @@ public class GuiThread extends Thread {
     public void updateGui(String update) {
         if(hexLayoutGui != null) {
             hexLayoutGui.updateGui(update);
+        }
+    }
+
+    public void clearGui() {
+        if(hexLayoutGui != null) {
+            hexLayoutGui.clearGui();
         }
     }
 }

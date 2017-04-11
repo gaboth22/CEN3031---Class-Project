@@ -4,7 +4,7 @@ import Location.Location;
 import TileMap.Hexagon;
 import java.util.Map;
 
-public class AllLocationsOnSameLevel {
+public class AllLocationsOnLevelOne {
 
     public static boolean check(
             Location l1,
@@ -21,6 +21,6 @@ public class AllLocationsOnSameLevel {
         Hexagon hex3 = hexMap.get(l3);
         int hex3Height = hex3.getHeight();
 
-        return hex1Height == hex2Height && hex1Height == hex3Height;
+        return (hex1Height == hex2Height && hex1Height == hex3Height) & (hex1Height == 1);
     }
 }

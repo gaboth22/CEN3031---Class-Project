@@ -1,6 +1,7 @@
 package GameMasterTest.GameMasterTest;
 
 import GameMaster.*;
+import GameMaster.ServerComm.GameClient;
 import GameMaster.ServerComm.ServerClient;
 import GameMaster.ServerComm.ServerMessages;
 import LocalTestServer.LocalTestServer;
@@ -12,7 +13,7 @@ import Networking.*;
 @Ignore("Stalls")
 public class GameMasterTest {
     private LocalTestServer testServer;
-    private ServerClient serverClient;
+    private GameClient serverClient;
     private GameTestDouble gameOne;
     private GameTestDouble gameTwo;
     private GameMaster gameMaster;

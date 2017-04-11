@@ -6,7 +6,9 @@ import GUI.PhaseToGuiAdapter.PhaseToGuiAdapter;
 import GameBoard.*;
 import GameBoard.GameBoardStateBuilder.*;
 import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.ServerPlayParser;
+import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.StringPlayToTypeOfBuildParser;
 import GameMaster.ServerComm.Parsers.StevePlayParser;
+import GamePieceMap.*;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
@@ -15,12 +17,15 @@ import Player.PlayerID;
 import Receiver.Receiver;
 import Sender.Sender;
 import Sender.SenderData.SenderData;
+import Settlements.Creation.Settlement;
 import Steve.*;
 import Steve.PlayGeneration.PlayGenerator;
 import Terrain.Terrain.Terrain;
 import TileMap.Hexagon;
-
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Game extends Thread {
 
@@ -37,6 +42,8 @@ public class Game extends Thread {
     private PhaseToGuiAdapter adapter;
     private volatile String tilePlacementStr;
     private volatile String buildPhaseStr;
+    private volatile ConcurrentLinkedQueue<String[]> receivedMessages;
+    private String gameID;
 
     public Game() {
     }
@@ -54,6 +61,8 @@ public class Game extends Thread {
 
         stevePlaySender = new Sender();
         runningGui = false;
+
+        receivedMessages = new ConcurrentLinkedQueue<>();
     }
 
     private void initializeSteve(PlayGenerator playGenerator) {
@@ -70,89 +79,174 @@ public class Game extends Thread {
         stateBuilder = new GameBoardStateBuilderImpl();
     }
 
-    private void initializeGuiThread() {
+    private void initializeGuiThread(boolean enableInput) {
         runningGui = true;
-        guiThread = new GuiThread();
+        guiThread = new GuiThread(enableInput);
     }
 
-    public void resetGameState() {
+    public synchronized void resetGameState(String gameID) {
+        Debug.print("RESETING GAME " + gameID, DebugLevel.INFO);
+
         steve = null;
         gameBoard = null;
+        this.gameID = gameID;
 
         initializeSteve(playGenerator);
         initializeGameBoard();
         initializeStateBuilder();
+
+        if(runningGui) {
+            Debug.print("RESETING GUI IN GAME " + gameID, DebugLevel.INFO);
+            guiThread.clearGui();
+            String firstTile = "1 tile v l g r j 0 0 -1 1 1 0 1 -1 -1 0";
+            guiThread.updateGui(firstTile);
+        }
     }
 
     public void setPlayReceiver(Receiver playReceiver) {
         stevePlaySender.subscribe(playReceiver);
     }
 
-    public void runWithGui() {
-        initializeGuiThread();
+    public void runWithGui(boolean enableInput) {
+        initializeGuiThread(enableInput);
         guiThread.start();
         String firstTile = "1 tile v l g r j 0 0 -1 1 1 0 1 -1 -1 0";
         guiThread.updateGui(firstTile);
         adapter = new PhaseToGuiAdapter();
     }
 
-    public void haveSteveDoPlay(String gameId, String moveNumber, String tileFromServer) {
+    public synchronized void haveSteveDoPlay(String gameId, String moveNumber, String tileFromServer) {
 
-        playInfoForSteve = new String[]{gameId, moveNumber, tileFromServer};
+        receivedMessages.add(new String[]{gameId, moveNumber, tileFromServer});
     }
 
-    public void enforceOpponentPlay(String playFromServer) {
-        opponentPlay = playFromServer;
+    public synchronized void enforceOpponentPlay(String playFromServer) {
+        receivedMessages.add(new String[]{playFromServer});
     }
 
     @Override
     public void run() {
         while(true) {
 
-            if(playInfoForSteve != null) {
+            if(!receivedMessages.isEmpty() && receivedMessages.peek().length == 3) {
+                playInfoForSteve = receivedMessages.remove();
 
-                synchronized (this) {
-                    GameBoardState currentGameState = getCurrentGameState();
-                    BiHexTileStructure tileForSteveToPlace = BiHexTileStructureBuilderFromString.getBiHexFromString(playInfoForSteve[2]);
-                    steve.setTileToPlace(tileForSteveToPlace);
-                    TilePlacementPhase tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
-                    BuildPhase buildPhase = steve.getSafeBuildPhase(currentGameState);
+                GameBoardState currentGameState = getCurrentGameState();
+                BiHexTileStructure tileForSteveToPlace = BiHexTileStructureBuilderFromString.getBiHexFromString(playInfoForSteve[2]);
+                steve.setTileToPlace(tileForSteveToPlace);
 
-                    if(buildPhase != null) {
+                TilePlacementPhase tilePlacementPhase = steve.generateTilePlay(currentGameState);
 
+                if(tilePlacementPhase == null) {
+                    tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
+                }
+
+                try {
+                    gameBoard.doTilePlacementPhase(tilePlacementPhase);
+                } catch (Exception e) {
+                   e.printStackTrace();
+                    try {
+                        tilePlacementPhase = steve.getSafeTilePhase(currentGameState);
+                        gameBoard.doTilePlacementPhase(tilePlacementPhase);
+                    }
+                    catch (Exception ex) {
+                        e.printStackTrace();
+                    }
+                }
+
+                currentGameState = getCurrentGameState();
+
+                BuildPhase buildPhase = steve.generateBuildPlay(currentGameState);
+
+                if(buildPhase == null) {
+                    buildPhase = steve.getSafeBuildPhase(currentGameState);
+                }
+
+                if(buildPhase != null) {
+
+                    try {
+                        gameBoard.doBuildPhase(buildPhase);
+                    } catch (Exception e) {
                         try {
-                            gameBoard.doTilePlacementPhase(tilePlacementPhase);
+                            buildPhase = steve.getSafeBuildPhase(currentGameState);
                             gameBoard.doBuildPhase(buildPhase);
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                        catch (Exception ex) {
+                            ex.printStackTrace();
+                            sendStevePlayToGameMaster(null, tilePlacementPhase, playInfoForSteve);
 
-                        if (runningGui) {
-                            updateGui(tilePlacementPhase, buildPhase);
+                            updateGuiWithTilePlacement(tilePlacementPhase);
+                            playInfoForSteve = null;
+                            continue;
                         }
+                        e.printStackTrace();
                     }
 
-                    sendStevePlayToGameMaster(buildPhase, tilePlacementPhase, playInfoForSteve);
-                    playInfoForSteve = null;
+                    if (runningGui) {
+                        updateGuiWithTilePlacement(tilePlacementPhase);
+                        updateGuiWithBuildPhase(buildPhase);
+                    }
                 }
+
+                sendStevePlayToGameMaster(buildPhase, tilePlacementPhase, playInfoForSteve);
+                playInfoForSteve = null;
             }
 
-            if(opponentPlay != null) {
-                synchronized (this) {
-                    doOpponentTilePlacementPhase();
-                    doOpponentPiecePlacementPhase();
-                    opponentPlay = null;
-                }
+            else if(!receivedMessages.isEmpty() && receivedMessages.peek().length == 1) {
+                opponentPlay = receivedMessages.remove()[0];
+                doOpponentTilePlacementPhase();
+                doOpponentPiecePlacementPhase();
+                opponentPlay = null;
             }
         }
     }
 
-    private void updateGui(TilePlacementPhase tilePlacementPhase, BuildPhase buildPhase) {
+    private void updateGuiWithTilePlacement(TilePlacementPhase tilePlacementPhase) {
         tilePlacementStr = adapter.adapt(tilePlacementPhase);
-        buildPhaseStr = adapter.adapt(buildPhase);
-
         guiThread.updateGui(tilePlacementStr);
+    }
+
+    private void updateGuiWithBuildPhase(BuildPhase bPhase) {
+        buildPhaseStr = adapter.adapt(bPhase);
         guiThread.updateGui(buildPhaseStr);
+
+        if(bPhase.getBuildType() == BuildType.EXPAND) {
+            List<Settlement> playerSettlements;
+            String playerAsString = null;
+
+            if(bPhase.getPlayerID() == PlayerID.PLAYER_ONE) {
+                playerAsString = "1";
+                playerSettlements = gameBoard.getPlayerOneSettlements();
+            }
+            else {
+                playerAsString = "2";
+                playerSettlements = gameBoard.getPlayerTwoSettlements();
+            }
+
+            Location expandedOn = bPhase.getLocationToPlacePieceOn();
+
+            Settlement set = null;
+
+            for(Settlement s : playerSettlements) {
+                if(s.locationIsInSettlement(expandedOn)) {
+                    set = s;
+                    break;
+                }
+            }
+
+            Set<Location> locationsInSettlement = set.getSetOfLocationsInSettlement();
+            GamePieceMap pieceMap = gameBoard.getGamePieceMap();
+
+            for(Location loc : locationsInSettlement) {
+                if(pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TOTORO &&
+                    pieceMap.getPieceAtLocation(loc).getPieceType() != TypeOfPiece.TIGER &&
+                    !loc.equals(expandedOn)) {
+
+                    String toGui = playerAsString + " piece vi " + loc.getX() + " " + loc.getY();
+                    guiThread.updateGui(toGui);
+                }
+            }
+        }
     }
 
     private void sendStevePlayToGameMaster(BuildPhase steveBuildPhase,
@@ -210,11 +304,14 @@ public class Game extends Thread {
         PlayerID opponentID = getOpponentId();
         GameBoardState gameBoardState = getCurrentGameState();
         BuildPhase build = ServerPlayParser.getServerPiecePlacement(opponentPlay, gameBoardState, opponentID);
-        try{
+        try {
+
             gameBoard.serverDoBuildPhase(build);
+            if(runningGui)
+               updateGuiWithBuildPhase(build);
         }
         catch(Exception ex) {
-            Debug.print(ex.getMessage(), DebugLevel.ERROR);
+           Debug.print(ex.getMessage(), DebugLevel.ERROR);
         }
         opponentPlay = null;
     }
@@ -224,6 +321,8 @@ public class Game extends Thread {
         TilePlacementPhase placement = ServerPlayParser.getServerTilePlacement(opponentPlay, getCurrentGameState(), opponentID);
         try{
             gameBoard.serverDoTilePlacementPhase(placement);
+            if(runningGui)
+                updateGuiWithTilePlacement(placement);
         }
         catch(Exception ex) {
             Debug.print(ex.getMessage(), DebugLevel.ERROR);
