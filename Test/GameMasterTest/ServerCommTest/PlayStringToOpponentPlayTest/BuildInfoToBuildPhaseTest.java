@@ -43,6 +43,7 @@ public class BuildInfoToBuildPhaseTest {
                 placedHexagons,
                 pieceMap,
                 null,
+                null,
                 null);
     }
 

@@ -29,7 +29,8 @@ public class StrategicTilePlacementTest {
                                             gameBoard.getPlacedHexagons(),
                                             gameBoard.getGamePieceMap(),
                                             gameBoard.getPlaceableLocations(),
-                                            gameBoard.getNukeableVolcanoLocations());
+                                            gameBoard.getNukeableVolcanoLocations(),
+                                            gameBoard.getTileMap());
 
         Terrain[] terrain = new Terrain[]{Terrain.GRASSLANDS, Terrain.JUNGLE};
         terrains = new BiHexTileStructure(terrain);

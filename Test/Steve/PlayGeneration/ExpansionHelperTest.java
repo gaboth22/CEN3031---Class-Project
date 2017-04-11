@@ -15,6 +15,7 @@ import Settlements.LargeHexagonBoard;
 import Terrain.Terrain.Terrain;
 import Tile.Tile.Tile;
 import Tile.Tile.TileImpl;
+import TileMap.TileMap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,15 @@ public class ExpansionHelperTest {
 
 
     private void setUpGameBoardState() {
-        gameState = new GameBoardState(gameBoard.getPlayer(PlayerID.PLAYER_ONE), gameBoard.getPlayer(PlayerID.PLAYER_TWO), 1, gameBoard.getPlacedHexagons(), gameBoard.getGamePieceMap(), gameBoard.getPlaceableLocations(), gameBoard.getNukeableVolcanoLocations());
+        TileMap tileMap = ((GameBoardImpl) gameBoard).getTileMap();
+        gameState = new GameBoardState(
+                gameBoard.getPlayer(PlayerID.PLAYER_ONE),
+                gameBoard.getPlayer(PlayerID.PLAYER_TWO),
+                1, gameBoard.getPlacedHexagons(),
+                gameBoard.getGamePieceMap(),
+                gameBoard.getPlaceableLocations(),
+                gameBoard.getNukeableVolcanoLocations(),
+                tileMap);
     }
 
 

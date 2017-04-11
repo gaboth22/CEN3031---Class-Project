@@ -5,6 +5,7 @@ import GamePieceMap.GamePieceMap;
 import Player.Player;
 import Player.PlayerID;
 import Steve.PlayGeneration.SmartTilePlacer.OppositePlayerGetter;
+import TileMap.HexagonMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,8 @@ public class OppositePlayerGetterTest {
                                     new HashMap<>(),
                                     new GamePieceMap(),
                                     new ArrayList<>(),
-                                    new ArrayList<>());
+                                    new ArrayList<>(),
+                                    new HexagonMap());
     }
 
     @Test

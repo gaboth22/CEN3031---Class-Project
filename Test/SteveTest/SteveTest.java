@@ -29,6 +29,7 @@ public class SteveTest {
                 null,
                 null,
                 null,
+                null,
                 null);
 
         builder = new TileBuilder();
