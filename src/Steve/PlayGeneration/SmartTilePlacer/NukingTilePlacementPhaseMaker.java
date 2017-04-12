@@ -62,10 +62,10 @@ public class NukingTilePlacementPhaseMaker {
 
         Tile nukingTile = null;
 
-        for(Settlement s : ofSizeFour) {
+        for(Settlement settlementOfSizeFourOrGreater : ofSizeFour) {
 
             List<Location> nukeableVolcanoesAroundSettlement =
-                    nukeableVolcanoAroundSettlementListGetter.getList(s, hexMap);
+                    nukeableVolcanoAroundSettlementListGetter.getList(settlementOfSizeFourOrGreater, hexMap);
 
             if(nukeableVolcanoesAroundSettlement.size() > 0) {
 
@@ -75,7 +75,7 @@ public class NukingTilePlacementPhaseMaker {
                             gameBoardState,
                             hexMap,
                             pieceMap,
-                            s,
+                            settlementOfSizeFourOrGreater,
                             volcano,
                             terrains,
                             activePlayer);
