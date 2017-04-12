@@ -1,5 +1,6 @@
 package Steve.PlayGeneration;
 
+import Debug.*;
 import GameBoard.GameBoardState;
 import Play.BuildPhase.BuildPhase;
 import Play.TilePlacementPhase.TilePlacementPhase;
@@ -60,6 +61,7 @@ public class ProfitablePlayGeneration implements PlayGenerator {
             buildPhase = TotoroLocationHelper.pickTotoroLocation(hexes, playerSettlements, pieces, activePlayer);
 
             if (buildPhase != null) {
+                Debug.print("DID pickTotoroLocation.", DebugLevel.INFO);
                 return buildPhase;
             }
         }
@@ -67,18 +69,21 @@ public class ProfitablePlayGeneration implements PlayGenerator {
         if (currentPlayer.getTigerCount() > 0) {
             buildPhase = TigerLocationHelper.pickTigerLocation(hexes, playerSettlements, pieces);
             if (buildPhase != null) {
+                Debug.print("DID pickTigerLocation.", DebugLevel.INFO);
                 return buildPhase;
             }
         }
 
         buildPhase = StrategicSettlementExpansion.buildAdjacentToLargestSettlement(gameState, currentPlayer);
         if(buildPhase != null){
+            Debug.print("DID buildAdjacentToLargestSettlement.", DebugLevel.INFO);
             return buildPhase;
         }
 
         if (ExpansionHelper.canExpand(currentPlayer)) {
             buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
             if(buildPhase != null){
+                Debug.print("DID expansionChoice.", DebugLevel.INFO);
                 return buildPhase;
             }
         }
@@ -86,6 +91,7 @@ public class ProfitablePlayGeneration implements PlayGenerator {
         if (currentPlayer.getVillagerCount() > 0) {
             buildPhase = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
             if (buildPhase != null) {
+                Debug.print("DID pickLocationForNewSettlement.", DebugLevel.INFO);
                 return buildPhase;
             }
         }
@@ -105,16 +111,22 @@ public class ProfitablePlayGeneration implements PlayGenerator {
                 currentPlayer = gameBoardState.getPlayerTwo();
 
             tilePlacementPhase = nukeMaker.getTilePlacement(gameBoardState, playerID, tileToPlace);
-            if(tilePlacementPhase != null)
+            if(tilePlacementPhase != null) {
+                Debug.print("DID nukeMaker.", DebugLevel.INFO);
                 return tilePlacementPhase;
+            }
 
             tilePlacementPhase = setupForNukeMaker.getTilePlacement(gameBoardState, playerID, tileToPlace);
-            if(tilePlacementPhase != null)
+            if(tilePlacementPhase != null) {
+                Debug.print("DID setupForNukeMake.", DebugLevel.INFO);
                 return tilePlacementPhase;
+            }
 
             tilePlacementPhase = StrategicTilePlacement.makeAStrategicTilePlacement(gameBoardState, currentPlayer, tileToPlace);
-            if(tilePlacementPhase != null)
+            if(tilePlacementPhase != null) {
+                Debug.print("DID strategicTilePlacement.", DebugLevel.INFO);
                 return tilePlacementPhase;
+            }
 
             return null;
     }

@@ -1,22 +1,22 @@
 package Sender;
 
-import java.util.LinkedList;
-import java.util.List;
 import Receiver.Receiver;
 import Sender.SenderData.SenderData;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Sender {
     private List<Receiver> receiverList;
 
     public Sender() {
-        receiverList = new LinkedList<Receiver>();
+        receiverList = new CopyOnWriteArrayList<Receiver>();
     }
 
     public void subscribe(Receiver receiver) {
         receiverList.add(receiver);
     }
 
-    public void publish(SenderData data) {
+    public synchronized void publish(SenderData data) {
         for(Receiver sub : receiverList) {
             sub.callback(data);
         }
