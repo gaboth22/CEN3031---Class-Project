@@ -1,5 +1,6 @@
 package GameBoard;
 
+import Debug.*;
 import GamePieceMap.*;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
@@ -33,7 +34,7 @@ public class BuildPhaseHelper {
             attemptSettlementFoundationRules(buildPhase, tileMap, gamePieceMap, activePlayer);
         }
         catch(InvalidPiecePlacementRuleException e) {
-            System.out.println(e.getClass());
+            Debug.print(e.getClass() + " " + e.getMessage(), DebugLevel.ERROR);
             return false;
         }
         return true;
