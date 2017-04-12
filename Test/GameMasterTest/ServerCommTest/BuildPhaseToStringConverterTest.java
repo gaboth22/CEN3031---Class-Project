@@ -7,6 +7,7 @@ import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
 import Player.PlayerID;
+import Settlements.Creation.Settlement;
 import Terrain.Terrain.Terrain;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,17 +49,19 @@ public class BuildPhaseToStringConverterTest {
     }
 
     @Test
-    public void conversionShouldBeCorrectForSettlementExpansion() {
+    public void conversionShouldBeCorrectForSettlementExpansion() throws Exception {
 
         BuildPhase expansion = givenIHaveSettlementExpandingPhase();
         whenIConvertItToString(expansion, Terrain.JUNGLE);
-        thenTheConvertedStringShouldBe("EXPAND SETTLEMENT AT -2 3 -1 JUNGLE");
+        thenTheConvertedStringShouldBe("EXPAND SETTLEMENT AT 1 -1 0 JUNGLE");
     }
 
-    private BuildPhase givenIHaveSettlementExpandingPhase() {
+    private BuildPhase givenIHaveSettlementExpandingPhase() throws Exception {
         GamePiece villager = new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER);
         Location toExpandOn =  new Location(-1,-2);
-        BuildPhase expansion = new BuildPhase(villager, toExpandOn, null);
+        Settlement s = new Settlement();
+        s.markPieceInSettlement(new Location(0, 1), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
+        BuildPhase expansion = new BuildPhase(villager, toExpandOn, s);
         expansion.setBuildType(BuildType.EXPAND);
 
         return expansion;
