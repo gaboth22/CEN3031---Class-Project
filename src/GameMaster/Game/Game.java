@@ -1,14 +1,18 @@
 package GameMaster.Game;
 
-import Debug.*;
+import Debug.Debug;
+import Debug.DebugLevel;
 import GUI.GuiThread.GuiThread;
 import GUI.PhaseToGuiAdapter.PhaseToGuiAdapter;
-import GameBoard.*;
-import GameBoard.GameBoardStateBuilder.*;
+import GameBoard.GameBoard;
+import GameBoard.GameBoardImpl;
+import GameBoard.GameBoardState;
+import GameBoard.GameBoardStateBuilder.GameBoardStateBuilder;
+import GameBoard.GameBoardStateBuilder.GameBoardStateBuilderImpl;
 import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.ServerPlayParser;
-import GameMaster.ServerComm.Parsers.PlayStringToOpponentPlay.StringPlayToTypeOfBuildParser;
 import GameMaster.ServerComm.Parsers.StevePlayParser;
-import GamePieceMap.*;
+import GamePieceMap.GamePieceMap;
+import GamePieceMap.TypeOfPiece;
 import Location.Location;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
@@ -18,10 +22,13 @@ import Receiver.Receiver;
 import Sender.Sender;
 import Sender.SenderData.SenderData;
 import Settlements.Creation.Settlement;
-import Steve.*;
+import Steve.BiHexTileStructure;
+import Steve.BiHexTileStructureBuilderFromString;
 import Steve.PlayGeneration.PlayGenerator;
+import Steve.Steve;
 import Terrain.Terrain.Terrain;
 import TileMap.Hexagon;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -179,6 +186,7 @@ public class Game extends Thread {
                             playInfoForSteve = null;
                             continue;
                         }
+                        Debug.print("Expected: " + e.getClass() + " " + e.getMessage(), DebugLevel.INFO);
                         e.printStackTrace();
                     }
 
