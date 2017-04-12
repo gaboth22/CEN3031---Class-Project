@@ -9,6 +9,7 @@ import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
 import Player.Player;
 import Player.PlayerID;
+import TileMap.TileMap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,14 @@ public class FoundSettlementHelperTest {
     }
 
     private void setUpGameBoardState() {
-        gameState = new GameBoardState(gameBoard.getPlayer(PlayerID.PLAYER_ONE), gameBoard.getPlayer(PlayerID.PLAYER_TWO), 1, gameBoard.getPlacedHexagons(), gameBoard.getGamePieceMap(), gameBoard.getPlaceableLocations(), gameBoard.getNukeableVolcanoLocations());
+        TileMap tileMap = ((GameBoardImpl) gameBoard).getTileMap();
+        gameState = new GameBoardState(
+                gameBoard.getPlayer(PlayerID.PLAYER_ONE),
+                gameBoard.getPlayer(PlayerID.PLAYER_TWO),
+                1, gameBoard.getPlacedHexagons(),
+                gameBoard.getGamePieceMap(),
+                gameBoard.getPlaceableLocations(),
+                gameBoard.getNukeableVolcanoLocations(),
+                tileMap);
     }
 }

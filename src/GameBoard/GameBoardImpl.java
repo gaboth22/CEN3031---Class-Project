@@ -424,4 +424,8 @@ public class GameBoardImpl implements GameBoard {
     public GamePieceMap getGamePieceMap(){
         return new GamePieceMap(gamePieceMap);
     }
+
+    public TileMap getTileMap() {
+        return new HexagonMap((HexagonMap) this.tileMap);
+    }
 }

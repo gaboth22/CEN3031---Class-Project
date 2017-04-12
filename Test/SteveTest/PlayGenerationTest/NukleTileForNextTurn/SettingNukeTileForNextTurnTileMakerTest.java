@@ -13,6 +13,7 @@ import Steve.PlayGeneration.NukeTileSetter.SettingNukeTileForNextTurnTileMaker;
 import Terrain.Terrain.Terrain;
 import Tile.Tile.Tile;
 import TileMap.Hexagon;
+import TileMap.HexagonMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -106,7 +107,8 @@ public class SettingNukeTileForNextTurnTileMakerTest {
                 hexMap,
                 new GamePieceMap(),
                 new ArrayList<Location>(),
-                new ArrayList<Location>()
+                new ArrayList<Location>(),
+                new HexagonMap()
         );
     }
 
@@ -180,7 +182,8 @@ public class SettingNukeTileForNextTurnTileMakerTest {
                 hexMap,
                 new GamePieceMap(),
                 new ArrayList<Location>(),
-                new ArrayList<Location>()
+                new ArrayList<Location>(),
+                new HexagonMap()
         );
     }
 
@@ -268,7 +271,8 @@ public class SettingNukeTileForNextTurnTileMakerTest {
                 hexMap,
                 new GamePieceMap(),
                 new ArrayList<Location>(),
-                new ArrayList<Location>()
+                new ArrayList<Location>(),
+                new HexagonMap()
         );
     }
 }

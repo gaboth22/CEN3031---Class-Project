@@ -59,32 +59,37 @@ public class NukingTilePlacementPhaseMaker {
     }
 
     private TilePlacementPhase getNukingTilePlacement(List<Settlement> ofSizeFour) {
-        Settlement nukeableSettlement = null;
-        Location ofVolcano = null;
 
-        for(Settlement s : ofSizeFour) {
+        Tile nukingTile = null;
+
+        for(Settlement settlementOfSizeFourOrGreater : ofSizeFour) {
 
             List<Location> nukeableVolcanoesAroundSettlement =
-                    nukeableVolcanoAroundSettlementListGetter.getList(s, hexMap);
+                    nukeableVolcanoAroundSettlementListGetter.getList(settlementOfSizeFourOrGreater, hexMap);
 
             if(nukeableVolcanoesAroundSettlement.size() > 0) {
-                nukeableSettlement = s;
-                ofVolcano = nukeableVolcanoesAroundSettlement.get(0);
-                break;
+
+                for(Location volcano : nukeableVolcanoesAroundSettlement) {
+
+                    nukingTile = nukingTileMaker.makeTile(
+                            gameBoardState,
+                            hexMap,
+                            pieceMap,
+                            settlementOfSizeFourOrGreater,
+                            volcano,
+                            terrains,
+                            activePlayer);
+
+                    if(nukingTile == null)
+                        continue;
+                    else
+                        break;
+                }
+
+                if(nukingTile != null)
+                    break;
             }
         }
-
-        if(nukeableSettlement == null)
-            return null;
-
-        Tile nukingTile = nukingTileMaker.makeTile(
-                gameBoardState,
-                hexMap,
-                pieceMap,
-                nukeableSettlement,
-                ofVolcano,
-                terrains,
-                activePlayer);
 
         if(nukingTile == null)
             return null;

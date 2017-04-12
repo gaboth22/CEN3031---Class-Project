@@ -7,6 +7,7 @@ import TileMap.Hexagon;
 import java.util.Map;
 import java.util.List;
 import Player.*;
+import TileMap.TileMap;
 
 public class GameBoardState {
     private Player playerOne;
@@ -14,6 +15,7 @@ public class GameBoardState {
     private int turnNumber;
     private Map<Location, Hexagon> placedHexagons;
     private GamePieceMap gamePieceMap;
+    private TileMap tileMap;
     private List<Location> placeableLocations;
     private List<Location> nukeableLocations;
 
@@ -24,7 +26,8 @@ public class GameBoardState {
             Map<Location, Hexagon> placedHexagons,
             GamePieceMap gamePieceMap,
             List<Location> placeableLocations,
-            List<Location> nukeableLocations) {
+            List<Location> nukeableLocations,
+            TileMap tileMap) {
 
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
@@ -33,6 +36,7 @@ public class GameBoardState {
         this.gamePieceMap = gamePieceMap;
         this.placeableLocations = placeableLocations;
         this.nukeableLocations = nukeableLocations;
+        this.tileMap = tileMap;
     }
 
     public int getTurnNumber() {
@@ -61,6 +65,10 @@ public class GameBoardState {
 
     public GamePieceMap getGamePieceMap() {
         return gamePieceMap;
+    }
+
+    public TileMap getTileMap() {
+        return tileMap;
     }
 
 }

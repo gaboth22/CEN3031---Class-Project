@@ -21,6 +21,6 @@ public class AllLocationsOnLevelOne {
         Hexagon hex3 = hexMap.get(l3);
         int hex3Height = hex3.getHeight();
 
-        return (hex1Height == hex2Height && hex1Height == hex3Height) & (hex1Height == 1);
+        return (hex1Height == 1 && hex2Height == 1 && hex3Height == 1);
     }
 }
