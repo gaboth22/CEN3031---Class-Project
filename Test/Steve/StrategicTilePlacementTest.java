@@ -167,7 +167,8 @@ public class StrategicTilePlacementTest {
                 gameBoard.getPlacedHexagons(),
                 gameBoard.getGamePieceMap(),
                 gameBoard.getPlaceableLocations(),
-                gameBoard.getNukeableVolcanoLocations());
+                gameBoard.getNukeableVolcanoLocations(),
+                gameBoard.getTileMap());
     }
 
     private void placeTileAtLocation(Location l1, Location l2, Location l3) throws Exception {
