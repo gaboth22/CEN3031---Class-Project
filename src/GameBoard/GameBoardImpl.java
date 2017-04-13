@@ -143,6 +143,7 @@ public class GameBoardImpl implements GameBoard {
 
             buildPhaseHelper.expandSettlement(buildPhase, tileMap, gamePieceMap);
             updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+            villagerPieceAmountDecrement(buildPhase.getPlayerID());
             settlementListUpdateForBuildPhase(buildPhase);
             incrementTurnNumber();
         }
@@ -199,6 +200,7 @@ public class GameBoardImpl implements GameBoard {
 
                 buildPhaseHelper.expandSettlement(buildPhase, tileMap, gamePieceMap);
                 updateScoreWhenVillagerPlaced(buildPhase.getPlayerID());
+                villagerPieceAmountDecrement(buildPhase.getPlayerID());
                 settlementListUpdateForBuildPhase(buildPhase);
                 incrementTurnNumber();
             }
