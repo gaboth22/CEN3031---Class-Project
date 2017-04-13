@@ -80,13 +80,13 @@ public class ProfitablePlayGeneration implements PlayGenerator {
             return buildPhase;
         }
 
-//        if (ExpansionHelper.canExpand(currentPlayer)) {
-//            buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
-//            if(buildPhase != null){
-//                Debug.print("DID expansionChoice.", DebugLevel.INFO);
-//                return buildPhase;
-//            }
-//        }
+        if (ExpansionHelper.canExpand(currentPlayer)) {
+            buildPhase = ExpansionHelper.expansionChoice(hexes, currentPlayer, pieces);
+            if(buildPhase != null){
+                Debug.print("DID expansionChoice.", DebugLevel.INFO);
+                return buildPhase;
+            }
+        }
 
         if (currentPlayer.getVillagerCount() > 0) {
             buildPhase = FoundSettlementHelper.pickLocationForNewSettlement(gameState, activePlayer);
