@@ -20,9 +20,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SettlementExpansionTest {
 
@@ -156,6 +154,139 @@ public class SettlementExpansionTest {
 
     private void addPieceToOrigin() throws Exception {
         pieceMap.insertAPieceAt(new Location(0,0), new GamePiece(PlayerID.PLAYER_ONE, TypeOfPiece.VILLAGER));
+    }
+
+    @Test
+    public void testThatTheLocationsGeneratedByFindLocationsToExpandToIsValid() throws Exception {
+        hexMap = getTopLevelHexagons(getRectangularGrasslandsHexagonBoard());
+        addPieceToOrigin();
+
+        Settlement settlement = getSettlementAtLocation(new Location(0,0));
+        Terrain terrainToExpandInto = Terrain.GRASSLANDS;
+        List<Location> locations = SettlementExpansion.findLocationsToExpandInto(hexMap, settlement, pieceMap, terrainToExpandInto);
+
+        assertThatAllTheLocationsWereExpandedTo(locations);
+        assertThatTheExpansionCostWas(locations, 5);
+        assertThatTheExpansionWasSuccessful(locations, settlement);
+    }
+
+    private void assertThatTheExpansionWasSuccessful(List<Location> locations, Settlement settlement) {
+
+        SettlementExpansion.expandSettlement(pieceMap, settlement, locations);
+
+        for(Location locToCheck : locations) {
+            Assert.assertEquals(TypeOfPiece.VILLAGER, pieceMap.getPieceAtLocation(locToCheck).getPieceType());
+            Assert.assertEquals(settlement.getSettlementOwner(), pieceMap.getPieceAtLocation(locToCheck).getPlayer());
+        }
+    }
+
+    private void assertThatTheExpansionCostWas(List<Location> locations, int costOfExpansion) {
+        Assert.assertEquals(costOfExpansion, SettlementExpansion.numVillagersRequiredToExpansion(hexMap, locations));
+    }
+
+    private void assertThatAllTheLocationsWereExpandedTo(List<Location> locations) {
+        Assert.assertTrue(locations.contains(new Location(0,1)));
+        Assert.assertTrue(locations.contains(new Location(0,2)));
+        Assert.assertTrue(locations.contains(new Location(1,0)));
+        Assert.assertTrue(locations.contains(new Location(1,1)));
+        Assert.assertTrue(locations.contains(new Location(1,2)));
+        Assert.assertEquals(5,locations.size());
+    }
+
+    private Settlement getSettlementAtLocation(Location location) {
+        return SettlementCreator.getSettlementAt(pieceMap, location);
+    }
+
+    public Hexagon[] getRectangularGrasslandsHexagonBoard() {
+        final int NOT_USED = -1;
+
+        Hexagon[] hexagons = new Hexagon[] {
+                new Hexagon(NOT_USED, new Location(0,0), 1, Terrain.GRASSLANDS),
+                new Hexagon(NOT_USED, new Location(0,1), 1, Terrain.GRASSLANDS),
+                new Hexagon(NOT_USED, new Location(0,2), 1, Terrain.GRASSLANDS),
+                new Hexagon(NOT_USED, new Location(1,0), 1, Terrain.GRASSLANDS),
+                new Hexagon(NOT_USED, new Location(1,1), 1, Terrain.GRASSLANDS),
+                new Hexagon(NOT_USED, new Location(1,2), 1, Terrain.GRASSLANDS)
+        };
+        return hexagons;
+    }
+
+    @Test
+    public void testThatTheLocationsOnASplitBoard() throws Exception {
+        hexMap = getTopLevelHexagons(getRectangularSplitHexagonBoard());
+        addPieceToOrigin();
+
+        Settlement settlement = getSettlementAtLocation(new Location(0,0));
+        Terrain terrainToExpandInto = Terrain.LAKE;
+        List<Location> locations = SettlementExpansion.findLocationsToExpandInto(hexMap, settlement, pieceMap, terrainToExpandInto);
+
+        assertThatAllTheLocationsAreInTheListForSplitBoard(locations);
+        assertThatTheExpansionCostWas(locations, 5);
+        assertThatTheExpansionWasSuccessful(locations, settlement);
+    }
+
+    private void assertThatAllTheLocationsAreInTheListForSplitBoard(List<Location> locations) {
+        Assert.assertTrue(locations.contains(new Location(0,1)));
+        Assert.assertTrue(locations.contains(new Location(0,2)));
+        Assert.assertTrue(locations.contains(new Location(1,2)));
+        Assert.assertTrue(locations.contains(new Location(2,1)));
+        Assert.assertTrue(locations.contains(new Location(2,0)));
+        Assert.assertEquals(5,locations.size());
+    }
+
+    public Hexagon[] getRectangularSplitHexagonBoard() {
+        final int NOT_USED = -1;
+
+        Hexagon[] hexagons = new Hexagon[] {
+                new Hexagon(NOT_USED, new Location(0,0), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(0,1), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(0,2), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(1,0), 1, Terrain.ROCKY),
+                new Hexagon(NOT_USED, new Location(1,1), 1, Terrain.ROCKY),
+                new Hexagon(NOT_USED, new Location(1,2), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(2,1), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(2,0), 1, Terrain.LAKE)
+        };
+        return hexagons;
+    }
+
+    @Test
+    public void assertThatTheFindLocationsFunctionCannotJumpThroughOurSettlement() throws Exception {
+        hexMap = getTopLevelHexagons(lineOfHexagons());
+        addPieceToOrigin();
+        addPlayerOnePieceAt(new Location(0,2), TypeOfPiece.TIGER);
+
+        Settlement settlement = getSettlementAtLocation(new Location(0,0));
+        Terrain terrainToExpandInto = Terrain.LAKE;
+        List<Location> locations = SettlementExpansion.findLocationsToExpandInto(hexMap, settlement, pieceMap, terrainToExpandInto);
+
+        assertThatOnlyOneLocationWasAddedForTheBlockedBoard(locations);
+        assertThatTheExpansionCostWas(locations, 1);
+        assertThatTheExpansionWasSuccessful(locations, settlement);
+
+    }
+
+    private void assertThatOnlyOneLocationWasAddedForTheBlockedBoard(List<Location> locations) {
+        Assert.assertTrue(locations.contains(new Location(0,1)));
+        Assert.assertEquals(1,locations.size());
+    }
+
+    private void addPlayerOnePieceAt(Location location, TypeOfPiece typeOfPiece) throws Exception {
+        pieceMap.insertAPieceAt(location, new GamePiece(PlayerID.PLAYER_ONE, typeOfPiece));
+    }
+
+    private Hexagon[] lineOfHexagons() {
+        final int NOT_USED = -1;
+
+        Hexagon[] hexagons = new Hexagon[] {
+                new Hexagon(NOT_USED, new Location(0,0), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(0,1), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(0,2), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(0,3), 1, Terrain.LAKE),
+                new Hexagon(NOT_USED, new Location(0,4), 1, Terrain.LAKE)
+        };
+
+        return hexagons;
     }
 
     @After
