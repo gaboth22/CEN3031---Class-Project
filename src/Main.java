@@ -9,12 +9,11 @@ import TournamentInfoParser.TournamentInforParser;
 
 public class Main {
 
-    private static final boolean CONSOLE_INPUT_IS_DISABLED = false;
-        private static String SERVER_IP;
-        private static int SERVER_PORT;
-        private static String TOURNAMENT_PASSWORD;
-        private static String USERNAME;
-        private static String PASSWORD;
+    private static String SERVER_IP;
+    private static int SERVER_PORT;
+    private static String TOURNAMENT_PASSWORD;
+    private static String USERNAME;
+    private static String PASSWORD;
 
     public static void main(String[] args) throws Exception {
 
