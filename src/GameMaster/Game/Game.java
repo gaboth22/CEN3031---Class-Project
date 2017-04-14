@@ -139,6 +139,19 @@ public class Game extends Thread {
                 playInfoForSteve = receivedMessages.remove();
 
                 GameBoardState currentGameState = getCurrentGameState();
+
+                if(activePlayer == PlayerID.PLAYER_ONE){
+                    Debug.print("Game " + playInfoForSteve[0] +  " | Totoros: " + currentGameState.getPlayerOne().getTotoroCount()
+                            + " | Tigers: " + currentGameState.getPlayerOne().getTigerCount()
+                            + " | Villagers: " + currentGameState.getPlayerOne().getVillagerCount(), DebugLevel.INFO);
+                }
+                else{
+                    Debug.print("Game " + playInfoForSteve[0] + " | Totoros: " + currentGameState.getPlayerTwo().getTotoroCount()
+                            + " | Tigers: " + currentGameState.getPlayerTwo().getTigerCount()
+                            + " | Villagers: " + currentGameState.getPlayerTwo().getVillagerCount(), DebugLevel.INFO);
+                }
+
+
                 BiHexTileStructure tileForSteveToPlace = BiHexTileStructureBuilderFromString.getBiHexFromString(playInfoForSteve[2]);
                 steve.setTileToPlace(tileForSteveToPlace);
 

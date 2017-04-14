@@ -1,5 +1,6 @@
 package Steve.PlayGeneration;
 
+import Movement.AdjacentLocationArrayGetter.AdjacentLocationArrayGetter;
 import Play.BuildPhase.BuildPhase;
 import Play.BuildPhase.BuildType;
 import Player.*;
@@ -29,12 +30,15 @@ public class ExpansionHelper {
                         continue;
                     }
                     if (SettlementExpansion.numVillagersRequiredToExpansion(hexes, locationsForExpansion) <= currentPlayer.getVillagerCount()) {
-                        //create BuildPhase
+                        if(notExpandingIntoOtherOwnedSettlement(locationsForExpansion, pieces, expansionCandidate, currentPlayer)){
+                            //create BuildPhase
 
-                        BuildPhase buildPhase
-                                = new BuildPhase(new GamePiece(currentPlayer.getID(), TypeOfPiece.VILLAGER), locationsForExpansion.get(0), expansionCandidate);
-                        buildPhase.setBuildType(BuildType.EXPAND);
-                        return buildPhase;
+                            BuildPhase buildPhase
+                                    = new BuildPhase(new GamePiece(currentPlayer.getID(), TypeOfPiece.VILLAGER), locationsForExpansion.get(0), expansionCandidate);
+                            buildPhase.setBuildType(BuildType.EXPAND);
+                            return buildPhase;
+                        }
+
                     }
                 }
             }
@@ -51,4 +55,25 @@ public class ExpansionHelper {
         }
     }
 
+    static private boolean notExpandingIntoOtherOwnedSettlement(
+            List<Location> locationsForExpansion, GamePieceMap gamePieceMap, Settlement expansionCandidate, Player currentPlayer){
+
+        Set<Location> locationsInExpansionCandidate = expansionCandidate.getSetOfLocationsInSettlement();
+        for(int i = 0; i < locationsForExpansion.size(); i++){
+            Location[] adjacents = AdjacentLocationArrayGetter.getArrayOfAdjacentLocationsTo(locationsForExpansion.get(i));
+            for(int j = 0; j < adjacents.length; j++){
+
+                if(locationsInExpansionCandidate.contains(adjacents[j])){
+                    continue;
+                }
+
+                if(gamePieceMap.isThereAPieceAt(adjacents[j])){
+                    if(gamePieceMap.getPieceOwnerIdAtLocation(adjacents[j]) == currentPlayer.getID()){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }
