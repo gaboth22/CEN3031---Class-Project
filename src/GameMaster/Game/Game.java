@@ -182,7 +182,9 @@ public class Game extends Thread {
                             ex.printStackTrace();
                             sendStevePlayToGameMaster(null, tilePlacementPhase, playInfoForSteve);
 
-                            updateGuiWithTilePlacement(tilePlacementPhase);
+                            if(runningGui)
+                                updateGuiWithTilePlacement(tilePlacementPhase);
+
                             playInfoForSteve = null;
                             continue;
                         }
