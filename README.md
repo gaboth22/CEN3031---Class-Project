@@ -15,9 +15,9 @@ You should be able to just clone the repo. Open the project with IntelliJ IDEA a
 
 # What will happen if you run it?
 
-It will fail since it immediately tries to connect to the tournament server. So you need to either lunch the tournament server ([Get it here](https://github.com/MatthewBregg/TigerIsland))
+It will fail since it immediately tries to connect to the tournament server. So you need to lunch the tournament server ([Get it here](https://github.com/MatthewBregg/TigerIsland))
 
-If you don't wanna do that, you can use our TestServer. This server run locally, and once you run it, everything you paste into that terminal window will be sent to the client. To run it:
+If you don't wanna do that, you can use our TestServer. This server runs locally, and once you run it, everything you paste into that terminal window will be sent to the client. To run it:
 
 ```
 #inside of our repo folder
@@ -27,11 +27,11 @@ make
 make run
 ```
 
-Then everything you past there will be sent to our program. Run the server prior to running the program. Also, you need to change our program to connect to the local server on ip 127.0.0.1, port 8000.
+Then everything you paste there will be sent to our program. Run the server prior to running the program. Also, you need to change our program to connect to the local server on IP address 127.0.0.1, port 8000.
 
 # How to update our porgram's info so that it connects to a different IP address, and so on?
 
-Just open the file called tournament.txt under /src and then just edit the fields there. Add not spaced in between the colon and the actual data, and keep the tags that tell you the type of data you're inputing. The file looks like this:
+Just open the file called tournament.txt under /src and then just edit the fields there. Add no spaces in between the colon and the actual data, and keep the tags that tell you the type of data you're inputing. The file looks like this:
 
 ```
 IP:<any_ip_address>
@@ -56,16 +56,16 @@ You can run our program with a GUI, it's not the best, but it helps you visualiz
 
 # Some architectural insight
 
-The GameBoard (GameBoardImpl) is the lowest level, and all the rules are checekd there with some helper classes to delegate some of the responsibility.
+The GameBoard (GameBoardImpl) is the lowest level class (after TileMap and GamePieceMap), and all the rules are checked there with some helper classes to delegate some of the responsibility.
 
-Then Game holds an instance of the GameBoard, and holds and instance of Steve, which is our AI (not really though). Steve uses a class called ProfitablePlayGeneration which generates play.
+Then Game holds an instance of the GameBoard, and holds an instance of Steve, which is our AI (not really though). Steve uses a class called ProfitablePlayGeneration which generates play.
 
 ProfitablePlayGeneration tries a sequence of plays, and returns the first play that is not null.
 
 ProfitablePlayGeneration strategy:
 
 For tiles:
-  1) We first try to nuke the other team, if they have reached any settlement to a size five or greater.
+  1) We first try to nuke the other team, if they have reached any settlement to a size four or greater.
      NukingTilePlacementPhaseMaker attempts to generate a tile placement that does this.
      
   2) If we can't readily nuke a tile, we setup a tile so that we can nuke on the next turn.
@@ -99,11 +99,11 @@ For pieces:
   
 # Low level architecure
 
-All the interaction with the server is handled by GameMaster with the help of serveral parsers that can be found under the Parsers package under GameMaster. The GameMaster unser a GameClient, ServerClient in this case that we use to talk to the server.
+All the interaction with the server is handled by GameMaster with the help of serveral parsers that can be found under the Parsers package under GameMaster. The GameMaster uses a GameClient; ServerClient in this case, that we use to talk to the server.
 
-Our plays are called TilePlacementPhase, and BuildPhase. These classes hold information pertaining an actual play (The data that does into the GameBoard class). The GameBoard provides two functions for doing so. There is doTilePlacementPhase(), and doBuildPhase(). There are functions that are equivalent to these that the GameBoard exposes, but for plays that come from the server, which we don't check rules on.
+Our plays are called TilePlacementPhase, and BuildPhase. These classes hold information pertaining an actual play (The data that goes into the GameBoard class). The GameBoard provides two functions for doing so. There is doTilePlacementPhase(), and doBuildPhase(). There are functions that are equivalent to these that the GameBoard exposes, but for plays that come from the server, which we don't check rules on.
 
-There is also the possibility to run visual tests, by going to TestMain, and changing the text inside of some the .log files with simulate a game. It asks for enter to continue to each play.
+There is also the possibility to run visual tests, by going to TestMain, and changing the text inside of some the .log files which will simulate a game. It asks for enter to continue after each step read from the .log source file.
 
 # NOTE
 If you are on Windows, three tests will fail, which pertain to the Debug class. This is fine.
